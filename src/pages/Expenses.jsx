@@ -1,3 +1,4 @@
+
 import { useMemo, useState } from 'react'
 import { addExpense, getExpenses, removeExpense, getBudgets } from '../lib/storage.js'
 
@@ -60,3 +61,4 @@ export default function Expenses(){
     </div>
   )
 }
+  

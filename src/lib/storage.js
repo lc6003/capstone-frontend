@@ -17,7 +17,7 @@ export function saveBudgets(budgets){
 }
 export function addBudget(newBudget){
   const budgets = getBudgets()
-  budgets.push({ id: crypto.randomUUID(), ...newBudget })
+  budgets.push({ id: crypto.randomUUID(), type:newBudget.type || 'variable', ...newBudget })
   saveBudgets(budgets)
   return budgets
 }
