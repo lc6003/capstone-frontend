@@ -194,8 +194,11 @@ async function handleGoogle() {
             )}
           </div>
 
-          <div className="row">
-            <label className="checkbox">
+          <div className="row" style={{ justifyContent: "space-between", alignItems: "center" }}>
+            <label
+              className="checkbox"
+              style={{ color: "#E07A3F", fontWeight: 600, cursor: "pointer" }}
+            >
               <input
                 type="checkbox"
                 name="remember"
@@ -207,6 +210,9 @@ async function handleGoogle() {
             <a 
               className="link" 
               href="#"
+              style={{ color: "#F4A261", fontWeight: 700, textDecoration: "none" }}
+              onMouseOver={(e) => (e.currentTarget.style.textDecoration = "underline")}
+              onMouseOut={(e) => (e.currentTarget.style.textDecoration = "none")}
               onClick={(e) => {
                 e.preventDefault()
                 setCurrentPage("forgot-password")
@@ -249,7 +255,24 @@ async function handleGoogle() {
         </form>
 
         <p className="center subtitle" style={{ marginTop: 16 }}>
-          New here? <a className="link" href="#">Create an account</a>
+          New here?{" "}
+          <button
+            className="link"
+            onClick={() => setCurrentPage('signup')}
+            style={{ 
+              color: "#F4A261", 
+              fontWeight: 700, 
+              textDecoration: "none",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              fontSize: "inherit"
+            }}
+            onMouseOver={(e) => (e.currentTarget.style.textDecoration = "underline")}
+            onMouseOut={(e) => (e.currentTarget.style.textDecoration = "none")}
+          >
+            Create an account
+          </button>
         </p>
       </div>
     </div>
