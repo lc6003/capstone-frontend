@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
 import { auth } from "../firebase"
 
-export default function SignUp({ onSuccess }) {
+export default function SignUp({ setCurrentPage }) {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -34,7 +34,8 @@ export default function SignUp({ onSuccess }) {
       if (name.trim()) {
         await updateProfile(cred.user, { displayName: name.trim() })
       }
-      if (typeof onSuccess === "function") onSuccess(cred.user)
+      // Navigate to questionnaire after successful signup
+      setCurrentPage('questionnaire')
     } catch (err) {
       const msg =
         err?.code === "auth/email-already-in-use"

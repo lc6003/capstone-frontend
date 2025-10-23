@@ -1,5 +1,14 @@
 import '../styles/HomePage.css';
 import ThemeToggle from './ThemeToggle.jsx';
+import {
+  FiFolder,    // step 1
+  FiActivity,  // step 2
+  FiShield,    // step 3
+  FiPieChart,  // feature 1
+  FiZap,       // feature 2
+  FiLock,      // feature 3
+  FiBell       // feature 4
+} from 'react-icons/fi';
 
 export default function HomePage({ setCurrentPage }) {
   const envelopes = [
@@ -134,21 +143,21 @@ export default function HomePage({ setCurrentPage }) {
 
           <ol className="how-steps">
             <li>
-              <div className="img-placeholder">Insert image</div>
+              <div className="img-placeholder" aria-hidden="true"><FiFolder /></div>
               <div>
                 <h3>Create smart envelopes</h3>
                 <p>Assign money to categories you actually use. We guide your splits based on goals and a typical month.</p>
               </div>
             </li>
             <li>
-              <div className="img-placeholder">Insert image</div>
+              <div className="img-placeholder" aria-hidden="true"><FiActivity /></div>
               <div>
                 <h3>Track without friction</h3>
                 <p>Log spending in seconds, import bank CSVs, and let rules auto tag transactions.</p>
               </div>
             </li>
             <li>
-              <div className="img-placeholder">Insert image</div>
+              <div className="img-placeholder" aria-hidden="true"><FiShield /></div>
               <div>
                 <h3>Protect your plan</h3>
                 <p>See safe to spend at a glance, get nudges before you overshoot, and roll leftovers to savings.</p>
@@ -166,15 +175,20 @@ export default function HomePage({ setCurrentPage }) {
             { title: 'Delightfully fast', copy: 'Zero lag UI and offline first so your budget is ready the moment you open the app.' },
             { title: 'Private by design', copy: 'Your data stays on your device with optional encrypted backup. No selling data.' },
             { title: 'Gentle reminders', copy: 'Notifications arrive at the right moment, after a purchase or before a bill.' },
-          ].map((f) => (
-            <article className="feature-card feature-with-image" key={f.title}>
-              <div className="feature-img img-placeholder">Insert image</div>
-              <div className="feature-body">
-                <h3 className="feature-title">{f.title}</h3>
-                <p className="feature-copy">{f.copy}</p>
-              </div>
-            </article>
-          ))}
+          ].map((f, idx) => {
+            const Icon = [FiPieChart, FiZap, FiLock, FiBell][idx];
+            return (
+              <article className="feature-card feature-with-image" key={f.title}>
+                <div className="feature-img img-placeholder" aria-hidden="true">
+                  <Icon />
+                </div>
+                <div className="feature-body">
+                  <h3 className="feature-title">{f.title}</h3>
+                  <p className="feature-copy">{f.copy}</p>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </section>
 

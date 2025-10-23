@@ -13,18 +13,12 @@ export default function Login({ setCurrentPage }) {
   const [googleLoading, setGoogleLoading] = useState(false)
   const [googleError, setGoogleError] = useState("")
 
-  // Handle Google redirect result when coming back from auth
   useEffect(() => {
     getRedirectResult(auth)
       .then((result) => {
-        if (result?.user) {
-          console.log("Signed in (redirect):", result.user)
-          setCurrentPage?.("home")
-        }
+        if (result?.user) setCurrentPage?.("home")
       })
-      .catch((err) => {
-        console.error("Redirect sign-in error:", err)
-      })
+      .catch((err) => console.error("Redirect sign-in error:", err))
   }, [setCurrentPage])
 
   function onChange(e) {
@@ -45,6 +39,7 @@ export default function Login({ setCurrentPage }) {
     const next = validate()
     setErrors(next)
     if (Object.keys(next).length === 0) {
+      // TODO: plug in real auth
       alert(`😺 Logging in as ${values.email}${values.remember ? " (remembered)" : ""}`)
       setCurrentPage?.("home")
     }
@@ -55,14 +50,12 @@ export default function Login({ setCurrentPage }) {
       setGoogleError("")
       setGoogleLoading(true)
       const result = await signInWithPopup(auth, googleProvider)
-      console.log("Signed in (popup):", result.user)
-      setCurrentPage?.("home")
+      if (result?.user) setCurrentPage?.("home")
     } catch (err) {
       const code = err?.code || ""
       if (code === "auth/popup-blocked") {
-        // Fallback to redirect if popup is blocked
         await signInWithRedirect(auth, googleProvider)
-      } else if (code === "auth/popup-closed-by-user"){
+      } else if (code === "auth/popup-closed-by-user") {
         setGoogleError("Sign-in was cancelled try again or a different method")
       } else {
         setGoogleError(err?.message || "Google sign-in failed")
@@ -139,8 +132,11 @@ export default function Login({ setCurrentPage }) {
             )}
           </div>
 
-          <div className="row">
-            <label className="checkbox">
+          <div className="row" style={{ justifyContent: "space-between", alignItems: "center" }}>
+            <label
+              className="checkbox"
+              style={{ color: "#E07A3F", fontWeight: 600, cursor: "pointer" }}
+            >
               <input
                 type="checkbox"
                 name="remember"
@@ -149,10 +145,38 @@ export default function Login({ setCurrentPage }) {
               />
               Remember me
             </label>
-            <a className="link" href="#">Forgot password?</a>
+
+            <a
+              className="link"
+              href="#"
+              style={{ color: "#F4A261", fontWeight: 700, textDecoration: "none" }}
+              onMouseOver={(e) => (e.currentTarget.style.textDecoration = "underline")}
+              onMouseOut={(e) => (e.currentTarget.style.textDecoration = "none")}
+            >
+              Forgot password?
+            </a>
           </div>
 
-          <button type="submit" className="btn">Sign in</button>
+          {/* Orange sign-in button */}
+          <button
+            type="submit"
+            className="btn"
+            style={{
+              background: "linear-gradient(135deg,#F4A261,#E07A3F)",
+              color: "#fff",
+              width: "100%",
+              fontWeight: 700,
+              borderRadius: 10,
+              border: "none",
+              padding: "0.9rem 1.2rem",
+              boxShadow: "0 8px 20px rgba(240,140,60,0.35)",
+              transition: "filter 0.25s ease",
+            }}
+            onMouseOver={(e) => (e.currentTarget.style.filter = "brightness(1.05)")}
+            onMouseOut={(e) => (e.currentTarget.style.filter = "brightness(1.0)")}
+          >
+            Sign in
+          </button>
 
           <div className="divider" aria-hidden="true">
             <div className="line"></div>
@@ -161,31 +185,38 @@ export default function Login({ setCurrentPage }) {
           </div>
 
           <div className="social">
-            <button
-              type="button"
-              onClick={handleGoogle}
-              disabled={googleLoading}
-            >
+            <button type="button" onClick={handleGoogle} disabled={googleLoading}>
               {googleLoading ? "Connecting…" : "Continue with Google"}
             </button>
-            <button type="button" disabled>
-              Continue with GitHub
-            </button>
+            <button type="button" disabled>Continue with GitHub</button>
           </div>
 
           {googleError && (
-            <p
-              className="subtitle"
-              role="alert"
-              style={{ color: "#dc2626", marginTop: 12 }}
-            >
+            <p className="subtitle" role="alert" style={{ color: "#dc2626", marginTop: 12 }}>
               {googleError}
             </p>
           )}
         </form>
 
         <p className="center subtitle" style={{ marginTop: 16 }}>
-          New here? <a className="link" href="#">Create an account</a>
+          New here?{" "}
+          <button
+            className="link"
+            onClick={() => setCurrentPage('signup')}
+            style={{ 
+              color: "#F4A261", 
+              fontWeight: 700, 
+              textDecoration: "none",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              fontSize: "inherit"
+            }}
+            onMouseOver={(e) => (e.currentTarget.style.textDecoration = "underline")}
+            onMouseOut={(e) => (e.currentTarget.style.textDecoration = "none")}
+          >
+            Create an account
+          </button>
         </p>
       </div>
     </div>
