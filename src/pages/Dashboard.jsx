@@ -1,9 +1,12 @@
 import { Link } from 'react-router-dom'
-import { totals, monthInsights } from '../lib/storage.js'
+import { totals, monthInsights, getBudgetTotalsByType, getIncomeTotals, getTotalCreditCardDebt } from '../lib/storage.js'
 
 export default function Dashboard(){
   const { total, byCategory, budgetLimits } = totals()
   const { sum } = monthInsights()
+  const { total: budgetedTotal } = getBudgetTotalsByType()
+  const { actual, expected } = getIncomeTotals()
+  const totalDebt = getTotalCreditCardDebt()
 
   const categories = Object.keys(byCategory)
   const overs = categories.filter(c => byCategory[c] > (budgetLimits[c]||Infinity))
@@ -19,6 +22,19 @@ export default function Dashboard(){
           <Link to="/budget" className="btn secondary">New Budget</Link>
           <Link to="/insights" className="btn">View Insights</Link>
         </div>
+      </section>
+
+      <section className="card" style={{gridColumn:'span 6'}}>
+        <h3>Income</h3>
+        <p className='muted'>Income earned this month.</p>
+        <div style={{fontSize:36,fontWeight:800}}><b>${actual.toFixed(2)}</b></div>
+        <p className="muted">Expected income for this month: <b>${expected.toFixed(2)}</b></p>
+      </section>
+
+      <section className="card" style={{gridColumn:'span 6'}}>
+        <h3>Total Budgeted Amount</h3>
+        <div style={{fontSize:36,fontWeight:800}}>${budgetedTotal.toFixed(2)}</div>
+        <p className="muted">Sum of all recurring and variable budgets.</p>
       </section>
 
       <section className="card" style={{gridColumn:'span 6'}}>
@@ -39,6 +55,12 @@ export default function Dashboard(){
             ))}
           </ul>
         )}
+      </section>
+
+      <section className="card" style={{gridColumn:'span 6'}}>
+        <h3>Credit Card Debt</h3>
+        <div style={{fontSize:36,fontWeight:800}}>${totalDebt.toFixed(2)}</div>
+        <p className="muted">The sum of all credit card balances after input payments. </p>
       </section>
 
       <section className="card" style={{gridColumn:'span 12'}}>

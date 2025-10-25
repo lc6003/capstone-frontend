@@ -12,8 +12,8 @@ export default function App(){
         <div className="row" style={{alignItems:'center', gap:12}}>
           <img src="/cat-envelope.jpg" width="32" height="32" alt="Cashvelo logo" />
           <NavLink to="/dashboard" className={({isActive})=> isActive? 'active':''}>Dashboard</NavLink>
-          <NavLink to="/expenses" className={({isActive})=> isActive? 'active':''}>Expenses</NavLink>
           <NavLink to="/budget" className={({isActive})=> isActive? 'active':''}>Budget</NavLink>
+          <NavLink to="/expenses" className={({isActive})=> isActive? 'active':''}>Spending</NavLink>   {/* Update route to /spending or rename back to 'Expenses' */}      
           <NavLink to="/insights" className={({isActive})=> isActive? 'active':''}>Insights</NavLink>
         </div>
         <ThemeToggle/>

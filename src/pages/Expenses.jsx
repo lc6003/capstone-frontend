@@ -1,6 +1,100 @@
 
 import { useMemo, useState } from 'react'
-import { addExpense, getExpenses, removeExpense, getBudgets } from '../lib/storage.js'
+import { addExpense, getExpenses, removeExpense, getBudgets,getCreditCards, addCreditCard, removeCreditCard, saveCreditCards, calculateRealTimeBalance } from '../lib/storage.js'
+
+function CreditCardTracker() {
+  const [cards, setCards] = useState(getCreditCards())
+  const [isEditing, setIsEditing] = useState(false)
+
+  function handleAddCard() {
+    const newCard = { id: crypto.randomUUID(), name: '',balance: '', pending: '',payment: ''}
+    const updated = [...cards, newCard]
+    setCards(updated)
+    saveCreditCards(updated)
+  }
+
+  function handleChange(index, field, value) {
+    const updated = [...cards]
+    updated[index][field] = value
+    setCards(updated)
+    saveCreditCards(updated)
+  }
+
+  function handleDelete(index) {
+    const updated = cards.filter((_, i) => i !== index)
+    setCards(updated)
+    saveCreditCards(updated)
+  }
+
+  function toggleEdit() {
+    setIsEditing(!isEditing)
+  }
+
+  return (
+    <section className="card" style={{ gridColumn: 'span 12', position: 'relative' }}>
+      <h3>Credit Card Tracker</h3>
+      {!isEditing && cards.length === 0 && (
+        <div style={{ textAlign: 'center', margin: '1rem 0' }}>
+          <p className="muted">No credit card data yet.</p>
+        </div>
+      )}
+      {isEditing && (
+        <>
+          <table className="table" style={{ marginBottom: '1rem' }}>
+            <thead>
+              <tr>
+                <th>Credit Card Name</th><th>Card Balance</th><th>Pending Charges</th><th>Payment</th><th>Real Time Balance</th><th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {cards.map((card, i) => (
+                <tr key={card.id}>
+                  <td><input className="input" value={card.name} onChange={e => handleChange(i, 'name', e.target.value)}/></td>
+                  <td> <input className="input" type="number" value={card.balance} onChange={e => handleChange(i, 'balance', e.target.value)}/></td>
+                  <td><input className="input" type="number" value={card.pending} onChange={e => handleChange(i, 'pending', e.target.value)} /></td>
+                  <td><input className="input" type="number" value={card.payment} onChange={e => handleChange(i, 'payment', e.target.value)} /></td>
+                  <td>${calculateRealTimeBalance(card).toFixed(2)}</td>
+                  <td><button className="btn danger" onClick={() => handleDelete(i)}>Delete</button></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="row" style={{ justifyContent: 'space-between', alignItems: 'center',marginTop: '1rem' }} >
+            <button className="btn secondary" onClick={handleAddCard}>+ Add Credit Card </button>
+            <button className="btn" onClick={toggleEdit}>Done</button>
+          </div>
+        </>
+      )}
+
+      {!isEditing && cards.length > 0 && (
+        <>
+          <table className="table">
+            <thead>
+              <tr><th>Credit Card</th><th>Balance</th><th>Pending</th><th>Payment</th><th>Real Time Balance</th></tr>
+            </thead>
+            <tbody>
+              {cards.map(card => (
+                <tr key={card.id}>
+                  <td>{card.name}</td>
+                  <td>${card.balance}</td>
+                  <td>${card.pending}</td>
+                  <td>${card.payment}</td>
+                  <td>${calculateRealTimeBalance(card).toFixed(2)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem'}}>
+            <button className="btn" onClick={toggleEdit}>Edit</button>
+          </div>
+        </>
+      )}
+    </section>
+  )
+}
+
+
 
 export default function Expenses(){
   const [_, force] = useState(0)
@@ -58,6 +152,8 @@ export default function Expenses(){
           </table>
         )}
       </section>
+      <hr style={{ gridColumn: 'span 12', border: 'none', borderTop: '2px solid #e5e7eb', margin: '2rem 0' }} />
+      <CreditCardTracker />
     </div>
   )
 }
