@@ -3,99 +3,52 @@ import React, { useState } from "react"
 const API_URL = "http://localhost:3000/api"
 
 export default function ForgotPassword({ setCurrentPage }) {
-    const [step, setStep] = useState(1)
-    const [username, setUsername] = useState("")
-    const [password, setPassword] = useState("")
-    const [confirmPassword, setConfirmPassword] = useState("")
-    const [showPassword, setShowPassword] = useState(false)
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState("")
+  const [email, setEmail] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const [error, setError] = useState("")
 
-    const handleUsernameSubmit = async (e) => {
-        e.preventDefault()
-        setError("")
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setError("")
+    setSuccess(false)
 
-        if(!username.trim()){
-            setError("Please enter your username")
-            return
-        }
-
-        try {
-            setLoading(true)
-
-            const response = await fetch(`${API_URL}/verify-username`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username: username.trim() })
-            })
-
-            const data = await response.json()
-
-            if(response.ok){
-                setStep(2)
-            }
-            else{
-                setError(data.error || "Username not found")
-            }
-        }   catch (err) {
-            console.error("Username verification error:", err)
-            setError("Unable to connect to server. Please try again.")
-        } finally {
-            setLoading(false)
-        }
+    if (!email.trim()) {
+      setError("Please enter your email address")
+      return
     }
 
-    const handlePasswordSubmit = async (e) => {
-        e.preventDefault()
-        setError("")
-
-        if(!password || !confirmPassword) {
-            setError("Please fill in all fields")
-            return
-        }
-
-        if (password.length < 6) {
-            setError("Password must be at least 6 characters")
-            return
-        }
-
-        if (password !== confirmPassword) {
-            setError("Passwords do not match")
-            return
-        }
-
-        try {
-            setLoading(true)
-
-            const response = await fetch (`${API_URL}/forgot-password-reset`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username: username.trim(),
-                    password 
-                })
-            })
-
-            const data = await response.json()
-
-            if(response.ok){
-                alert("Password reset successful! You can now log in with your new password.")
-                setCurrentPage?.("login")
-            }
-            else{
-                setError(data.error || "Failed to reset password")
-            }
-        }   catch (err){
-            console.error("Reset password error:", err)
-            setError("Unable to connect to server. Please try again.")
-        }   finally {
-            setLoading(false)
-        }
+    if (!/^\S+@\S+\.\S+$/.test(email)) {
+      setError("Please enter a valid email address")
+      return
     }
+
+    try {
+      setLoading(true)
+
+      const response = await fetch(`${API_URL}/forgot-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: email.trim() })
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setSuccess(true)
+      } else {
+        setError(data.error || "Something went wrong")
+      }
+
+    } catch (err) {
+      console.error("Forgot password error:", err)
+      setError("Unable to connect to server. Please try again.")
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <div className="card" role="region" aria-label="Forgot password card">
@@ -110,25 +63,25 @@ export default function ForgotPassword({ setCurrentPage }) {
           </div>
           <h1>Forgot your password? 🐱</h1>
           <p className="subtitle">
-            {step === 1 
-              ? "Enter your username to reset your password" 
-              : `Hi ${username}! Enter your new password`}
+            {success 
+              ? "Check your email for the reset link" 
+              : "Enter your email and we'll send you a reset link"}
           </p>
         </div>
 
-        {step === 1 ? (
-          <form onSubmit={handleUsernameSubmit} noValidate>
+        {!success ? (
+          <form onSubmit={handleSubmit} noValidate>
             <div className="form-group">
-              <label htmlFor="username" className="label">Username</label>
+              <label htmlFor="email" className="label">Email address</label>
               <input
-                id="username"
-                name="username"
-                type="text"
+                id="email"
+                name="email"
+                type="email"
                 className="input"
-                placeholder="Enter your username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                autoComplete="username"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
               />
             </div>
 
@@ -139,7 +92,7 @@ export default function ForgotPassword({ setCurrentPage }) {
             )}
 
             <button type="submit" className="btn" disabled={loading}>
-              {loading ? "Verifying..." : "Continue"}
+              {loading ? "Sending..." : "Send reset link"}
             </button>
 
             <p className="center subtitle" style={{ marginTop: 16 }}>
@@ -157,72 +110,30 @@ export default function ForgotPassword({ setCurrentPage }) {
             </p>
           </form>
         ) : (
-          <form onSubmit={handlePasswordSubmit} noValidate>
-            <div className="form-group">
-              <label htmlFor="password" className="label">New password</label>
-              <div className="password-wrap">
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  className="input"
-                  placeholder="At least 6 characters"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  autoComplete="new-password"
-                />
-                <button
-                  type="button"
-                  className="toggle-eye"
-                  onClick={() => setShowPassword((s) => !s)}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                >
-                  {showPassword ? "Hide" : "Show"}
-                </button>
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="confirm" className="label">Confirm new password</label>
-              <input
-                id="confirm"
-                name="confirm"
-                type={showPassword ? "text" : "password"}
-                className="input"
-                placeholder="Re-enter password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                autoComplete="new-password"
-              />
-            </div>
-
-            {error && (
-              <p className="subtitle" role="alert" style={{ color: "#dc2626" }}>
-                {error}
+          <div>
+            <div style={{
+              background: '#d1fae5',
+              border: '1px solid #6ee7b7',
+              borderRadius: '8px',
+              padding: '16px',
+              marginBottom: '20px'
+            }}>
+              <p style={{ color: '#065f46', margin: 0, fontSize: '14px' }}>
+                ✅ If an account exists with this email, you will receive a password reset link shortly.
               </p>
-            )}
+            </div>
 
-            <button type="submit" className="btn" disabled={loading}>
-              {loading ? "Resetting password..." : "Reset password"}
-            </button>
-
-            <p className="center subtitle" style={{ marginTop: 16 }}>
-              Wrong username?{" "}
-              <a 
-                className="link" 
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault()
-                  setStep(1)
-                  setPassword("")
-                  setConfirmPassword("")
-                  setError("")
-                }}
-              >
-                Go back
-              </a>
+            <p className="subtitle" style={{ textAlign: 'center', marginBottom: 16 }}>
+              Check your email inbox and spam folder for the reset link.
             </p>
-          </form>
+
+            <button 
+              className="btn" 
+              onClick={() => setCurrentPage?.("login")}
+            >
+              Back to login
+            </button>
+          </div>
         )}
       </div>
     </div>
