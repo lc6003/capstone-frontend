@@ -226,3 +226,74 @@ html.dark .input{
   color: var(--muted);
   font-size: 13px;
 }
+:root{
+  --bg:#ffffff;
+  --card:#f6f8ff;
+  --border:#dbe1f1;
+  --text:#000000;
+  --muted:#334155;
+  --accent:#162eca;
+  --accent-2:#22c55e;
+  --danger:#0f29ba;
+}
+
+html.dark{
+  --bg:#0b0b0d;
+  --card:#131316;
+  --border:#232327;
+  --text:#f3f4f6;
+  --muted:#9ca3af;
+  --accent:#8b5cf6;
+  --accent-2:#22c55e;
+  --danger:#0a23e1;
+}
+
+*{box-sizing:border-box}
+html,body,#root{height:100%}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji;
+  transition: background .25s ease, color .25s ease;
+}
+a{color:inherit;text-decoration:none}
+.container{max-width:1100px;margin:0 auto;padding:24px}
+
+.nav{
+  display:flex;gap:12px;align-items:center;
+  border-bottom:1px solid var(--border);
+  padding:12px 0;margin-bottom:16px;
+  background:var(--bg);
+}
+.nav a{padding:8px 12px;border:1px solid var(--border);border-radius:10px}
+.nav a.active{border-color:var(--accent);outline:2px solid color-mix(in srgb, var(--accent) 40%, transparent);}
+
+.grid{display:grid;grid-template-columns: repeat(12, 1fr); gap:16px}
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;padding:16px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.15);
+  transition: background .25s ease, color .25s ease, border-color .25s ease;
+}
+.card h3{margin:0 0 8px 0}
+
+.btn{border:1px solid var(--border);background:var(--accent);color:white;border-radius:12px;padding:10px 14px;font-weight:600;cursor:pointer}
+.btn.secondary{background:transparent;color:var(--text)}
+.btn.danger{background:var(--danger)}
+
+.input, .select{
+  width:100%;
+  padding:10px 12px;border-radius:10px;
+  border:1px solid var(--border);
+  background:var(--card);
+  color:var(--text);
+  transition: background .25s ease, color .25s ease, border-color .25s ease;
+}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.table{width:100%;border-collapse:collapse}
+.table th,.table td{border-bottom:1px solid var(--border);padding:10px;text-align:left}
+.pill{display:inline-block;padding:4px 8px;border:1px solid var(--border);border-radius:999px;font-size:12px;color:var(--muted)}
+.muted{color:var(--muted);font-size:14px}
+.spacer{height:12px}
