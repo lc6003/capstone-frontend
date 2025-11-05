@@ -57,16 +57,21 @@ export default function App() {
 
   return user ? (
     <div className="container">
-      <nav className="nav" style={{ justifyContent: "space-between" }}>
-        <div className="row" style={{ alignItems: "center", gap: 12 }}>
-          <img src="/cat-envelope.jpg" width="32" height="32" alt="Cashvelo" />
-          <NavLink to="/dashboard">Dashboard</NavLink>
-          <NavLink to="/budget">Budget</NavLink>
-          <NavLink to="/expenses">Spending</NavLink>
-          <NavLink to="/insights">Insights</NavLink>
-        </div>
-        <button onClick={handleLogout} className="btn secondary">Logout</button>
-      </nav>
+<nav className="nav">
+  <div className="left">
+    <img src="/cat-envelope.jpg" width="24" height="24" alt="Cashvelo" />
+    <NavLink to="/dashboard" end>Dashboard</NavLink>
+    <NavLink to="/budget">Budget</NavLink>
+    <NavLink to="/expenses">Spending</NavLink>
+    <NavLink to="/insights">Insights</NavLink>
+  </div>
+  <div className="right">
+    <ThemeToggle />
+    <button onClick={handleLogout} className="btn ghost logout">Logout</button>
+  </div>
+</nav>
+
+
 
       <Routes>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />

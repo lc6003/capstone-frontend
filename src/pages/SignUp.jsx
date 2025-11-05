@@ -36,7 +36,7 @@ export default function SignUp() {
         localStorage.setItem("authMethod", "express")
         localStorage.setItem("authToken", data.token)
         localStorage.setItem("user", JSON.stringify(data.user))
-        navigate("/", { replace: true })
+        window.location.href = "/dashboard"
       } else {
         setError(data.error || "Something went wrong. Please try again.")
       }

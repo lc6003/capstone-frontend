@@ -402,3 +402,45 @@ html.dark .option-label {
     width: 100%;
   }
 }
+.nav{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  border-bottom:1px solid var(--border);
+  padding:12px 0;
+  margin-bottom:16px;
+  background:var(--bg);
+}
+
+.nav .left{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.nav .right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+/* nav links look like normal text, not big buttons */
+.nav a{
+  font-weight:600;
+  padding:4px 6px;
+  border-radius:6px;
+}
+
+.nav a.active{
+  border-bottom:2px solid var(--accent);
+}
+
+/* logout subtle */
+.btn.ghost{
+  background:transparent;
+  border:1px solid var(--border);
+  color:var(--text);
+  padding:8px 12px;
+  border-radius:10px;
+}
