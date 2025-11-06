@@ -40,6 +40,11 @@ body{
   min-height: 100%;
   display: grid;
   grid-template-rows: auto 1fr auto;
+  background: #F6F1E7;
+}
+
+html.dark .container{
+  background: #0b0b0d;
 }
 
 .header, .footer{
@@ -87,9 +92,10 @@ html.dark .brand .logo{
 /* ===================================================
    THEME TOGGLE — orange color like HomePage
    =================================================== */
-.theme-toggle-wrap{ display:inline-flex; }
-.theme-toggle-wrap *{ font-size:0 !important; line-height:1; }
-.theme-toggle-wrap :where(button, a, div){
+/* Theme toggle styles - only apply to non-HomePage contexts (Login/SignUp pages) */
+body:not(.page-container) .theme-toggle-wrap{ display:inline-flex; }
+body:not(.page-container) .theme-toggle-wrap *{ font-size:0 !important; line-height:1; }
+body:not(.page-container) .theme-toggle-wrap :where(button, a, div){
   display:inline-flex; align-items:center; justify-content:center;
   padding:.55rem .9rem; border-radius:999px; border:none;
   background: linear-gradient(135deg, #F4A261, #E07A3F); /* orange gradient */
@@ -98,12 +104,12 @@ html.dark .brand .logo{
   box-shadow:0 4px 12px rgba(240,140,60,0.30);
   transition:transform 0.15s ease, box-shadow 0.15s ease, filter 0.2s ease;
 }
-.theme-toggle-wrap :where(button, a, div):hover{
+body:not(.page-container) .theme-toggle-wrap :where(button, a, div):hover{
   transform:translateY(-1px);
   box-shadow:0 6px 16px rgba(240,140,60,0.45);
   filter:brightness(1.03);
 }
-.theme-toggle-wrap :where(button, a, div)::after{
+body:not(.page-container) .theme-toggle-wrap :where(button, a, div)::after{
   content:"Theme"; font-size:14px; font-weight:800; letter-spacing:.2px;
 }
 
@@ -408,39 +414,142 @@ html.dark .option-label {
   justify-content:space-between;
   gap:12px;
   border-bottom:1px solid var(--border);
-  padding:12px 0;
-  margin-bottom:16px;
-  background:var(--bg);
+  padding:16px 24px;
+  margin-bottom:0;
+  background:#F6F1E7;
+  max-width:1140px;
+  width:100%;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+html.dark .nav{
+  background:#0b0b0d;
 }
 
 .nav .left{
   display:flex;
   align-items:center;
-  gap:14px;
+  gap:16px;
+}
+
+.nav .logo-img{
+  width: 2.4rem;
+  height: 2.4rem;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 .nav .right{
   display:flex;
   align-items:center;
-  gap:10px;
+  gap:12px;
+  justify-content:flex-end;
 }
 
-/* nav links look like normal text, not big buttons */
+.theme-toggle-btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:8px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  background:transparent;
+  color:var(--text);
+  cursor:pointer;
+  transition:all 0.2s ease;
+  width:36px;
+  height:36px;
+}
+
+.theme-toggle-btn:hover{
+  background:rgba(0,0,0,0.04);
+  border-color:rgba(244,162,97,0.5);
+}
+
+html.dark .theme-toggle-btn:hover{
+  background:rgba(255,255,255,0.05);
+}
+
+/* nav links as pills */
 .nav a{
   font-weight:600;
-  padding:4px 6px;
-  border-radius:6px;
+  padding:8px 16px;
+  border-radius:999px;
+  text-decoration:none;
+  color:#1a1a1a;
+  font-size:14px;
+  line-height:1.5;
+  transition:all 0.2s ease;
+  border:1px solid transparent;
+  background:transparent;
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  vertical-align:middle;
+  margin:0;
+  height:auto;
+  min-height:auto;
+}
+
+html.dark .nav a{
+  color:#f3f4f6;
 }
 
 .nav a.active{
-  border-bottom:2px solid var(--accent);
+  background:linear-gradient(135deg, #F4A261, #E07A3F);
+  color:#ffffff;
+  border:1px solid transparent;
 }
 
-/* logout subtle */
-.btn.ghost{
+.nav a:not(.active){
+  border:1px solid rgba(244,162,97,0.3);
+}
+
+.nav a:not(.active):hover{
+  background:rgba(0,0,0,0.04);
+  border-color:rgba(244,162,97,0.5);
+}
+
+html.dark .nav a:not(.active):hover{
+  background:rgba(255,255,255,0.05);
+}
+
+/* logout button - styled like nav pills */
+.nav .btn.ghost.logout{
+  font-weight:600;
+  padding:8px 16px;
+  border-radius:999px;
+  text-decoration:none;
+  color:#1a1a1a;
+  font-size:14px;
+  line-height:1.5;
+  transition:all 0.2s ease;
+  border:1px solid rgba(244,162,97,0.3);
   background:transparent;
-  border:1px solid var(--border);
-  color:var(--text);
-  padding:8px 12px;
-  border-radius:10px;
+  cursor:pointer;
+  font-family:inherit;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  vertical-align:middle;
+  box-sizing:border-box;
+  margin:0;
+  height:auto;
+  min-height:auto;
+  position:relative;
+}
+
+html.dark .nav .btn.ghost.logout{
+  color:#f3f4f6;
+}
+
+.nav .btn.ghost.logout:hover{
+  background:rgba(0,0,0,0.04);
+  border-color:rgba(244,162,97,0.5);
+}
+
+html.dark .nav .btn.ghost.logout:hover{
+  background:rgba(255,255,255,0.05);
 }
