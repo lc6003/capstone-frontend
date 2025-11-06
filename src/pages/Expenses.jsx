@@ -31,6 +31,7 @@ function CreditCardTracker() {
       {!isEditing && cards.length === 0 && (
         <div className="center" style={{ margin: "1rem 0" }}>
           <p className="muted">No credit card data yet.</p>
+          <button className="btn" onClick={toggleEdit}>I want to add a credit card!</button>
         </div>
       )}
 
