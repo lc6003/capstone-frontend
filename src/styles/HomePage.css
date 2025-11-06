@@ -106,17 +106,52 @@ html.dark .page-container{
 }
 
 /* THEME TOGGLE */
-.theme-toggle-wrap{ display:inline-flex; }
-.theme-toggle-wrap *{ font-size:0 !important; line-height:1; }
-.theme-toggle-wrap :where(button, a, div){
-  display:inline-flex; align-items:center; justify-content:center;
-  padding:.55rem .9rem; border-radius:999px; border:1px solid var(--border);
-  background: color-mix(in srgb, var(--bg) 70%, transparent);
-  color: var(--text); cursor:pointer; transition: transform .12s ease, background .2s ease;
+.page-container .theme-toggle-wrap{ 
+  display:inline-flex; 
 }
-.theme-toggle-wrap :where(button, a, div):hover{ transform: translateY(-1px); background: rgba(0,0,0,.06); }
-.theme-toggle-wrap :where(button, a, div)::after{
-  content:"Theme"; font-size:14px; font-weight:800; letter-spacing:.2px;
+
+.page-container .theme-toggle-wrap *{ 
+  font-size:inherit !important; 
+  line-height:inherit !important; 
+}
+
+.page-container .theme-toggle-wrap .theme-toggle-btn{
+  display:flex !important;
+  align-items:center;
+  justify-content:center;
+  padding:8px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  background:transparent;
+  color:var(--text);
+  cursor:pointer;
+  transition:all 0.2s ease;
+  width:36px;
+  height:36px;
+  font-size:0 !important;
+  line-height:1 !important;
+}
+
+.page-container .theme-toggle-wrap .theme-toggle-btn svg{
+  font-size:20px !important;
+  display:block !important;
+  width:20px;
+  height:20px;
+}
+
+.page-container .theme-toggle-wrap .theme-toggle-btn::after{
+  content:none !important;
+  display:none !important;
+}
+
+.page-container .theme-toggle-wrap .theme-toggle-btn:hover{
+  background:rgba(0,0,0,.06);
+  border-color:rgba(244,162,97,0.5);
+  transform:translateY(-1px);
+}
+
+html.dark .page-container .theme-toggle-wrap .theme-toggle-btn:hover{
+  background:rgba(255,255,255,0.05);
 }
 
 /* ================================

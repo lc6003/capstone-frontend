@@ -41,12 +41,14 @@ export default function Dashboard(){
   }).sort((a,b)=>b.pct-a.pct).slice(0,8)
 
   return(
-    <div className="dashboard-container dash">
-      <div className="grid">
+    <div className="dashboard-page-wrapper">
+      <div className="bg-blob blob-one" />
+      <div className="bg-blob blob-two" />
+      <div className="dashboard-container dash">
+        <div className="grid">
         <section className="card col-12">
-          <h2 style={{margin:"0 0 6px"}}>Welcome back 👋</h2>
+          <h2>Welcome back</h2>
           <p className="muted">Quick summary of your budgets and spending.</p>
-          <div className="spacer"/>
           <div className="row gap-8">
             <Link to="/expenses" className="btn secondary">Add Expense</Link>
             <Link to="/budget" className="btn secondary">New Budget</Link>
@@ -101,7 +103,7 @@ export default function Dashboard(){
         <section className="card col-6">
           <h3>Budgets At Risk</h3>
           {overs.length===0?(
-            <p className="muted">No categories over their limit 🎉</p>
+            <p className="muted">No categories over their limit</p>
           ):(
             <ul className="list">
               {overs.map(c=>{
@@ -141,6 +143,7 @@ export default function Dashboard(){
             </table>
           )}
         </section>
+        </div>
       </div>
     </div>
   )

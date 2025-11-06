@@ -57,19 +57,19 @@ export default function App() {
 
   return user ? (
     <div className="container">
-<nav className="nav">
-  <div className="left">
-    <img src="/cat-envelope.jpg" width="24" height="24" alt="Cashvelo" />
-    <NavLink to="/dashboard" end>Dashboard</NavLink>
-    <NavLink to="/budget">Budget</NavLink>
-    <NavLink to="/expenses">Spending</NavLink>
-    <NavLink to="/insights">Insights</NavLink>
-  </div>
-  <div className="right">
-    <ThemeToggle />
-    <button onClick={handleLogout} className="btn ghost logout">Logout</button>
-  </div>
-</nav>
+      <nav className="nav">
+        <div className="left">
+          <img src="/cat-envelope.jpg" className="logo-img" alt="Cashvelo" />
+          <NavLink to="/dashboard" end>Dashboard</NavLink>
+          <NavLink to="/budget">Budget</NavLink>
+          <NavLink to="/expenses">Spending</NavLink>
+          <NavLink to="/insights">Insights</NavLink>
+        </div>
+        <div className="right">
+          <ThemeToggle />
+          <button onClick={handleLogout} className="btn ghost logout">Logout</button>
+        </div>
+      </nav>
 
 
 

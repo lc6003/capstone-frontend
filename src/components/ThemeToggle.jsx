@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import { FiSun, FiMoon } from "react-icons/fi"
 
 function applyTheme(dark) {
   const root = document.documentElement
@@ -23,12 +24,12 @@ export default function ThemeToggle(){
     <button
       type="button"
       onClick={() => setDark(d => !d)}
-      className="link"
+      className="theme-toggle-btn"
       aria-pressed={dark}
       title={dark ? "Switch to light mode" : "Switch to dark mode"}
       aria-label="Toggle theme"
     >
-      {dark ? "🌙 Dark" : "☀️ Light"}
+      {dark ? <FiMoon size={20} /> : <FiSun size={20} />}
     </button>
   )
 }
