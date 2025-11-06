@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react"
 import { addBudget, getBudgets, removeBudget, getExpenses, getBudgetTotalsByType, removeLastIncome } from "../lib/storage.js"
+import { FaRegTrashAlt } from "react-icons/fa";
 
 function IncomeColumn({ title, storageKey, prefix }) {
   const [entries, setEntries] = useState(() => JSON.parse(localStorage.getItem(storageKey) || "[]"))
@@ -30,11 +31,13 @@ function IncomeColumn({ title, storageKey, prefix }) {
       {entries.map((amt, i) => (
         <div key={i} style={{ marginBottom: "1rem" }}>Paycheck {i + 1}: ${amt.toFixed(2)}</div>
       ))}
-      <form onSubmit={addEntry} style={{ marginTop: "0.5rem" }}>
+      <form onSubmit={addEntry} style={{ marginTop: "0.5rem", display: "flex", alignItems: "center", flexWrap:"nowrap" }}>
         <label style={{ marginRight: "0.5rem" }}>{prefix} {entries.length + 1}:</label>
         <input className="input" type="number" step="0.01" placeholder="$ amount" value={input} onChange={(e) => setInput(e.target.value)} style={{ width: 120, marginRight: "0.5rem" }} />
         <button className="btn" type="submit">Add</button>
-        <button className="btn danger" onClick={handleDeleteLast} style={{ marginLeft: "0.5rem" }}>Delete Last Entry</button>
+        <button className="btn danger" onClick={handleDeleteLast} title="Delete last entry" style={{  marginLeft: "0.5rem", minWidth: "40px", height: "40px", display: "inline-flex", alignItems: "center", justifyContent: "center", verticalAlign: "middle", background: "crimson"}}>
+          <FaRegTrashAlt size={16} color="white" />
+        </button>
       </form>
     </div>
   )
