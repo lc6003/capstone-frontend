@@ -173,6 +173,19 @@ export default function Login() {
               </div>
             </div>
 
+            <div className="row" style={{ justifyContent:"space-between", marginTop:10 }}>
+              <label className="checkbox">
+                <input
+                  type="checkbox"
+                  name="remember"
+                  checked={values.remember}
+                  onChange={onChange}
+                />
+                Remember me
+              </label>
+              <Link className="link" to="/forgot-password">Forgot password?</Link>
+            </div>
+
             <button type="submit" className="btn" disabled={loginLoading}>
               {loginLoading ? "Signing in…" : "Log in"}
             </button>
