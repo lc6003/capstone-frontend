@@ -1,0 +1,32 @@
+.dashboard-container{max-width:1100px;width:100%;margin:0 auto;padding:24px}
+
+.dash .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+
+.col-12{grid-column:span 12}
+.col-6{grid-column:span 6}
+@media(max-width:880px){.col-6{grid-column:span 12}}
+
+.kpi .stat{font-size:36px;font-weight:800;line-height:1.1}
+.kpi .label{margin-top:6px}
+
+.envelopes{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+.panel{grid-column:span 3;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px}
+@media(max-width:880px){.panel{grid-column:span 6}}
+@media(max-width:560px){.panel{grid-column:span 12}}
+
+.panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.progress{height:8px;background:var(--border);border-radius:8px;overflow:hidden}
+.progress>div{height:100%;background:var(--primary);border-radius:8px;transition:width .3s ease}
+
+.list{list-style:none;padding:0;margin:0}
+.list-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
+.list-row:last-child{border-bottom:0}
+
+.mt-16{margin-top:16px}
+.gap-8{gap:8px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:880px){.two-col{grid-template-columns:1fr}}
+.center{text-align:center}
+
+.dash .card{width:auto !important}
+.dash .btn{width:auto !important}
