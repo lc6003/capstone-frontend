@@ -13,6 +13,7 @@ import Dashboard from "./pages/Dashboard.jsx"
 import Expenses from "./pages/Expenses.jsx"
 import Budget from "./pages/Budget.jsx"
 import Insights from "./pages/Insights.jsx"
+import CashStuffing from "./pages/CashStuffing.jsx";
 
 
 function Protected({ user, children }) {
@@ -79,6 +80,7 @@ export default function App() {
         <Route path="/budget" element={<Protected user={user}><Budget/></Protected>} />
         <Route path="/expenses" element={<Protected user={user}><Expenses/></Protected>} />
         <Route path="/insights" element={<Protected user={user}><Insights/></Protected>} />
+        <Route path="/cash-stuffing" element={<Protected user={user}><CashStuffing/></Protected>} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </div>
