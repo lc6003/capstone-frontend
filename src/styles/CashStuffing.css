@@ -1,0 +1,198 @@
+.cash-container {
+  text-align: center;
+  padding: 2rem;
+}
+
+.title {
+  font-weight: 700;
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 1.5rem;
+}
+
+.wallets-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.binder-section {
+  margin-top: 2rem;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text);
+}
+
+.wallets-grid {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.binder-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  justify-items: center;
+}
+
+@media (max-width: 900px) {
+  .binder-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .binder-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.binder-placeholder,
+.wallet-placeholder {
+  border: 2px dashed #ccc;
+  border-radius: 1rem;
+  width: 260px;
+  height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  background-color: #fafafa;
+  color: #777;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.binder-placeholder:hover,
+.wallet-placeholder:hover {
+  background-color: #f4f4f4;
+  border-color: #f4a261;
+  color: #333;
+}
+
+.binder-placeholder.active,
+.wallet-placeholder.active {
+  cursor: default;
+  border-style: solid;
+  padding: 1rem;
+  background: white;
+}
+
+.input {
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  width: 100%;
+  font-size: 1rem;
+}
+
+.btn {
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f4a261, #e07a3f);
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(240, 140, 60, 0.3);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(240, 140, 60, 0.45);
+}
+
+.btn.danger {
+  background: #dc2626;
+  color: white;
+}
+
+.btn.danger:hover {
+  background: #b91c1c;
+}
+
+.btn.small {
+  width: auto;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
+  border-radius: 10px;
+}
+
+/* ===== Binder Hover Actions ===== */
+.binder-wrapper {
+  position: relative;
+  text-align: center;
+  transition: transform 0.15s ease;
+}
+
+.binder-wrapper:hover {
+  transform: translateY(-2px);
+}
+
+.binder-actions {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.binder-wrapper:hover .binder-actions {
+  opacity: 1;
+}
+
+.binder-edit {
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+
+
+
+.binder-wrapper {
+  position: relative;
+  text-align: center;
+  transition: transform 0.15s ease;
+}
+
+.binder-wrapper:hover {
+  transform: translateY(-2px);
+}
+
+.binder-actions {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.binder-wrapper:hover .binder-actions {
+  opacity: 1;
+}
+
+.binder-edit,
+.binder-confirm {
+  margin-top: 0.5rem;
+  text-align: center;
+}

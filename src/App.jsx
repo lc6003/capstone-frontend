@@ -14,6 +14,8 @@ import Expenses from "./pages/Expenses.jsx"
 import Budget from "./pages/Budget.jsx"
 import Insights from "./pages/Insights.jsx"
 import CashStuffing from "./pages/CashStuffing.jsx";
+import EnvelopePage from "./pages/EnvelopePage.jsx";
+
 
 
 function Protected({ user, children }) {
@@ -81,6 +83,7 @@ export default function App() {
         <Route path="/expenses" element={<Protected user={user}><Expenses/></Protected>} />
         <Route path="/insights" element={<Protected user={user}><Insights/></Protected>} />
         <Route path="/cash-stuffing" element={<Protected user={user}><CashStuffing/></Protected>} />
+        <Route path="/:type/:name"element={<Protected user={user}><EnvelopePage /></Protected>} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </div>

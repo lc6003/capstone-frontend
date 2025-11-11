@@ -13,12 +13,12 @@ export default function CashStuffing() {
     </button>
     </div>
 
-      <h2 style={{ textAlign: "left", marginBottom: "1rem" }}>💵 Cash Stuffing</h2>
+      <h2 style={{ textAlign: "left", marginBottom: "1rem" }}>Cash Stuffing</h2>
       <p style={{ color: "#555", lineHeight: 1.6, margin: "0 auto", textAlign: "left", marginBottom: "2rem" }}>
        
         Cash stuffing is a simple but powerful budgeting method where you divide
-          your money into categories — like groceries, gas, and savings — and assign each category a
-          specific amount of cash. It’s a hands-on way to track spending and stay in control of your
+          your money into categories, like groceries, gas, and savings, and assign each category a
+          specific amount of cash. It’s a hands on way to track spending and stay in control of your
           finances.
       </p>
 
