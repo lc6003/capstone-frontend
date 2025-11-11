@@ -189,11 +189,26 @@ export default function Login() {
             <button type="submit" className="btn" disabled={loginLoading}>
               {loginLoading ? "Signing in…" : "Log in"}
             </button>
-
-            <p className="center subtitle" style={{ marginTop: 16 }}>
-              New here? <Link className="link" to="/signup">Create an account</Link>
-            </p>
           </form>
+
+          {googleError && (
+            <div style={{ color: "crimson", marginTop: 10, fontSize: 14 }}>{googleError}</div>
+          )}
+
+          <div className="divider" aria-hidden="true">
+            <span className="line" /><span>or</span><span className="line" />
+          </div>
+
+          <div className="social">
+            <button type="button" onClick={handleGoogle} disabled={googleLoading}>
+              {googleLoading ? "Signing in..." : "Continue with Google"}
+            </button>
+            <button type="button">Continue with Apple</button>
+          </div>
+
+          <p className="center subtitle" style={{ marginTop: 16 }}>
+            New here? <Link className="link" to="/signup">Create an account</Link>
+          </p>
         </div>
       </div>
     </div>

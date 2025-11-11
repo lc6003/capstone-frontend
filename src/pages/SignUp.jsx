@@ -36,7 +36,9 @@ export default function SignUp() {
         localStorage.setItem("authMethod", "express")
         localStorage.setItem("authToken", data.token)
         localStorage.setItem("user", JSON.stringify(data.user))
-        window.location.href = "/dashboard"
+        // Use window.location.href to force full page reload
+        // This ensures App component re-initializes and reads from localStorage
+        window.location.href = "/questionnaire"
       } else {
         setError(data.error || "Something went wrong. Please try again.")
       }
