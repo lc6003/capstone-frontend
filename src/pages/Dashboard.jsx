@@ -1,44 +1,97 @@
 import { Link } from "react-router-dom"
-import {
-  totals,
-  monthInsights,
-  getBudgetTotalsByType,
-  getIncomeTotals,
-  getTotalCreditCardDebt
-} from "../lib/storage.js"
+import { useState, useEffect } from "react"
+import { fetchBudgets, fetchExpenses, fetchIncome, fetchCreditCards } from "../lib/api.js"
 import "../styles/dashboard.css"
-
 
 const money = (n) => (Number.isFinite(n) ? `$${n.toFixed(2)}` : "—")
 
-export default function Dashboard(){
-  const t=totals()||{}
-  const total=Number.isFinite(t?.total)?t.total:0
-  const byCategory=t?.byCategory||{}
-  const budgetLimits=t?.budgetLimits||{}
-  const m=monthInsights()||{}
-  const sum=Number.isFinite(m?.sum)?m.sum:0
-  const b=getBudgetTotalsByType()||{}
-  const budgetedTotal=Number.isFinite(b?.total)?b.total:0
-  const inc=getIncomeTotals()||{}
-  const actual=Number.isFinite(inc?.actual)?inc.actual:0
-  const expected=Number.isFinite(inc?.expected)?inc.expected:0
-  const debtRaw=getTotalCreditCardDebt?.()
-  const totalDebt=Number.isFinite(debtRaw)?debtRaw:0
+function calculateRealTimeBalance(card) {
+  const balance = Number(card.balance) || 0
+  const pending = Number(card.pending) || 0
+  const payment = Number(card.payment) || 0
+  return balance + pending - payment
+}
 
-  const categories=Object.keys(byCategory)
-  const overs=categories.filter(c=>{
-    const spent=Number(byCategory[c])||0
-    const limit=budgetLimits[c]
-    return Number.isFinite(limit)&&spent>limit
+export default function Dashboard(){
+  const [budgets, setBudgets] = useState([])
+  const [expenses, setExpenses] = useState([])
+  const [income, setIncome] = useState({ actual: [], expected: [] })
+  const [creditCards, setCreditCards] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    loadData()
+  }, [])
+
+  async function loadData() {
+    try {
+      setLoading(true)
+      const [budgetsData, expensesData, actualIncome, expectedIncome, cardsData] = await Promise.all([
+        fetchBudgets(),
+        fetchExpenses(),
+        fetchIncome('actual'),
+        fetchIncome('expected'),
+        fetchCreditCards()
+      ])
+      setBudgets(budgetsData)
+      setExpenses(expensesData)
+      setIncome({ actual: actualIncome, expected: expectedIncome })
+      setCreditCards(cardsData)
+    } catch (error) {
+      console.error('Failed to load dashboard data:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const total = expenses.reduce((sum, e) => sum + (Number(e.amount) || 0), 0)
+  
+  const byCategory = expenses.reduce((acc, e) => {
+    const cat = e.category || "Uncategorized"
+    acc[cat] = (acc[cat] || 0) + (Number(e.amount) || 0)
+    return acc
+  }, {})
+
+  const budgetLimits = budgets.reduce((acc, b) => {
+    if (Number.isFinite(b.limit)) {
+      acc[b.name] = b.limit
+    }
+    return acc
+  }, {})
+
+  const now = new Date()
+  const thisMonthExpenses = expenses.filter(e => {
+    const d = new Date(e.date)
+    return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()
+  })
+  const sum = thisMonthExpenses.reduce((s, e) => s + (Number(e.amount) || 0), 0)
+  const budgetedTotal = budgets.reduce((s, b) => s + (Number(b.limit) || 0), 0)
+  const actual = income.actual.reduce((s, i) => s + (Number(i.amount) || 0), 0)
+  const expected = income.expected.reduce((s, i) => s + (Number(i.amount) || 0), 0)
+  const totalDebt = creditCards.reduce((sum, card) => sum + calculateRealTimeBalance(card), 0)
+  const categories = Object.keys(byCategory)
+  const overs = categories.filter(c => {
+    const spent = Number(byCategory[c]) || 0
+    const limit = budgetLimits[c]
+    return Number.isFinite(limit) && spent > limit
   })
 
-  const envelopeItems=categories.map(c=>{
-    const spent=Number(byCategory[c])||0
-    const limit=budgetLimits[c]
-    const pct=Number.isFinite(limit)&&limit>0?Math.min(100,Math.round((spent/limit)*100)):0
-    return {name:c,spent,limit,pct}
-  }).sort((a,b)=>b.pct-a.pct).slice(0,8)
+  const envelopeItems = categories.map(c => {
+    const spent = Number(byCategory[c]) || 0
+    const limit = budgetLimits[c]
+    const pct = Number.isFinite(limit) && limit > 0 ? Math.min(100, Math.round((spent/limit)*100)) : 0
+    return {name: c, spent, limit, pct}
+  }).sort((a,b) => b.pct - a.pct).slice(0, 8)
+
+  if (loading) {
+    return (
+      <div className="dashboard-page-wrapper">
+        <div className="dashboard-container dash">
+          <p>Loading...</p>
+        </div>
+      </div>
+    )
+  }
 
   return(
     <div className="dashboard-page-wrapper">
