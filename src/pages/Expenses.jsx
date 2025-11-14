@@ -1,27 +1,71 @@
-import { useMemo, useState } from "react"
-import { addExpense, getExpenses, removeExpense, getBudgets, getCreditCards, addCreditCard, removeCreditCard, saveCreditCards, calculateRealTimeBalance } from "../lib/storage.js"
+import { useState, useEffect } from "react"
+import { fetchExpenses, createExpense, deleteExpense, fetchBudgets, fetchCreditCards, createCreditCard, updateCreditCard, deleteCreditCard } from "../lib/api.js"
+
+function calculateRealTimeBalance(card) {
+  const balance = Number(card.balance) || 0
+  const pending = Number(card.pending) || 0
+  const payment = Number(card.payment) || 0
+  return balance + pending - payment
+}
 
 function CreditCardTracker() {
-  const [cards, setCards] = useState(getCreditCards())
+  const [cards, setCards] = useState([])
   const [isEditing, setIsEditing] = useState(false)
+  const [loading, setLoading] = useState(false)
 
-  function handleAddCard() {
-    const newCard = { id: crypto.randomUUID(), name: "", balance: "", pending: "", payment: "" }
-    const updated = [...cards, newCard]
-    setCards(updated)
-    saveCreditCards(updated)
+  useEffect(() => {
+    loadCards()
+  }, [])
+
+  async function loadCards() {
+    try {
+      const data = await fetchCreditCards()
+      setCards(data)
+    } catch (error) {
+      console.error('Failed to load credit cards:', error)
+    }
   }
-  function handleChange(index, field, value) {
-    const updated = [...cards]
-    updated[index][field] = value
-    setCards(updated)
-    saveCreditCards(updated)
+
+  async function handleAddCard() {
+    const newCard = { name: "", balance: 0, pending: 0, payment: 0 }
+    try {
+      setLoading(true)
+      await createCreditCard(newCard)
+      await loadCards()
+    } catch (error) {
+      console.error('Failed to add card:', error)
+      alert('Failed to add credit card')
+    } finally {
+      setLoading(false)
+    }
   }
-  function handleDelete(index) {
-    const updated = cards.filter((_, i) => i !== index)
-    setCards(updated)
-    saveCreditCards(updated)
+
+  async function handleChange(id, field, value) {
+    const card = cards.find(c => c._id === id)
+    if (!card) return
+
+    const updated = { ...card, [field]: value }
+    try {
+      await updateCreditCard(id, updated)
+      setCards(cards.map(c => c._id === id ? updated : c))
+    } catch (error) {
+      console.error('Failed to update card:', error)
+    }
   }
+
+  async function handleDelete(id) {
+    try {
+      setLoading(true)
+      await deleteCreditCard(id)
+      await loadCards()
+    } catch (error) {
+      console.error('Failed to delete card:', error)
+      alert('Failed to delete credit card')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   function toggleEdit() { setIsEditing(!isEditing) }
 
   return (
@@ -49,21 +93,21 @@ function CreditCardTracker() {
               </tr>
             </thead>
             <tbody>
-              {cards.map((card, i) => (
-                <tr key={card.id}>
-                  <td><input className="input" value={card.name} onChange={e => handleChange(i, "name", e.target.value)} /></td>
-                  <td><input className="input" type="number" value={card.balance} onChange={e => handleChange(i, "balance", e.target.value)} /></td>
-                  <td><input className="input" type="number" value={card.pending} onChange={e => handleChange(i, "pending", e.target.value)} /></td>
-                  <td><input className="input" type="number" value={card.payment} onChange={e => handleChange(i, "payment", e.target.value)} /></td>
+              {cards.map((card) => (
+                <tr key={card._id}>
+                  <td><input className="input" value={card.name} onChange={e => handleChange(card._id, "name", e.target.value)} /></td>
+                  <td><input className="input" type="number" value={card.balance} onChange={e => handleChange(card._id, "balance", e.target.value)} /></td>
+                  <td><input className="input" type="number" value={card.pending} onChange={e => handleChange(card._id, "pending", e.target.value)} /></td>
+                  <td><input className="input" type="number" value={card.payment} onChange={e => handleChange(card._id, "payment", e.target.value)} /></td>
                   <td>${calculateRealTimeBalance(card).toFixed(2)}</td>
-                  <td><button className="btn danger" onClick={() => handleDelete(i)}>Delete</button></td>
+                  <td><button className="btn danger" onClick={() => handleDelete(card._id)} disabled={loading}>Delete</button></td>
                 </tr>
               ))}
             </tbody>
           </table>
 
           <div className="row" style={{ justifyContent: "space-between", alignItems: "center", marginTop: "1rem" }}>
-            <button className="btn secondary" onClick={handleAddCard}>+ Add Credit Card</button>
+            <button className="btn secondary" onClick={handleAddCard} disabled={loading}>+ Add Credit Card</button>
             <button className="btn" onClick={toggleEdit}>Done</button>
           </div>
         </>
@@ -83,7 +127,7 @@ function CreditCardTracker() {
             </thead>
             <tbody>
               {cards.map(card => (
-                <tr key={card.id}>
+                <tr key={card._id}>
                   <td>{card.name}</td>
                   <td>${card.balance}</td>
                   <td>${card.pending}</td>
@@ -104,30 +148,67 @@ function CreditCardTracker() {
 }
 
 export default function Expenses(){
-  const [_, force] = useState(0)
-  const budgets = getBudgets()
+  const [expenses, setExpenses] = useState([])
+  const [budgets, setBudgets] = useState([])
+  const [loading, setLoading] = useState(false)
   const [form, setForm] = useState({
     amount: "",
-    category: budgets[0]?.name || "",
+    category: "",
     date: new Date().toISOString().slice(0,10),
     note: ""
   })
-  const expenses = useMemo(
-    () => getExpenses().sort((a,b)=> new Date(b.date) - new Date(a.date)),
-    [_]
-  )
 
-  function submit(e){
+  useEffect(() => {
+    loadData()
+  }, [])
+
+  async function loadData() {
+    try {
+      const [expensesData, budgetsData] = await Promise.all([
+        fetchExpenses(),
+        fetchBudgets()
+      ])
+      setExpenses(expensesData)
+      setBudgets(budgetsData)
+      if (budgetsData.length > 0 && !form.category) {
+        setForm(f => ({ ...f, category: budgetsData[0].name }))
+      }
+    } catch (error) {
+      console.error('Failed to load data:', error)
+    }
+  }
+
+  async function submit(e){
     e.preventDefault()
     if(!form.amount) return
-    addExpense({ ...form, amount: Number(form.amount) })
-    setForm(f => ({ ...f, amount:"", note:"" }))
-    force(x => x + 1)
+    
+    try {
+      setLoading(true)
+      await createExpense({ ...form, amount: Number(form.amount) })
+      setForm(f => ({ ...f, amount:"", note:"" }))
+      await loadData()
+    } catch (error) {
+      console.error('Failed to add expense:', error)
+      alert('Failed to add expense')
+    } finally {
+      setLoading(false)
+    }
   }
-  function del(id){
-    removeExpense(id)
-    force(x => x + 1)
+
+  async function del(id){
+    try {
+      setLoading(true)
+      await deleteExpense(id)
+      await loadData()
+    } catch (error) {
+      console.error('Failed to delete expense:', error)
+      alert('Failed to delete expense')
+    } finally {
+      setLoading(false)
+    }
   }
+
+  const sortedExpenses = [...expenses].sort((a,b)=> new Date(b.date) - new Date(a.date))
 
   return (
     <div className="dashboard-container dash">
@@ -137,23 +218,23 @@ export default function Expenses(){
           <form className="row" onSubmit={submit}>
             <input className="input" type="number" step="0.01" placeholder="Amount"
                    value={form.amount} onChange={e=>setForm({ ...form, amount:e.target.value })}
-                   style={{ maxWidth:160 }} />
+                   style={{ maxWidth:160 }} disabled={loading} />
             <select className="select" value={form.category} onChange={e=>setForm({ ...form, category:e.target.value })}
-                    style={{ maxWidth:220 }}>
+                    style={{ maxWidth:220 }} disabled={loading}>
               <option value="">Uncategorized</option>
-              {budgets.map(b => <option key={b.id} value={b.name}>{b.name}</option>)}
+              {budgets.map(b => <option key={b._id} value={b.name}>{b.name}</option>)}
             </select>
             <input className="input" type="date" value={form.date} onChange={e=>setForm({ ...form, date:e.target.value })}
-                   style={{ maxWidth:180 }} />
+                   style={{ maxWidth:180 }} disabled={loading} />
             <input className="input" type="text" placeholder="Note" value={form.note}
-                   onChange={e=>setForm({ ...form, note:e.target.value })} />
-            <button className="btn" type="submit">Add</button>
+                   onChange={e=>setForm({ ...form, note:e.target.value })} disabled={loading} />
+            <button className="btn" type="submit" disabled={loading}>Add</button>
           </form>
         </section>
 
         <section className="card col-12">
           <h3>Recent</h3>
-          {expenses.length === 0 ? (
+          {sortedExpenses.length === 0 ? (
             <p className="muted">No expenses yet.</p>
           ) : (
             <table className="table">
@@ -161,13 +242,13 @@ export default function Expenses(){
                 <tr><th>Date</th><th>Category</th><th>Amount</th><th>Note</th><th></th></tr>
               </thead>
               <tbody>
-                {expenses.map(e => (
-                  <tr key={e.id}>
+                {sortedExpenses.map(e => (
+                  <tr key={e._id}>
                     <td>{new Date(e.date).toLocaleDateString()}</td>
                     <td>{e.category || "Uncategorized"}</td>
                     <td>${Number(e.amount).toFixed(2)}</td>
                     <td>{e.note}</td>
-                    <td><button className="btn danger" onClick={()=>del(e.id)}>Delete</button></td>
+                    <td><button className="btn danger" onClick={()=>del(e._id)} disabled={loading}>Delete</button></td>
                   </tr>
                 ))}
               </tbody>
