@@ -13,6 +13,7 @@ import Dashboard from "./pages/Dashboard.jsx"
 import Expenses from "./pages/Expenses.jsx"
 import Budget from "./pages/Budget.jsx"
 import Insights from "./pages/Insights.jsx"
+import QuestionnairePage from "./pages/QuestionnairePage.jsx"
 
 
 function Protected({ user, children }) {
@@ -22,30 +23,78 @@ function PublicOnly({ user, children }) {
   return user ? <Navigate to="/dashboard" replace /> : children
 }
 
+// Initialize user from localStorage synchronously before first render
+const getInitialUser = () => {
+  try {
+    const storedUser = JSON.parse(localStorage.getItem("user") || "null")
+    const hasToken = !!localStorage.getItem("authToken")
+    if (storedUser && hasToken) {
+      return storedUser
+    }
+  } catch (e) {
+    console.error("Error reading user from localStorage:", e)
+  }
+  return undefined
+}
+
 export default function App() {
-  const [user, setUser] = useState(undefined)
+  const [user, setUser] = useState(getInitialUser)
   console.log("APP USER = ", user)
 
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user") || "null")
-    const hasToken = !!localStorage.getItem("authToken")
-    if (storedUser && hasToken) setUser(storedUser)
+    // Check localStorage first (for backend API authentication)
+    const checkLocalStorage = () => {
+      const storedUser = JSON.parse(localStorage.getItem("user") || "null")
+      const hasToken = !!localStorage.getItem("authToken")
+      if (storedUser && hasToken) {
+        setUser(storedUser)
+        return true
+      }
+      return false
+    }
 
+    // Set user from localStorage if not already set
+    if (!user) {
+      checkLocalStorage()
+    }
+
+    // Listen for custom auth state changes (when user signs up/login via backend API)
+    const handleAuthChange = () => {
+      checkLocalStorage()
+    }
+    window.addEventListener("authStateChanged", handleAuthChange)
+    
+    // Also listen to storage events (for cross-tab sync)
+    const handleStorageChange = (e) => {
+      if (e.key === "user" || e.key === "authToken") {
+        checkLocalStorage()
+      }
+    }
+    window.addEventListener("storage", handleStorageChange)
+
+    // Also listen to Firebase auth changes (for Firebase authentication)
     const unsub = onAuthStateChanged(auth, u => {
       if (u) {
+        // Firebase user exists, use Firebase data
         setUser({
           id: u.uid,
           email: u.email,
           username: u.displayName || u.email?.split("@")[0]
         })
       } else {
+        // No Firebase user, check localStorage (for backend API auth)
         const su = JSON.parse(localStorage.getItem("user") || "null")
         const tk = localStorage.getItem("authToken")
         setUser(su && tk ? su : null)
       }
     })
-    return () => unsub()
+    
+    return () => {
+      unsub()
+      window.removeEventListener("authStateChanged", handleAuthChange)
+      window.removeEventListener("storage", handleStorageChange)
+    }
   }, [])
 
   async function handleLogout() {
@@ -75,6 +124,7 @@ export default function App() {
 
       <Routes>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/questionnaire" element={<Protected user={user}><QuestionnairePage/></Protected>} />
         <Route path="/dashboard" element={<Protected user={user}><Dashboard/></Protected>} />
         <Route path="/budget" element={<Protected user={user}><Budget/></Protected>} />
         <Route path="/expenses" element={<Protected user={user}><Expenses/></Protected>} />
