@@ -14,7 +14,7 @@ import Expenses from "./pages/Expenses.jsx"
 import Budget from "./pages/Budget.jsx"
 import Insights from "./pages/Insights.jsx"
 import QuestionnairePage from "./pages/QuestionnairePage.jsx"
-
+import LanguageSwitcher from "./components/LanguageSwitcher.jsx"
 
 function Protected({ user, children }) {
   return user ? children : <Navigate to="/login" replace />
@@ -23,7 +23,6 @@ function PublicOnly({ user, children }) {
   return user ? <Navigate to="/dashboard" replace /> : children
 }
 
-// Initialize user from localStorage synchronously before first render
 const getInitialUser = () => {
   try {
     const storedUser = JSON.parse(localStorage.getItem("user") || "null")
@@ -41,9 +40,7 @@ export default function App() {
   const [user, setUser] = useState(getInitialUser)
   console.log("APP USER = ", user)
 
-
   useEffect(() => {
-    // Check localStorage first (for backend API authentication)
     const checkLocalStorage = () => {
       const storedUser = JSON.parse(localStorage.getItem("user") || "null")
       const hasToken = !!localStorage.getItem("authToken")
@@ -54,18 +51,15 @@ export default function App() {
       return false
     }
 
-    // Set user from localStorage if not already set
     if (!user) {
       checkLocalStorage()
     }
 
-    // Listen for custom auth state changes (when user signs up/login via backend API)
     const handleAuthChange = () => {
       checkLocalStorage()
     }
     window.addEventListener("authStateChanged", handleAuthChange)
-    
-    // Also listen to storage events (for cross-tab sync)
+
     const handleStorageChange = (e) => {
       if (e.key === "user" || e.key === "authToken") {
         checkLocalStorage()
@@ -73,17 +67,14 @@ export default function App() {
     }
     window.addEventListener("storage", handleStorageChange)
 
-    // Also listen to Firebase auth changes (for Firebase authentication)
     const unsub = onAuthStateChanged(auth, u => {
       if (u) {
-        // Firebase user exists, use Firebase data
         setUser({
           id: u.uid,
           email: u.email,
           username: u.displayName || u.email?.split("@")[0]
         })
       } else {
-        // No Firebase user, check localStorage (for backend API auth)
         const su = JSON.parse(localStorage.getItem("user") || "null")
         const tk = localStorage.getItem("authToken")
         setUser(su && tk ? su : null)
@@ -116,11 +107,10 @@ export default function App() {
         </div>
         <div className="right">
           <ThemeToggle />
+          <LanguageSwitcher />
           <button onClick={handleLogout} className="btn ghost logout">Logout</button>
         </div>
       </nav>
-
-
 
       <Routes>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
@@ -133,13 +123,19 @@ export default function App() {
       </Routes>
     </div>
   ) : (
-    <Routes>
-      <Route path="/" element={<PublicOnly user={user}><HomePage/></PublicOnly>} />
-      <Route path="/login" element={<PublicOnly user={user}><Login/></PublicOnly>} />
-      <Route path="/signup" element={<PublicOnly user={user}><SignUp/></PublicOnly>} />
-      <Route path="/forgot-password" element={<PublicOnly user={user}><ForgotPassword/></PublicOnly>} />
-      <Route path="/reset-password/:token" element={<PublicOnly user={user}><ResetPassword/></PublicOnly>} />
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+    <>
+      <div style={{ display: "flex", justifyContent: "flex-end", padding: "10px" }}>
+        <LanguageSwitcher />
+      </div>
+
+      <Routes>
+        <Route path="/" element={<PublicOnly user={user}><HomePage/></PublicOnly>} />
+        <Route path="/login" element={<PublicOnly user={user}><Login/></PublicOnly>} />
+        <Route path="/signup" element={<PublicOnly user={user}><SignUp/></PublicOnly>} />
+        <Route path="/forgot-password" element={<PublicOnly user={user}><ForgotPassword/></PublicOnly>} />
+        <Route path="/reset-password/:token" element={<PublicOnly user={user}><ResetPassword/></PublicOnly>} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </>
   )
 }

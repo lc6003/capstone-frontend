@@ -1,0 +1,217 @@
+{
+  "appName": "Cashvelo",
+
+  "auth": {
+    "login": "Iniciar sesión",
+    "signup": "Crear cuenta"
+  },
+
+  "login": {
+    "title": "Bienvenid@ de nuevo 🐱",
+    "subtitle": "Inicie sesión para seguir construyendo hábitos financieros sólidos con Cashvelo.",
+    "emailLabel": "Correo electrónico",
+    "emailPlaceholder": "tú@ejemplo.com",
+    "emailRequired": "El correo electrónico es obligatorio.",
+    "emailInvalid": "Ingresa un correo válido.",
+    "passwordLabel": "Contraseña",
+    "passwordPlaceholder": "••••••••",
+    "passwordRequired": "La contraseña es obligatoria.",
+    "rememberMe": "Recuérdame",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "submit": "Iniciar sesión",
+    "submitLoading": "Iniciando…",
+    "or": "o",
+    "google": "Continuar con Google",
+    "googleLoading": "Iniciando...",
+    "microsoft": "Continuar con Microsoft",
+    "newHere": "¿Eres nuev@?",
+    "createAccount": "Crear una cuenta",
+    "serverError": "No se pudo conectar al servidor. Por favor, inténtalo de nuevo.",
+    "loginFailed": "Error al iniciar sesión"
+  },
+
+  "signup": {
+    "title": "Crea tu cuenta",
+    "subtitle": "Únete a Cashvelo para presupuestar de forma más inteligente.",
+    "nameLabel": "Nombre completo (opcional)",
+    "namePlaceholder": "ej., Alex Doe",
+    "emailLabel": "Correo electrónico",
+    "emailPlaceholder": "tú@ejemplo.com",
+    "passwordLabel": "Contraseña",
+    "passwordPlaceholder": "Mínimo 6 caracteres",
+    "confirmLabel": "Confirmar contraseña",
+    "confirmPlaceholder": "Vuelve a escribir la contraseña",
+
+    "errorRequired": "Por favor completa todos los campos requeridos.",
+    "errorShortPassword": "La contraseña debe tener al menos 6 caracteres.",
+    "errorMismatch": "Las contraseñas no coinciden.",
+    "errorDefault": "Algo salió mal. Por favor, inténtalo de nuevo.",
+    "serverError": "No se pudo conectar al servidor. Por favor, inténtalo de nuevo.",
+
+    "submit": "Crear cuenta",
+    "submitLoading": "Creando cuenta...",
+
+    "or": "o",
+    "google": "Continuar con Google",
+    "googleLoading": "Registrando...",
+    "microsoft": "Continuar con Microsoft",
+
+    "alreadyHaveAccount": "¿Ya tienes una cuenta?",
+    "login": "Iniciar sesión"
+  },
+
+  "dashboard": {
+    "welcomeTitle": "Bienvenido de nuevo",
+    "welcomeSubtitle": "Resumen rápido de tus presupuestos y gastos.",
+
+    "buttons": {
+      "addExpense": "Agregar gasto",
+      "newBudget": "Nuevo presupuesto",
+      "viewInsights": "Ver estadísticas"
+    },
+
+    "incomeTitle": "Ingresos",
+    "incomeSubtitle": "Ingresos obtenidos este mes.",
+    "incomeExpectedLabel": "Ingreso esperado para este mes:",
+
+    "totalBudgetedTitle": "Total presupuestado",
+    "totalBudgetedSubtitle": "Suma de todos los presupuestos fijos y variables.",
+
+    "totalSpentTitle": "Total gastado (Todo el tiempo)",
+    "totalSpentSubtitle": "Este mes hasta ahora:",
+
+    "debtTitle": "Deuda de tarjeta de crédito",
+    "debtSubtitle": "La suma de todos los saldos de tarjetas después de pagos registrados.",
+
+    "envelopesTitle": "Sobres",
+    "envelopesEmpty": "No hay presupuestos aún. Crea uno en la página de Presupuesto.",
+
+    "budgetsAtRiskTitle": "Presupuestos en riesgo",
+    "budgetsAtRiskEmpty": "Ninguna categoría supera su límite",
+
+    "byCategoryTitle": "Por categoría",
+    "byCategoryEmpty": "No hay gastos aún. Agrega uno en la página de Gastos.",
+
+    "table": {
+      "category": "Categoría",
+      "spent": "Gastado",
+      "limit": "Límite"
+    },
+
+    "noLimitPill": "Sin límite"
+  },
+
+  "expenses": {
+    "title": "Gastos",
+
+    "form": {
+      "amountPlaceholder": "Monto",
+      "categoryUncategorized": "Sin categoría",
+      "dateLabel": "Fecha",
+      "notePlaceholder": "Nota",
+      "submit": "Agregar"
+    },
+
+    "recentTitle": "Recientes",
+    "recentEmpty": "No hay gastos aún.",
+
+    "table": {
+      "date": "Fecha",
+      "category": "Categoría",
+      "amount": "Monto",
+      "note": "Nota",
+      "delete": "Eliminar"
+    },
+
+    "creditCards": {
+      "title": "Control de tarjetas de crédito",
+      "empty": "Aún no hay datos de tarjetas de crédito.",
+
+      "editTable": {
+        "name": "Nombre de la tarjeta",
+        "balance": "Saldo",
+        "pending": "Cargos pendientes",
+        "payment": "Pago",
+        "realTimeBalance": "Saldo en tiempo real",
+        "delete": "Eliminar"
+      },
+
+      "viewTable": {
+        "name": "Tarjeta",
+        "balance": "Saldo",
+        "pending": "Pendiente",
+        "payment": "Pago",
+        "realTimeBalance": "Saldo en tiempo real"
+      },
+
+      "buttons": {
+        "addCard": "+ Agregar tarjeta",
+        "done": "Listo",
+        "edit": "Editar"
+      }
+    }
+  },
+
+  "insights": {
+    "title": "Estadísticas (Este mes)",
+    "totalSpent": "Total gastado hasta ahora:",
+    "spendByCategoryTitle": "Gasto por categoría",
+    "dailySpendTitle": "Gasto diario",
+    "noData": "Aún no hay datos.",
+
+    "chart": {
+      "amount": "Monto"
+    }
+  },
+  "budget": {
+  "title": "Presupuesto",
+
+  "form": {
+    "namePlaceholder": "Nombre de categoría (ej., Supermercado)",
+    "limitPlaceholder": "Límite mensual (opcional)",
+    "typeRecurring": "Recurrente (mensual)",
+    "typeVariable": "Variable",
+    "submit": "Agregar",
+    "missingFieldsAlert": "⚠️ Por favor escribe un nombre de categoría y selecciona \"Recurrente\" o \"Variable\" antes de agregar un presupuesto."
+  },
+
+  "totalBudgetedTitle": "Total presupuestado",
+
+  "summary": {
+    "recurringTitle": "Gastos recurrentes",
+    "variableTitle": "Gastos variables"
+  },
+
+  "recurring": {
+    "title": "Recurrente",
+    "empty": "Todavía no hay presupuestos recurrentes."
+  },
+
+  "variable": {
+    "title": "Variable",
+    "empty": "Todavía no hay presupuestos variables."
+  },
+
+  "table": {
+    "category": "Categoría",
+    "limit": "Límite",
+    "spent": "Gastado",
+    "remaining": "Restante",
+    "delete": "Eliminar"
+  },
+
+  "noLimitPill": "Sin límite",
+
+  "incomeTracker": {
+    "title": "Control de ingresos",
+    "subtitle": "Registra tus ingresos reales y esperados.",
+    "actualTitle": "Ingreso real",
+    "expectedTitle": "Ingreso esperado",
+    "prefixPaycheck": "Pago",
+    "prefixExpectedPaycheck": "Pago esperado",
+    "inputPlaceholder": "Monto en $",
+    "add": "Agregar",
+    "deleteLast": "Eliminar último registro"
+  }
+}
+}

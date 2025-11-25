@@ -1,0 +1,218 @@
+{
+  "appName": "Cashvelo",
+
+  "auth": {
+    "login": "Log in",
+    "signup": "Create account"
+  },
+
+  "login": {
+    "title": "Welcome back 🐱",
+    "subtitle": "Sign in to continue building strong financial habits with Cashvelo.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "emailRequired": "Email is required.",
+    "emailInvalid": "Enter a valid email.",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "••••••••",
+    "passwordRequired": "Password is required.",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "submit": "Log in",
+    "submitLoading": "Signing in…",
+    "or": "or",
+    "google": "Continue with Google",
+    "googleLoading": "Signing in...",
+    "microsoft": "Continue with Microsoft",
+    "newHere": "New here?",
+    "createAccount": "Create an account",
+    "serverError": "Unable to connect to server. Please try again.",
+    "loginFailed": "Login failed"
+  },
+
+  "signup": {
+    "title": "Create your account",
+    "subtitle": "Join Cashvelo to budget smarter.",
+    "nameLabel": "Full name (optional)",
+    "namePlaceholder": "e.g., Alex Doe",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "At least 6 characters",
+    "confirmLabel": "Confirm password",
+    "confirmPlaceholder": "Re-enter password",
+
+    "errorRequired": "Please fill in all required fields.",
+    "errorShortPassword": "Password must be at least 6 characters",
+    "errorMismatch": "Passwords do not match.",
+    "errorDefault": "Something went wrong. Please try again.",
+    "serverError": "Unable to connect to server. Please try again.",
+
+    "submit": "Create account",
+    "submitLoading": "Creating account...",
+
+    "or": "or",
+    "google": "Continue with Google",
+    "googleLoading": "Signing up...",
+    "microsoft": "Continue with Microsoft",
+
+    "alreadyHaveAccount": "Already have an account?",
+    "login": "Log in"
+  },
+
+  "dashboard": {
+    "welcomeTitle": "Welcome back",
+    "welcomeSubtitle": "Quick summary of your budgets and spending.",
+
+    "buttons": {
+      "addExpense": "Add Expense",
+      "newBudget": "New Budget",
+      "viewInsights": "View Insights"
+    },
+
+    "incomeTitle": "Income",
+    "incomeSubtitle": "Income earned this month.",
+    "incomeExpectedLabel": "Expected income for this month:",
+
+    "totalBudgetedTitle": "Total Budgeted Amount",
+    "totalBudgetedSubtitle": "Sum of all recurring and variable budgets.",
+
+    "totalSpentTitle": "Total Spent (All time)",
+    "totalSpentSubtitle": "This month so far:",
+
+    "debtTitle": "Credit Card Debt",
+    "debtSubtitle": "The sum of all credit card balances after input payments.",
+
+    "envelopesTitle": "Envelopes",
+    "envelopesEmpty": "No budgets yet. Create one on the Budget page.",
+
+    "budgetsAtRiskTitle": "Budgets At Risk",
+    "budgetsAtRiskEmpty": "No categories over their limit",
+
+    "byCategoryTitle": "By Category",
+    "byCategoryEmpty": "No expenses yet. Add one on the Expenses page.",
+
+    "table": {
+      "category": "Category",
+      "spent": "Spent",
+      "limit": "Limit"
+    },
+
+    "noLimitPill": "No limit"
+  },
+
+  "expenses": {
+    "title": "Spending",
+
+    "form": {
+      "amountPlaceholder": "Amount",
+      "categoryUncategorized": "Uncategorized",
+      "dateLabel": "Date",
+      "notePlaceholder": "Note",
+      "submit": "Add"
+    },
+
+    "recentTitle": "Recent",
+    "recentEmpty": "No expenses yet.",
+
+    "table": {
+      "date": "Date",
+      "category": "Category",
+      "amount": "Amount",
+      "note": "Note",
+      "delete": "Delete"
+    },
+
+    "creditCards": {
+      "title": "Credit Card Tracker",
+      "empty": "No credit card data yet.",
+
+      "editTable": {
+        "name": "Credit Card Name",
+        "balance": "Card Balance",
+        "pending": "Pending Charges",
+        "payment": "Payment",
+        "realTimeBalance": "Real Time Balance",
+        "delete": "Delete"
+      },
+
+      "viewTable": {
+        "name": "Credit Card",
+        "balance": "Balance",
+        "pending": "Pending",
+        "payment": "Payment",
+        "realTimeBalance": "Real Time Balance"
+      },
+
+      "buttons": {
+        "addCard": "+ Add Credit Card",
+        "done": "Done",
+        "edit": "Edit"
+      }
+    }
+  },
+
+  "insights": {
+    "title": "Insights (This Month)",
+    "totalSpent": "Total spent so far:",
+    "spendByCategoryTitle": "Spend by Category",
+    "dailySpendTitle": "Daily Spend",
+    "noData": "No data yet.",
+
+    "chart": {
+      "amount": "Amount"
+    }
+  },
+  "budget": {
+  "title": "Budget",
+
+  "form": {
+    "namePlaceholder": "Category name (e.g., Groceries)",
+    "limitPlaceholder": "Monthly limit (optional)",
+    "typeRecurring": "Recurring (monthly)",
+    "typeVariable": "Variable",
+    "submit": "Add",
+    "missingFieldsAlert": "⚠️ Please write a category name and select either 'Recurring' or 'Variable' before adding a budget."
+  },
+
+  "totalBudgetedTitle": "Total Budgeted",
+
+  "summary": {
+    "recurringTitle": "Recurring Expenses",
+    "variableTitle": "Variable Expenses"
+  },
+
+  "recurring": {
+    "title": "Recurring",
+    "empty": "No recurring budgets yet."
+  },
+
+  "variable": {
+    "title": "Variable",
+    "empty": "No variable budgets yet."
+  },
+
+  "table": {
+    "category": "Category",
+    "limit": "Limit",
+    "spent": "Spent",
+    "remaining": "Remaining",
+    "delete": "Delete"
+  },
+
+  "noLimitPill": "No limit",
+
+  "incomeTracker": {
+    "title": "Income Tracker",
+    "subtitle": "Track your actual and expected income below.",
+    "actualTitle": "Actual Income",
+    "expectedTitle": "Expected Income",
+    "prefixPaycheck": "Paycheck",
+    "prefixExpectedPaycheck": "Expected Paycheck",
+    "inputPlaceholder": "$ amount",
+    "add": "Add",
+    "deleteLast": "Delete Last Entry"
+  }
+}
+
+}

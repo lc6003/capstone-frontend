@@ -1,8 +1,22 @@
 import { useMemo } from "react"
 import { monthInsights } from "../lib/storage.js"
-import { PieChart, Pie, Cell, Tooltip, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts"
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  ResponsiveContainer
+} from "recharts"
+import { useTranslation } from "react-i18next"
 
 export default function Insights(){
+  const { t } = useTranslation()
   const { byCategory, expenses, sum } = useMemo(() => monthInsights(), [])
 
   const data = Object.entries(byCategory).map(([name, value]) => ({ name, value }))
@@ -17,14 +31,16 @@ export default function Insights(){
     <div className="dashboard-container dash">
       <div className="grid">
         <section className="card col-12">
-          <h2>Insights (This Month)</h2>
-          <p className="muted">Total spent so far: <b>${sum.toFixed(2)}</b></p>
+          <h2>{t("insights.title")}</h2>
+          <p className="muted">
+            {t("insights.totalSpent")} <b>${sum.toFixed(2)}</b>
+          </p>
         </section>
 
         <section className="card col-6">
-          <h3>Spend by Category</h3>
+          <h3>{t("insights.spendByCategoryTitle")}</h3>
           {data.length === 0 ? (
-            <p className="muted">No data yet.</p>
+            <p className="muted">{t("insights.noData")}</p>
           ) : (
             <div className="chart">
               <ResponsiveContainer>
@@ -39,9 +55,9 @@ export default function Insights(){
         </section>
 
         <section className="card col-6">
-          <h3>Daily Spend</h3>
+          <h3>{t("insights.dailySpendTitle")}</h3>
           {series.length === 0 ? (
-            <p className="muted">No data yet.</p>
+            <p className="muted">{t("insights.noData")}</p>
           ) : (
             <div className="chart">
               <ResponsiveContainer>
@@ -51,7 +67,7 @@ export default function Insights(){
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="value" name="Amount" />
+                  <Bar dataKey="value" name={t("insights.chart.amount")} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
