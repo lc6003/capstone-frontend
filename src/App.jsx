@@ -13,6 +13,7 @@ import Dashboard from "./pages/Dashboard.jsx"
 import Expenses from "./pages/Expenses.jsx"
 import Budget from "./pages/Budget.jsx"
 import Insights from "./pages/Insights.jsx"
+import Settings from "./pages/Settings.jsx"  
 
 
 function Protected({ user, children }) {
@@ -49,9 +50,13 @@ export default function App() {
   }, [])
 
   async function handleLogout() {
+    const theme = localStorage.getItem("cashvelo_theme")
     await signOut(auth)
     localStorage.clear()
     sessionStorage.clear()
+    if(theme){
+      localStorage.setItem("cashvelo_theme", theme)
+    }
     window.location.href = "/"  
   }
 
@@ -67,6 +72,7 @@ export default function App() {
         </div>
         <div className="right">
           <ThemeToggle />
+          <NavLink to="/settings" className="btn ghost">⚙️</NavLink>
           <button onClick={handleLogout} className="btn ghost logout">Logout</button>
         </div>
       </nav>
@@ -79,6 +85,7 @@ export default function App() {
         <Route path="/budget" element={<Protected user={user}><Budget/></Protected>} />
         <Route path="/expenses" element={<Protected user={user}><Expenses/></Protected>} />
         <Route path="/insights" element={<Protected user={user}><Insights/></Protected>} />
+        <Route path="/settings" element={<Protected user={user}><Settings/></Protected>} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </div>
