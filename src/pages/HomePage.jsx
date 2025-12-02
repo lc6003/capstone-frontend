@@ -388,6 +388,87 @@ export default function HomePage() {
         </div>
       </section>
 
+ <section className="about budget-links">
+        <div className="about-inner">
+          <h2 className="section-title">Why budgeting helps</h2>
+          <p className="section-intro">
+          Budgeting doesn’t mean you can’t spend. It simply helps you understand where your money goes. 
+          When you have a plan, life feels less stressful, you stay more organized, 
+          and you move closer to your goals.
+          </p>
+
+          <div className="budget-single-card">
+            <h3>Learn more (English)</h3>
+            <p className="budget-links-text">
+              Beginner-friendly guides that explain how budgeting creates
+              clarity, reduces stress, and helps you make better financial
+              decisions.
+            </p>
+
+            <ul>
+              <li>
+                <a
+                  href="https://www.experian.com/blogs/ask-experian/why-is-budgeting-important/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Why is budgeting important? — Experian
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://consumer.gov/your-money/making-budget"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  How to manage your money — Consumer.gov
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section className="about budget-links">
+        <div className="about-inner">
+          <h2 className="section-title">Por qué el presupuesto ayuda</h2>
+          <p className="section-intro">
+            Hacer un presupuesto no significa limitarte; significa tomar control.
+            Un plan claro te ayuda a evitar deudas, ahorrar para tus metas,
+            prevenir sorpresas y sentir más tranquilidad con tu dinero.
+          </p>
+
+          <div className="budget-single-card">
+            <h3>Aprende más (Español)</h3>
+            <p className="budget-links-text">
+              Recursos en español que explican cómo empezar, organizar mejor tus
+              gastos y manejar tu dinero con más seguridad.
+            </p>
+
+            <ul>
+              <li>
+                <a
+                  href="https://www.usa.gov/es/articulos/consejos-para-tener-un-presupuesto"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Consejos para tener un presupuesto — USA.gov
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://consumidor.gov/su-dinero/como-hacer-un-presupuesto"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Cómo hacer un presupuesto — Consumidor.gov
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
       <footer className="footer">
         © {new Date().getFullYear()} Cashvelo
       </footer>

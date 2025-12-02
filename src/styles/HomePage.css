@@ -272,3 +272,46 @@ html.dark .feature-band{ background: linear-gradient(180deg, rgba(15,23,42,.6), 
 @media (max-width: 1024px){ .hero-grid{ grid-template-columns: 1fr; } }
 @media (max-width: 900px){ .feature-grid{ grid-template-columns: 1fr; } }
 @media (max-width: 640px){ .nav-links{ gap: .35rem; } .nav-link{ padding: .5rem .7rem; } .feature-card{ grid-template-columns: 1fr; } .feature-with-image .feature-img{ height: 160px; } }
+
+.budget-links {
+  padding-bottom: 3rem;
+}
+
+.budget-single-card {
+  background: var(--card-bg, rgba(255, 255, 255, 0.85));
+  border-radius: 1.25rem;
+  padding: 1.75rem;
+  margin-top: 1.5rem;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  backdrop-filter: blur(12px);
+}
+
+.budget-single-card h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.15rem;
+}
+
+.budget-links-text {
+  margin-bottom: 1rem;
+  color: var(--text-secondary, #64748b);
+}
+
+.budget-single-card ul {
+  padding-left: 1.25rem;
+}
+
+.budget-single-card li {
+  margin-bottom: 0.65rem;
+}
+
+.budget-single-card a {
+  text-decoration: none;
+  color: var(--accent-color, #4f46e5);
+  font-weight: 500;
+}
+
+.budget-single-card a:hover {
+  text-decoration: underline;
+  opacity: 0.85;
+}
