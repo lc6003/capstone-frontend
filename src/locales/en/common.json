@@ -1,10 +1,15 @@
 {
   "appName": "Cashvelo",
+  "app": {
+    "logoAlt": "Cashvelo"
+  },
+  
 
   "auth": {
     "login": "Log in",
     "signup": "Create account"
   },
+  
 
   "login": {
     "title": "Welcome back 🐱",
@@ -63,6 +68,13 @@
   "dashboard": {
     "welcomeTitle": "Welcome back",
     "welcomeSubtitle": "Quick summary of your budgets and spending.",
+    "nav": {
+      "dashboard": "Dashboard",
+      "budget": "Budget",
+      "expenses": "Spending",
+      "insights": "Insights",
+      "logout": "Logout"
+    },
 
     "buttons": {
       "addExpense": "Add Expense",
@@ -212,6 +224,106 @@
     "inputPlaceholder": "$ amount",
     "add": "Add",
     "deleteLast": "Delete Last Entry"
+  }
+},
+"home": {
+  "logoAria": "Cashvelo home",
+  "logoAlt": "Cashvelo logo",
+
+  "nav": {
+    "home": "Home",
+    "how": "How it works",
+    "features": "Features",
+    "why": "Why Cashvelo",
+    "login": "Log in",
+    "signup": "Create account",
+    "signupAria": "Create free account"
+  },
+
+  "hero": {
+    "titleLine1": "Budget beautifully.",
+    "titleLine2": "Spend confidently.",
+    "subtitle": "Cashvelo turns your income into simple envelopes, gives you crystal clear insights, and helps you stay consistent without spreadsheets or stress.",
+    "primaryCta": "Start in 60 seconds →",
+    "secondaryCta": "See a live demo"
+  },
+
+  "envelopes": {
+    "groceries": "Groceries",
+    "transport": "Transport",
+    "savings": "Savings",
+    "fun": "Fun"
+  },
+
+  "demo": {
+    "aria": "Demo of envelopes and insights",
+    "title": "Envelopes",
+    "chip": "Demo",
+    "insights": {
+      "mtd": "Month to date:",
+      "mtdSuffix": "tracked",
+      "safe": "Safe to spend:",
+      "upcoming": "Upcoming:",
+      "upcomingSuffix": "in 5 days"
+    }
+  },
+
+  "badges": {
+    "envelope": "Envelope budgeting",
+    "insights": "Clear insights"
+  },
+
+  "description": "Cashvelo uses the cash envelope system, a visual method for setting limits, tracking spending, and keeping momentum month to month.",
+
+  "how": {
+    "title": "How Cashvelo keeps you on track",
+    "subtitle": "Three steps. Minutes to set up. Habits that last.",
+    "step1": {
+      "title": "Create smart envelopes",
+      "body": "Assign money to categories you actually use. We guide your splits based on goals and a typical month."
+    },
+    "step2": {
+      "title": "Track without friction",
+      "body": "Log spending in seconds, import bank CSVs, and let rules auto tag transactions."
+    },
+    "step3": {
+      "title": "Protect your plan",
+      "body": "See safe to spend at a glance, get nudges before you overshoot, and roll leftovers to savings."
+    }
+  },
+
+  "features": {
+    "goals": {
+      "title": "Goals that feel doable",
+      "copy": "Targets for travel, emergency fund, or debt payoff broken into weekly bites."
+    },
+    "fast": {
+      "title": "Delightfully fast",
+      "copy": "Zero lag UI and offline first so your budget is ready the moment you open the app."
+    },
+    "private": {
+      "title": "Private by design",
+      "copy": "Your data stays on your device with optional encrypted backup. No selling data."
+    },
+    "reminders": {
+      "title": "Gentle reminders",
+      "copy": "Notifications arrive at the right moment, after a purchase or before a bill."
+    }
+  },
+
+  "why": {
+    "title": "Why people stick with Cashvelo",
+    "item1": "Visual envelope system that clicks instantly",
+    "item2": "Clear safe to spend so decisions feel easy",
+    "item3": "Rollovers keep momentum month to month",
+    "item4": "Works great solo or with a partner"
+  },
+
+  "cta": {
+    "title": "Ready to feel in control of money?",
+    "subtitle": "Get started in minutes.",
+    "primaryCta": "Create account",
+    "secondaryCta": "I already have an account"
   }
 }
 

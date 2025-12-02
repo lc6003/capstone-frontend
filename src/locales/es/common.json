@@ -63,6 +63,14 @@
   "dashboard": {
     "welcomeTitle": "Bienvenido de nuevo",
     "welcomeSubtitle": "Resumen rápido de tus presupuestos y gastos.",
+   
+    "nav": {
+      "dashboard": "Panel",
+      "budget": "Presupuesto",
+      "expenses": "Gastos",
+      "insights": "Estadísticas",
+      "logout": "Cerrar sesión"
+    },
 
     "buttons": {
       "addExpense": "Agregar gasto",
@@ -212,6 +220,105 @@
     "inputPlaceholder": "Monto en $",
     "add": "Agregar",
     "deleteLast": "Eliminar último registro"
+  }
+},  "home": {
+  "logoAria": "Inicio de Cashvelo",
+  "logoAlt": "Logo de Cashvelo",
+
+  "nav": {
+    "home": "Inicio",
+    "how": "Cómo funciona",
+    "features": "Funciones",
+    "why": "Por qué Cashvelo",
+    "login": "Iniciar sesión",
+    "signup": "Crear cuenta",
+    "signupAria": "Crear una cuenta gratis"
+  },
+
+  "hero": {
+    "titleLine1": "Presupuesta bonito.",
+    "titleLine2": "Gasta con confianza.",
+    "subtitle": "Cashvelo convierte tus ingresos en sobres simples, te da claridad con tus gastos y te ayuda a ser constante sin hojas de cálculo ni estrés.",
+    "primaryCta": "Empieza en 60 segundos →",
+    "secondaryCta": "Ver una demo en vivo"
+  },
+
+  "envelopes": {
+    "groceries": "Comida",
+    "transport": "Transporte",
+    "savings": "Ahorros",
+    "fun": "Diversión"
+  },
+
+  "demo": {
+    "aria": "Demostración de sobres y estadísticas",
+    "title": "Sobres",
+    "chip": "Demo",
+    "insights": {
+      "mtd": "Mes actual:",
+      "mtdSuffix": "registrados",
+      "safe": "Seguro para gastar:",
+      "upcoming": "Próximos pagos:",
+      "upcomingSuffix": "en 5 días"
+    }
+  },
+
+  "badges": {
+    "envelope": "Método de sobres",
+    "insights": "Estadísticas claras"
+  },
+
+  "description": "Cashvelo usa el sistema de sobres, una forma visual de poner límites, seguir tus gastos y mantener tu hábito mes a mes.",
+
+  "how": {
+    "title": "Cómo Cashvelo te mantiene al día",
+    "subtitle": "Tres pasos. Minutos para empezar. Hábitos que duran.",
+    "step1": {
+      "title": "Crea sobres inteligentes",
+      "body": "Asigna dinero a categorías que de verdad usas. Te guiamos según tus metas y tu mes típico."
+    },
+    "step2": {
+      "title": "Registra sin complicaciones",
+      "body": "Anota tus gastos en segundos, importa CSV de tu banco y deja que las reglas etiqueten tus movimientos."
+    },
+    "step3": {
+      "title": "Protege tu plan",
+      "body": "Ve tu 'seguro para gastar' de un vistazo, recibe avisos antes de pasarte y manda lo que sobra a ahorros."
+    }
+  },
+
+  "features": {
+    "goals": {
+      "title": "Metas que sí se sienten posibles",
+      "copy": "Viajes, fondo de emergencia o deudas divididos en metas semanales pequeñas."
+    },
+    "fast": {
+      "title": "Rápido y ligero",
+      "copy": "Interfaz sin lag y lista incluso sin internet, para que tu presupuesto esté listo al abrir la app."
+    },
+    "private": {
+      "title": "Privado desde el diseño",
+      "copy": "Tus datos se quedan en tu dispositivo con copia de seguridad cifrada opcional. Nada de vender información."
+    },
+    "reminders": {
+      "title": "Recordatorios suaves",
+      "copy": "Notificaciones en el momento justo: después de una compra o antes de un cobro."
+    }
+  },
+
+  "why": {
+    "title": "Por qué la gente sigue usando Cashvelo",
+    "item1": "Sistema de sobres visual que se entiende rápido",
+    "item2": "‘Seguro para gastar’ claro para decidir sin estrés",
+    "item3": "Los sobrantes pasan al siguiente mes para mantener el ritmo",
+    "item4": "Funciona bien sola o en pareja"
+  },
+
+  "cta": {
+    "title": "¿Lista para sentir control de tu dinero?",
+    "subtitle": "Empieza en minutos.",
+    "primaryCta": "Crear cuenta",
+    "secondaryCta": "Ya tengo una cuenta"
   }
 }
 }
