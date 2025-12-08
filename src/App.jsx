@@ -4,6 +4,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth"
 import { auth } from "./firebase"
 
 import ThemeToggle from "./components/ThemeToggle.jsx"
+import MobileBottomNav from "./components/MobileBottomNav.jsx"
 import HomePage from "./pages/HomePage.jsx"
 import Login from "./pages/Login.jsx"
 import SignUp from "./pages/SignUp.jsx"
@@ -39,7 +40,6 @@ const getInitialUser = () => {
 
 export default function App() {
   const [user, setUser] = useState(getInitialUser)
-  console.log("APP USER = ", user)
 
 
   useEffect(() => {
@@ -131,6 +131,9 @@ export default function App() {
         <Route path="/insights" element={<Protected user={user}><Insights/></Protected>} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
+      
+      {/* Mobile bottom navigation - only visible on mobile */}
+      <MobileBottomNav />
     </div>
   ) : (
     <Routes>

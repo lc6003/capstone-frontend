@@ -12,12 +12,16 @@ function IncomeColumn({ title, storageKey, prefix }) {
     const updated = [...entries, amount]
     setEntries(updated)
     localStorage.setItem(storageKey, JSON.stringify(updated))
+    // Dispatch event to notify other components
+    window.dispatchEvent(new Event('incomeUpdated'))
     setInput("")
   }
   function handleDeleteLast() {
     const type = storageKey.includes("expected") ? "expected" : "actual"
     const updated = removeLastIncome(type)
     setEntries(updated)
+    // Dispatch event to notify other components
+    window.dispatchEvent(new Event('incomeUpdated'))
   }
 
   const total = entries.reduce((a, b) => a + b, 0)
