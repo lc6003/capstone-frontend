@@ -389,7 +389,7 @@ export default function Goals() {
               </button>
               {goal.currentAmount > 0 && (
                 <button 
-                  className="btn secondary" 
+                  className="btn danger" 
                   style={{ flex: 1 }}
                   onClick={() => {
                     setContributionModal(goal)
@@ -474,8 +474,8 @@ export default function Goals() {
               </button>
               {contributionModal.currentAmount > 0 && (
                 <button 
-                  className="btn secondary" 
-                  style={{ flex: 1 }}
+                  className="btn danger" 
+                  style={{ width: "100%" }}
                   onClick={() => handleContribution(true)}
                   disabled={loading}
                 >
