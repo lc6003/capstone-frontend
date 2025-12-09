@@ -129,3 +129,60 @@ export async function deleteIncome(id) {
     if (!response.ok) throw new Error('Failed to delete income');
     return response.json();
 }
+
+export async function fetchGoals() {
+    const response = await fetch(`${API_URL}/goals`, {
+        headers: getHeaders()
+    });
+    if (!response.ok) throw new Error('Failed to fetch goals');
+    return response.json();
+}
+
+export async function createGoal(goal) {
+    const response = await fetch(`${API_URL}/goals`, {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify(goal)
+    });
+    if (!response.ok) throw new Error('Failed to create goal');
+    return response.json();
+}
+
+export async function updateGoal(id, goal) {
+    const response = await fetch(`${API_URL}/goals/${id}`, {
+        method: 'PUT',
+        headers: getHeaders(),
+        body: JSON.stringify(goal)
+    });
+    if (!response.ok) throw new Error('Failed to update goal');
+    return response.json();
+}
+
+export async function contributeToGoal(id, amount) {
+    const response = await fetch(`${API_URL}/goals/${id}/contribute`, {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify({ amount })
+    });
+    if (!response.ok) throw new Error('Failed to contribute to goal');
+    return response.json();
+}
+
+export async function withdrawFromGoal(id, amount) {
+    const response = await fetch(`${API_URL}/goals/${id}/withdraw`, {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify({ amount })
+    });
+    if (!response.ok) throw new Error('Failed to withdraw from goal');
+    return response.json();
+}
+
+export async function deleteGoal(id) {
+    const response = await fetch(`${API_URL}/goals/${id}`, {
+        method: 'DELETE',
+        headers: getHeaders()
+    });
+    if (!response.ok) throw new Error('Failed to delete goal');
+    return response.json();
+}

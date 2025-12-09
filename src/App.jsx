@@ -14,6 +14,7 @@ import Expenses from "./pages/Expenses.jsx"
 import Budget from "./pages/Budget.jsx"
 import Insights from "./pages/Insights.jsx"
 import Settings from "./pages/Settings.jsx"  
+import Goals from "./pages/Goals.jsx"
 
 
 function Protected({ user, children }) {
@@ -69,6 +70,7 @@ export default function App() {
           <NavLink to="/budget">Budget</NavLink>
           <NavLink to="/expenses">Spending</NavLink>
           <NavLink to="/insights">Insights</NavLink>
+          <NavLink to="/goals">Goals</NavLink>
         </div>
         <div className="right">
           <ThemeToggle />
@@ -86,6 +88,7 @@ export default function App() {
         <Route path="/expenses" element={<Protected user={user}><Expenses/></Protected>} />
         <Route path="/insights" element={<Protected user={user}><Insights/></Protected>} />
         <Route path="/settings" element={<Protected user={user}><Settings/></Protected>} />
+        <Route path="/goals" element={<Protected user={user}><Goals/></Protected>} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </div>
