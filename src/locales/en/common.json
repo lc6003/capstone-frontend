@@ -3,13 +3,11 @@
   "app": {
     "logoAlt": "Cashvelo"
   },
-  
 
   "auth": {
     "login": "Log in",
     "signup": "Create account"
   },
-  
 
   "login": {
     "title": "Welcome back 🐱",
@@ -46,21 +44,17 @@
     "passwordPlaceholder": "At least 6 characters",
     "confirmLabel": "Confirm password",
     "confirmPlaceholder": "Re-enter password",
-
     "errorRequired": "Please fill in all required fields.",
     "errorShortPassword": "Password must be at least 6 characters",
     "errorMismatch": "Passwords do not match.",
     "errorDefault": "Something went wrong. Please try again.",
     "serverError": "Unable to connect to server. Please try again.",
-
     "submit": "Create account",
     "submitLoading": "Creating account...",
-
     "or": "or",
     "google": "Continue with Google",
     "googleLoading": "Signing up...",
     "microsoft": "Continue with Microsoft",
-
     "alreadyHaveAccount": "Already have an account?",
     "login": "Log in"
   },
@@ -68,6 +62,7 @@
   "dashboard": {
     "welcomeTitle": "Welcome back",
     "welcomeSubtitle": "Quick summary of your budgets and spending.",
+
     "nav": {
       "dashboard": "Dashboard",
       "budget": "Budget",
@@ -75,13 +70,13 @@
       "insights": "Insights",
       "logout": "Logout"
     },
-    "monthSummary": {
-  "thisMonth": "So far this month you spent {{amount}} across {{count}} {{unit}}.",
-  "otherMonth": "In {{month}} you spent {{amount}} across {{count}} {{unit}}.",
-  "transaction": "transaction",
-  "transactions": "transactions"
-},
 
+    "monthSummary": {
+      "thisMonth": "So far this month you spent {{amount}} across {{count}} {{unit}}.",
+      "otherMonth": "In {{month}} you spent {{amount}} across {{count}} {{unit}}.",
+      "transaction": "transaction",
+      "transactions": "transactions"
+    },
 
     "buttons": {
       "addExpense": "Add Expense",
@@ -122,216 +117,276 @@
 
   "expenses": {
     "title": "Spending",
+    "addTransaction": "Add Transaction",
+    "amount": "Amount",
+    "category": "Category",
+    "date": "Date",
+    "note": "Note",
+    "selectCategory": "Select Category",
+    "uncategorized": "Uncategorized",
 
-    "form": {
-      "amountPlaceholder": "Amount",
-      "categoryUncategorized": "Uncategorized",
-      "dateLabel": "Date",
-      "notePlaceholder": "Note",
-      "submit": "Add"
+    "recent": "Recent Transactions",
+    "noExpenses": "No expenses yet.",
+    "noMatch": "No expenses match the selected filters.",
+
+    "filters": {
+      "allCategories": "All Categories",
+      "allTime": "All Time",
+      "today": "Today",
+      "week": "Last 7 Days",
+      "month": "This Month",
+      "year": "This Year",
+      "filteredTotal": "Filtered total:"
     },
 
-    "recentTitle": "Recent",
-    "recentEmpty": "No expenses yet.",
+    "modal": {
+      "details": "Expense Details"
+    }
+  },
+
+  "import": {
+    "upload": "Upload Bank Statement",
+    "subtitle": "Upload your CSV or PDF file",
+    "chooseFile": "Choose File",
+    "csv": "CSV",
+    "pdf": "PDF",
+    "preview": "Preview",
+    "parsing": "Parsing file...",
+    "approveAll": "Approve All",
+    "import": "Import Transactions",
+    "success": "Transactions imported successfully.",
+    "history": "Upload History"
+  },
+
+  "cards": {
+    "title": "Credit Card Tracker",
+    "add": "Add Credit Card",
+    "edit": "Edit",
+    "delete": "Delete",
+    "name": "Credit Card Name",
+    "balance": "Balance",
+    "pending": "Pending Charges",
+    "payment": "Payment",
+    "realtime": "Real Time Balance",
+    "empty": "No credit cards yet."
+  },
+
+"insights": {
+  "title": "Insights (This month)",
+  "totalSpent": "Total spent so far:",
+  "noData": "No data yet.",
+
+  "monthlyOverviewTitle": "Monthly Overview",
+  "monthlyOverviewLegendIncome": "Income",
+  "monthlyOverviewLegendSpend": "Spending",
+
+  "hero": {
+    "incomePositive": "You earned {{amount}} this month.",
+    "incomeNone": "No income recorded this month.",
+    "spendMoreThanEarned": "You spent {{percent}}% more than you earned.",
+    "spendOfIncome": "You spent {{percent}}% of your income.",
+    "spendOnlyAmount": "You spent {{amount}} this month.",
+    "spendNone": "No spending recorded this month.",
+    "netSaved": "You saved {{amount}} this month.",
+    "netOverspent": "You overspent by {{amount}}.",
+    "netEqual": "Income and spending are equal."
+  },
+
+  "charts": {
+    "spendingBreakdownTitle": "Spending Breakdown",
+    "spendingBreakdownEmpty": "No category data yet.",
+    "dailyTrendTitle": "Daily Spending Trend",
+    "dailyTrendEmpty": "No data yet.",
+    "thisVsLastTitle": "This Month vs Last Month",
+    "thisMonthColumn": "This Month",
+    "lastMonthColumn": "Last Month",
+    "totalSpendingLabel": "Total Spending",
+    "transactionsLabel": "Transactions",
+    "avgDailySpendLabel": "Avg Daily Spend"
+  },
+
+  "comparison": {
+    "firstMonth": "This is your first month with spending data.",
+    "noData": "No spending data available for comparison.",
+    "spendingUp": "Spending is up by {{dollars}} (+{{percent}}%) compared to last month.",
+    "spendingDown": "You spent {{dollars}} ({{percent}}%) less than last month.",
+    "spendingSame": "Your spending matches last month exactly."
+  },
+
+  "keyInsightsTitle": "Key Insights",
+  "keyInsights": {
+    "topCategory": "{{category}} is your highest spending category this month ({{percent}}%).",
+    "topCategoryChangeUp": "{{category}} spending increased by {{percent}}% compared to last month.",
+    "topCategoryChangeDown": "{{category}} spending decreased by {{percent}}% compared to last month.",
+    "budgetUsageHigh": "You have used {{percent}}% of your monthly budget.",
+    "overallUp": "Overall spending is up {{percent}}% from last month.",
+    "overallDown": "Overall spending is down {{percent}}% from last month.",
+    "categoryChangeUp": "{{category}} spending increased by {{percent}}% compared to last month.",
+    "categoryChangeDown": "{{category}} spending decreased by {{percent}}% compared to last month."
+  },
+
+  "subscriptions": {
+    "title": "Subscriptions",
+    "empty": "No recurring payments detected yet.",
+    "averageAmount": "Average Amount",
+    "nextCharge": "Next Expected Charge",
+    "soon": "Soon",
+    "frequency": {
+      "weekly": "Weekly",
+      "monthly": "Monthly"
+    }
+  }
+},
+
+  "budget": {
+    "title": "Budget",
+    "form": {
+      "namePlaceholder": "Category name (e.g., Groceries)",
+      "limitPlaceholder": "Monthly limit (optional)",
+      "typeRecurring": "Recurring (monthly)",
+      "typeVariable": "Variable",
+      "submit": "Add",
+      "missingFieldsAlert": "⚠️ Please write a category name and select either 'Recurring' or 'Variable' before adding a budget."
+    },
+
+    "totalBudgetedTitle": "Total Budgeted",
+
+    "summary": {
+      "recurringTitle": "Recurring Expenses",
+      "variableTitle": "Variable Expenses"
+    },
+
+    "recurring": {
+      "title": "Recurring",
+      "empty": "No recurring budgets yet."
+    },
+
+    "variable": {
+      "title": "Variable",
+      "empty": "No variable budgets yet."
+    },
 
     "table": {
-      "date": "Date",
       "category": "Category",
-      "amount": "Amount",
-      "note": "Note",
+      "limit": "Limit",
+      "spent": "Spent",
+      "remaining": "Remaining",
       "delete": "Delete"
     },
 
-    "creditCards": {
-      "title": "Credit Card Tracker",
-      "empty": "No credit card data yet.",
+    "noLimitPill": "No limit",
 
-      "editTable": {
-        "name": "Credit Card Name",
-        "balance": "Card Balance",
-        "pending": "Pending Charges",
-        "payment": "Payment",
-        "realTimeBalance": "Real Time Balance",
-        "delete": "Delete"
-      },
+    "incomeTracker": {
+      "title": "Income Tracker",
+      "subtitle": "Track your actual and expected income below.",
+      "actualTitle": "Actual Income",
+      "expectedTitle": "Expected Income",
+      "prefixPaycheck": "Paycheck",
+      "prefixExpectedPaycheck": "Expected Paycheck",
+      "inputPlaceholder": "$ amount",
+      "add": "Add",
+      "deleteLast": "Delete Last Entry"
+    }
+  },
 
-      "viewTable": {
-        "name": "Credit Card",
-        "balance": "Balance",
-        "pending": "Pending",
-        "payment": "Payment",
-        "realTimeBalance": "Real Time Balance"
-      },
+  "home": {
+    "logoAria": "Cashvelo home",
+    "logoAlt": "Cashvelo logo",
 
-      "buttons": {
-        "addCard": "+ Add Credit Card",
-        "done": "Done",
-        "edit": "Edit"
+    "nav": {
+      "home": "Home",
+      "how": "How it works",
+      "features": "Features",
+      "why": "Why Cashvelo",
+      "login": "Log in",
+      "signup": "Create account",
+      "signupAria": "Create free account"
+    },
+
+    "hero": {
+      "titleLine1": "Budget beautifully.",
+      "titleLine2": "Spend confidently.",
+      "subtitle": "Cashvelo turns your income into simple envelopes, gives you crystal clear insights, and helps you stay consistent without spreadsheets or stress.",
+      "primaryCta": "Start in 60 seconds →",
+      "secondaryCta": "See a live demo"
+    },
+
+    "envelopes": {
+      "groceries": "Groceries",
+      "transport": "Transport",
+      "savings": "Savings",
+      "fun": "Fun"
+    },
+
+    "demo": {
+      "aria": "Demo of envelopes and insights",
+      "title": "Envelopes",
+      "chip": "Demo",
+      "insights": {
+        "mtd": "Month to date:",
+        "mtdSuffix": "tracked",
+        "safe": "Safe to spend:",
+        "upcoming": "Upcoming:",
+        "upcomingSuffix": "in 5 days"
       }
+    },
+
+    "badges": {
+      "envelope": "Envelope budgeting",
+      "insights": "Clear insights"
+    },
+
+    "description": "Cashvelo uses the cash envelope system, a visual method for setting limits, tracking spending, and keeping momentum month to month.",
+
+    "how": {
+      "title": "How Cashvelo keeps you on track",
+      "subtitle": "Three steps. Minutes to set up. Habits that last.",
+      "step1": {
+        "title": "Create smart envelopes",
+        "body": "Assign money to categories you actually use. We guide your splits based on goals and a typical month."
+      },
+      "step2": {
+        "title": "Track without friction",
+        "body": "Log spending in seconds, import bank CSVs, and let rules auto tag transactions."
+      },
+      "step3": {
+        "title": "Protect your plan",
+        "body": "See safe to spend at a glance, get nudges before you overshoot, and roll leftovers to savings."
+      }
+    },
+
+    "features": {
+      "goals": {
+        "title": "Goals that feel doable",
+        "copy": "Targets for travel, emergency fund, or debt payoff broken into weekly bites."
+      },
+      "fast": {
+        "title": "Delightfully fast",
+        "copy": "Zero lag UI and offline first so your budget is ready the moment you open the app."
+      },
+      "private": {
+        "title": "Private by design",
+        "copy": "Your data stays on your device with optional encrypted backup. No selling data."
+      },
+      "reminders": {
+        "title": "Gentle reminders",
+        "copy": "Notifications arrive at the right moment, after a purchase or before a bill."
+      }
+    },
+
+    "why": {
+      "title": "Why people stick with Cashvelo",
+      "item1": "Visual envelope system that clicks instantly",
+      "item2": "Clear safe to spend so decisions feel easy",
+      "item3": "Rollovers keep momentum month to month",
+      "item4": "Works great solo or with a partner"
+    },
+
+    "cta": {
+      "title": "Ready to feel in control of money?",
+      "subtitle": "Get started in minutes.",
+      "primaryCta": "Create account",
+      "secondaryCta": "I already have an account"
     }
-  },
-
-  "insights": {
-    "title": "Insights (This Month)",
-    "totalSpent": "Total spent so far:",
-    "spendByCategoryTitle": "Spend by Category",
-    "dailySpendTitle": "Daily Spend",
-    "noData": "No data yet.",
-
-    "chart": {
-      "amount": "Amount"
-    }
-  },
-  "budget": {
-  "title": "Budget",
-
-  "form": {
-    "namePlaceholder": "Category name (e.g., Groceries)",
-    "limitPlaceholder": "Monthly limit (optional)",
-    "typeRecurring": "Recurring (monthly)",
-    "typeVariable": "Variable",
-    "submit": "Add",
-    "missingFieldsAlert": "⚠️ Please write a category name and select either 'Recurring' or 'Variable' before adding a budget."
-  },
-
-  "totalBudgetedTitle": "Total Budgeted",
-
-  "summary": {
-    "recurringTitle": "Recurring Expenses",
-    "variableTitle": "Variable Expenses"
-  },
-
-  "recurring": {
-    "title": "Recurring",
-    "empty": "No recurring budgets yet."
-  },
-
-  "variable": {
-    "title": "Variable",
-    "empty": "No variable budgets yet."
-  },
-
-  "table": {
-    "category": "Category",
-    "limit": "Limit",
-    "spent": "Spent",
-    "remaining": "Remaining",
-    "delete": "Delete"
-  },
-
-  "noLimitPill": "No limit",
-
-  "incomeTracker": {
-    "title": "Income Tracker",
-    "subtitle": "Track your actual and expected income below.",
-    "actualTitle": "Actual Income",
-    "expectedTitle": "Expected Income",
-    "prefixPaycheck": "Paycheck",
-    "prefixExpectedPaycheck": "Expected Paycheck",
-    "inputPlaceholder": "$ amount",
-    "add": "Add",
-    "deleteLast": "Delete Last Entry"
   }
-},
-"home": {
-  "logoAria": "Cashvelo home",
-  "logoAlt": "Cashvelo logo",
-
-  "nav": {
-    "home": "Home",
-    "how": "How it works",
-    "features": "Features",
-    "why": "Why Cashvelo",
-    "login": "Log in",
-    "signup": "Create account",
-    "signupAria": "Create free account"
-  },
-
-  "hero": {
-    "titleLine1": "Budget beautifully.",
-    "titleLine2": "Spend confidently.",
-    "subtitle": "Cashvelo turns your income into simple envelopes, gives you crystal clear insights, and helps you stay consistent without spreadsheets or stress.",
-    "primaryCta": "Start in 60 seconds →",
-    "secondaryCta": "See a live demo"
-  },
-
-  "envelopes": {
-    "groceries": "Groceries",
-    "transport": "Transport",
-    "savings": "Savings",
-    "fun": "Fun"
-  },
-
-  "demo": {
-    "aria": "Demo of envelopes and insights",
-    "title": "Envelopes",
-    "chip": "Demo",
-    "insights": {
-      "mtd": "Month to date:",
-      "mtdSuffix": "tracked",
-      "safe": "Safe to spend:",
-      "upcoming": "Upcoming:",
-      "upcomingSuffix": "in 5 days"
-    }
-  },
-
-  "badges": {
-    "envelope": "Envelope budgeting",
-    "insights": "Clear insights"
-  },
-
-  "description": "Cashvelo uses the cash envelope system, a visual method for setting limits, tracking spending, and keeping momentum month to month.",
-
-  "how": {
-    "title": "How Cashvelo keeps you on track",
-    "subtitle": "Three steps. Minutes to set up. Habits that last.",
-    "step1": {
-      "title": "Create smart envelopes",
-      "body": "Assign money to categories you actually use. We guide your splits based on goals and a typical month."
-    },
-    "step2": {
-      "title": "Track without friction",
-      "body": "Log spending in seconds, import bank CSVs, and let rules auto tag transactions."
-    },
-    "step3": {
-      "title": "Protect your plan",
-      "body": "See safe to spend at a glance, get nudges before you overshoot, and roll leftovers to savings."
-    }
-  },
-
-  "features": {
-    "goals": {
-      "title": "Goals that feel doable",
-      "copy": "Targets for travel, emergency fund, or debt payoff broken into weekly bites."
-    },
-    "fast": {
-      "title": "Delightfully fast",
-      "copy": "Zero lag UI and offline first so your budget is ready the moment you open the app."
-    },
-    "private": {
-      "title": "Private by design",
-      "copy": "Your data stays on your device with optional encrypted backup. No selling data."
-    },
-    "reminders": {
-      "title": "Gentle reminders",
-      "copy": "Notifications arrive at the right moment, after a purchase or before a bill."
-    }
-  },
-
-  "why": {
-    "title": "Why people stick with Cashvelo",
-    "item1": "Visual envelope system that clicks instantly",
-    "item2": "Clear safe to spend so decisions feel easy",
-    "item3": "Rollovers keep momentum month to month",
-    "item4": "Works great solo or with a partner"
-  },
-
-  "cta": {
-    "title": "Ready to feel in control of money?",
-    "subtitle": "Get started in minutes.",
-    "primaryCta": "Create account",
-    "secondaryCta": "I already have an account"
-  }
-}
-
 }

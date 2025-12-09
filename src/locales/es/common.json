@@ -41,21 +41,17 @@
     "passwordPlaceholder": "Mínimo 6 caracteres",
     "confirmLabel": "Confirmar contraseña",
     "confirmPlaceholder": "Vuelve a escribir la contraseña",
-
     "errorRequired": "Por favor completa todos los campos requeridos.",
     "errorShortPassword": "La contraseña debe tener al menos 6 caracteres.",
     "errorMismatch": "Las contraseñas no coinciden.",
     "errorDefault": "Algo salió mal. Por favor, inténtalo de nuevo.",
     "serverError": "No se pudo conectar al servidor. Por favor, inténtalo de nuevo.",
-
     "submit": "Crear cuenta",
     "submitLoading": "Creando cuenta...",
-
     "or": "o",
     "google": "Continuar con Google",
     "googleLoading": "Registrando...",
     "microsoft": "Continuar con Microsoft",
-
     "alreadyHaveAccount": "¿Ya tienes una cuenta?",
     "login": "Iniciar sesión"
   },
@@ -63,40 +59,42 @@
   "dashboard": {
     "welcomeTitle": "Bienvenido de nuevo",
     "welcomeSubtitle": "Resumen rápido de tus presupuestos y gastos.",
+
     "monthSwitcher": {
-  "prevAria": "Mes anterior",
-  "nextAria": "Mes siguiente"
-},
+      "prevAria": "Mes anterior",
+      "nextAria": "Mes siguiente"
+    },
 
-"glance": {
-  "title": "Resumen del mes",
-  "spentLabel": "Gastado",
-  "remainingBudgetLabel": "Presupuesto restante",
-  "avgDailySpendLabel": "Promedio diario",
-  "totalDebtLabel": "Deuda total de tarjetas:"
-},
+    "glance": {
+      "title": "Resumen del mes",
+      "spentLabel": "Gastado",
+      "remainingBudgetLabel": "Presupuesto restante",
+      "avgDailySpendLabel": "Promedio diario",
+      "totalDebtLabel": "Deuda total de tarjetas:"
+    },
 
-"highlights": {
-  "title": "Destacados"
-},
+    "highlights": {
+      "title": "Destacados"
+    },
 
-"projected": {
-  "title": "Gasto proyectado a fin de mes",
-  "estimatedLabel": "Estimado:"
-},
+    "projected": {
+      "title": "Gasto proyectado a fin de mes",
+      "estimatedLabel": "Estimado:"
+    },
 
-"creditSnapshot": {
-  "title": "Resumen de crédito",
-  "totalDebtLabel": "Deuda total:",
-  "highestUtilizationLabel": "Mayor utilización:"
-},
-"monthSummary": {
-  "thisMonth": "En lo que va del mes has gastado {{amount}} en {{count}} {{unit}}.",
-  "otherMonth": "En {{month}} gastaste {{amount}} en {{count}} {{unit}}.",
-  "transaction": "transacción",
-  "transactions": "transacciones"
-},
-   
+    "creditSnapshot": {
+      "title": "Resumen de crédito",
+      "totalDebtLabel": "Deuda total:",
+      "highestUtilizationLabel": "Mayor utilización:"
+    },
+
+    "monthSummary": {
+      "thisMonth": "En lo que va del mes has gastado {{amount}} en {{count}} {{unit}}.",
+      "otherMonth": "En {{month}} gastaste {{amount}} en {{count}} {{unit}}.",
+      "transaction": "transacción",
+      "transactions": "transacciones"
+    },
+
     "nav": {
       "dashboard": "Panel",
       "budget": "Presupuesto",
@@ -195,165 +193,223 @@
     }
   },
 
-  "insights": {
-    "title": "Estadísticas (Este mes)",
-    "totalSpent": "Total gastado hasta ahora:",
-    "spendByCategoryTitle": "Gasto por categoría",
-    "dailySpendTitle": "Gasto diario",
-    "noData": "Aún no hay datos.",
+"insights": {
+  "title": "Estadísticas (Este mes)",
+  "totalSpent": "Total gastado hasta ahora:",
+  "noData": "Aún no hay datos.",
 
-    "chart": {
-      "amount": "Monto"
-    }
-  },
-  "budget": {
-  "title": "Presupuesto",
-
-  "form": {
-    "namePlaceholder": "Nombre de categoría (ej., Supermercado)",
-    "limitPlaceholder": "Límite mensual (opcional)",
-    "typeRecurring": "Recurrente (mensual)",
-    "typeVariable": "Variable",
-    "submit": "Agregar",
-    "missingFieldsAlert": "⚠️ Por favor escribe un nombre de categoría y selecciona \"Recurrente\" o \"Variable\" antes de agregar un presupuesto."
-  },
-
-  "totalBudgetedTitle": "Total presupuestado",
-
-  "summary": {
-    "recurringTitle": "Gastos recurrentes",
-    "variableTitle": "Gastos variables"
-  },
-
-  "recurring": {
-    "title": "Recurrente",
-    "empty": "Todavía no hay presupuestos recurrentes."
-  },
-
-  "variable": {
-    "title": "Variable",
-    "empty": "Todavía no hay presupuestos variables."
-  },
-
-  "table": {
-    "category": "Categoría",
-    "limit": "Límite",
-    "spent": "Gastado",
-    "remaining": "Restante",
-    "delete": "Eliminar"
-  },
-
-  "noLimitPill": "Sin límite",
-
-  "incomeTracker": {
-    "title": "Control de ingresos",
-    "subtitle": "Registra tus ingresos reales y esperados.",
-    "actualTitle": "Ingreso real",
-    "expectedTitle": "Ingreso esperado",
-    "prefixPaycheck": "Pago",
-    "prefixExpectedPaycheck": "Pago esperado",
-    "inputPlaceholder": "Monto en $",
-    "add": "Agregar",
-    "deleteLast": "Eliminar último registro"
-  }
-},  "home": {
-  "logoAria": "Inicio de Cashvelo",
-  "logoAlt": "Logo de Cashvelo",
-
-  "nav": {
-    "home": "Inicio",
-    "how": "Cómo funciona",
-    "features": "Funciones",
-    "why": "Por qué Cashvelo",
-    "login": "Iniciar sesión",
-    "signup": "Crear cuenta",
-    "signupAria": "Crear una cuenta gratis"
-  },
+  "monthlyOverviewTitle": "Resumen mensual",
+  "monthlyOverviewLegendIncome": "Ingresos",
+  "monthlyOverviewLegendSpend": "Gastos",
 
   "hero": {
-    "titleLine1": "Presupuesta bonito.",
-    "titleLine2": "Gasta con confianza.",
-    "subtitle": "Cashvelo convierte tus ingresos en sobres simples, te da claridad con tus gastos y te ayuda a ser constante sin hojas de cálculo ni estrés.",
-    "primaryCta": "Empieza en 60 segundos →",
-    "secondaryCta": "Ver una demo en vivo"
+    "incomePositive": "Este mes ganaste {{amount}}.",
+    "incomeNone": "No hay ingresos registrados este mes.",
+    "spendMoreThanEarned": "Gastaste un {{percent}}% más de lo que ganaste.",
+    "spendOfIncome": "Gastaste el {{percent}}% de tus ingresos.",
+    "spendOnlyAmount": "Gastaste {{amount}} este mes.",
+    "spendNone": "No hay gastos registrados este mes.",
+    "netSaved": "Ahorraste {{amount}} este mes.",
+    "netOverspent": "Te pasaste del presupuesto por {{amount}}.",
+    "netEqual": "Tus ingresos y gastos son iguales."
   },
 
-  "envelopes": {
-    "groceries": "Comida",
-    "transport": "Transporte",
-    "savings": "Ahorros",
-    "fun": "Diversión"
+  "charts": {
+    "spendingBreakdownTitle": "Desglose de gastos",
+    "spendingBreakdownEmpty": "Todavía no hay datos por categoría.",
+    "dailyTrendTitle": "Tendencia de gasto diario",
+    "dailyTrendEmpty": "Todavía no hay datos.",
+    "thisVsLastTitle": "Este mes vs. el mes pasado",
+    "thisMonthColumn": "Este mes",
+    "lastMonthColumn": "Mes pasado",
+    "totalSpendingLabel": "Gasto total",
+    "transactionsLabel": "Transacciones",
+    "avgDailySpendLabel": "Gasto diario promedio"
   },
 
-  "demo": {
-    "aria": "Demostración de sobres y estadísticas",
-    "title": "Sobres",
-    "chip": "Demo",
-    "insights": {
-      "mtd": "Mes actual:",
-      "mtdSuffix": "registrados",
-      "safe": "Seguro para gastar:",
-      "upcoming": "Próximos pagos:",
-      "upcomingSuffix": "en 5 días"
+  "comparison": {
+    "firstMonth": "Este es tu primer mes con datos de gastos.",
+    "noData": "No hay datos de gastos para comparar.",
+    "spendingUp": "Tu gasto subió {{dollars}} (+{{percent}}%) comparado con el mes pasado.",
+    "spendingDown": "Gastaste {{dollars}} menos ({{percent}}%) que el mes pasado.",
+    "spendingSame": "Tus gastos son iguales al mes pasado."
+  },
+
+  "keyInsightsTitle": "Puntos clave",
+  "keyInsights": {
+    "topCategory": "{{category}} es tu categoría con más gasto este mes ({{percent}}%).",
+    "topCategoryChangeUp": "El gasto en {{category}} aumentó un {{percent}}% comparado con el mes pasado.",
+    "topCategoryChangeDown": "El gasto en {{category}} bajó un {{percent}}% comparado con el mes pasado.",
+    "budgetUsageHigh": "Has usado el {{percent}}% de tu presupuesto mensual.",
+    "overallUp": "En total, tus gastos subieron un {{percent}}% comparado con el mes pasado.",
+    "overallDown": "En total, tus gastos bajaron un {{percent}}% comparado con el mes pasado.",
+    "categoryChangeUp": "El gasto en {{category}} aumentó un {{percent}}% comparado con el mes pasado.",
+    "categoryChangeDown": "El gasto en {{category}} bajó un {{percent}}% comparado con el mes pasado."
+  },
+
+  "subscriptions": {
+    "title": "Suscripciones",
+    "empty": "Todavía no se detectan pagos recurrentes.",
+    "averageAmount": "Monto promedio",
+    "nextCharge": "Próximo cobro esperado",
+    "soon": "Pronto",
+    "frequency": {
+      "weekly": "Semanal",
+      "monthly": "Mensual"
     }
-  },
-
-  "badges": {
-    "envelope": "Método de sobres",
-    "insights": "Estadísticas claras"
-  },
-
-  "description": "Cashvelo usa el sistema de sobres, una forma visual de poner límites, seguir tus gastos y mantener tu hábito mes a mes.",
-
-  "how": {
-    "title": "Cómo Cashvelo te mantiene al día",
-    "subtitle": "Tres pasos. Minutos para empezar. Hábitos que duran.",
-    "step1": {
-      "title": "Crea sobres inteligentes",
-      "body": "Asigna dinero a categorías que de verdad usas. Te guiamos según tus metas y tu mes típico."
-    },
-    "step2": {
-      "title": "Registra sin complicaciones",
-      "body": "Anota tus gastos en segundos, importa CSV de tu banco y deja que las reglas etiqueten tus movimientos."
-    },
-    "step3": {
-      "title": "Protege tu plan",
-      "body": "Ve tu 'seguro para gastar' de un vistazo, recibe avisos antes de pasarte y manda lo que sobra a ahorros."
-    }
-  },
-
-  "features": {
-    "goals": {
-      "title": "Metas que sí se sienten posibles",
-      "copy": "Viajes, fondo de emergencia o deudas divididos en metas semanales pequeñas."
-    },
-    "fast": {
-      "title": "Rápido y ligero",
-      "copy": "Interfaz sin lag y lista incluso sin internet, para que tu presupuesto esté listo al abrir la app."
-    },
-    "private": {
-      "title": "Privado desde el diseño",
-      "copy": "Tus datos se quedan en tu dispositivo con copia de seguridad cifrada opcional. Nada de vender información."
-    },
-    "reminders": {
-      "title": "Recordatorios suaves",
-      "copy": "Notificaciones en el momento justo: después de una compra o antes de un cobro."
-    }
-  },
-
-  "why": {
-    "title": "Por qué la gente sigue usando Cashvelo",
-    "item1": "Sistema de sobres visual que se entiende rápido",
-    "item2": "‘Seguro para gastar’ claro para decidir sin estrés",
-    "item3": "Los sobrantes pasan al siguiente mes para mantener el ritmo",
-    "item4": "Funciona bien sola o en pareja"
-  },
-
-  "cta": {
-    "title": "¿Lista para sentir control de tu dinero?",
-    "subtitle": "Empieza en minutos.",
-    "primaryCta": "Crear cuenta",
-    "secondaryCta": "Ya tengo una cuenta"
   }
-}
+},
+
+  "budget": {
+    "title": "Presupuesto",
+
+    "form": {
+      "namePlaceholder": "Nombre de categoría (ej., Supermercado)",
+      "limitPlaceholder": "Límite mensual (opcional)",
+      "typeRecurring": "Recurrente (mensual)",
+      "typeVariable": "Variable",
+      "submit": "Agregar",
+      "missingFieldsAlert": "⚠️ Por favor escribe un nombre de categoría y selecciona \"Recurrente\" o \"Variable\" antes de agregar un presupuesto."
+    },
+
+    "totalBudgetedTitle": "Total presupuestado",
+
+    "summary": {
+      "recurringTitle": "Gastos recurrentes",
+      "variableTitle": "Gastos variables"
+    },
+
+    "recurring": {
+      "title": "Recurrente",
+      "empty": "Todavía no hay presupuestos recurrentes."
+    },
+
+    "variable": {
+      "title": "Variable",
+      "empty": "Todavía no hay presupuestos variables."
+    },
+
+    "table": {
+      "category": "Categoría",
+      "limit": "Límite",
+      "spent": "Gastado",
+      "remaining": "Restante",
+      "delete": "Eliminar"
+    },
+
+    "noLimitPill": "Sin límite",
+
+    "incomeTracker": {
+      "title": "Control de ingresos",
+      "subtitle": "Registra tus ingresos reales y esperados.",
+      "actualTitle": "Ingreso real",
+      "expectedTitle": "Ingreso esperado",
+      "prefixPaycheck": "Pago",
+      "prefixExpectedPaycheck": "Pago esperado",
+      "inputPlaceholder": "Monto en $",
+      "add": "Agregar",
+      "deleteLast": "Eliminar último registro"
+    }
+  },
+
+  "home": {
+    "logoAria": "Inicio de Cashvelo",
+    "logoAlt": "Logo de Cashvelo",
+
+    "nav": {
+      "home": "Inicio",
+      "how": "Cómo funciona",
+      "features": "Funciones",
+      "why": "Por qué Cashvelo",
+      "login": "Iniciar sesión",
+      "signup": "Crear cuenta",
+      "signupAria": "Crear una cuenta gratis"
+    },
+
+    "hero": {
+      "titleLine1": "Presupuesta bonito.",
+      "titleLine2": "Gasta con confianza.",
+      "subtitle": "Cashvelo convierte tus ingresos en sobres simples, te da claridad con tus gastos y te ayuda a ser constante sin hojas de cálculo ni estrés.",
+      "primaryCta": "Empieza en 60 segundos →",
+      "secondaryCta": "Ver una demo en vivo"
+    },
+
+    "envelopes": {
+      "groceries": "Comida",
+      "transport": "Transporte",
+      "savings": "Ahorros",
+      "fun": "Diversión"
+    },
+
+    "demo": {
+      "aria": "Demostración de sobres y estadísticas",
+      "title": "Sobres",
+      "chip": "Demo",
+      "insights": {
+        "mtd": "Mes actual:",
+        "mtdSuffix": "registrados",
+        "safe": "Seguro para gastar:",
+        "upcoming": "Próximos pagos:",
+        "upcomingSuffix": "en 5 días"
+      }
+    },
+
+    "badges": {
+      "envelope": "Método de sobres",
+      "insights": "Estadísticas claras"
+    },
+
+    "description": "Cashvelo usa el sistema de sobres, una forma visual de poner límites, seguir tus gastos y mantener tu hábito mes a mes.",
+
+    "how": {
+      "title": "Cómo Cashvelo te mantiene al día",
+      "subtitle": "Tres pasos. Minutos para empezar. Hábitos que duran.",
+      "step1": {
+        "title": "Crea sobres inteligentes",
+        "body": "Asigna dinero a categorías que de verdad usas. Te guiamos según tus metas y tu mes típico."
+      },
+      "step2": {
+        "title": "Registra sin complicaciones",
+        "body": "Anota tus gastos en segundos, importa CSV de tu banco y deja que las reglas etiqueten tus movimientos."
+      },
+      "step3": {
+        "title": "Protege tu plan",
+        "body": "Ve tu 'seguro para gastar' de un vistazo, recibe avisos antes de pasarte y manda lo que sobra a ahorros."
+      }
+    },
+
+    "features": {
+      "goals": {
+        "title": "Metas que sí se sienten posibles",
+        "copy": "Viajes, fondo de emergencia o deudas divididos en metas semanales pequeñas."
+      },
+      "fast": {
+        "title": "Rápido y ligero",
+        "copy": "Interfaz sin lag y lista incluso sin internet, para que tu presupuesto esté listo al abrir la app."
+      },
+      "private": {
+        "title": "Privado desde el diseño",
+        "copy": "Tus datos se quedan en tu dispositivo con copia de seguridad cifrada opcional. Nada de vender información."
+      },
+      "reminders": {
+        "title": "Recordatorios suaves",
+        "copy": "Notificaciones en el momento justo: después de una compra o antes de un cobro."
+      }
+    },
+
+    "why": {
+      "title": "Por qué la gente sigue usando Cashvelo",
+      "item1": "Sistema de sobres visual que se entiende rápido",
+      "item2": "‘Seguro para gastar’ claro para decidir sin estrés",
+      "item3": "Los sobrantes pasan al siguiente mes para mantener el ritmo",
+      "item4": "Funciona bien sola o en pareja"
+    },
+
+    "cta": {
+      "title": "¿Lista para sentir control de tu dinero?",
+      "subtitle": "Empieza en minutos.",
+      "primaryCta": "Crear cuenta",
+      "secondaryCta": "Ya tengo una cuenta"
+    }
+  }
 }

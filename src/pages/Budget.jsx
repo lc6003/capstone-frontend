@@ -1,42 +1,73 @@
-import { useMemo, useState } from "react"
+import { useState, useEffect } from "react"
 import {
-  addBudget,
-  getBudgets,
-  removeBudget,
-  getExpenses,
-  getBudgetTotalsByType,
-  removeLastIncome
-} from "../lib/storage.js"
+  fetchBudgets,
+  createBudget,
+  deleteBudget,
+  fetchIncome,
+  createIncome,
+  deleteIncome,
+  fetchExpenses
+} from "../lib/api.js"
 import { useTranslation } from "react-i18next"
 
 function IncomeColumn({ title, storageKey, prefix }) {
   const { t } = useTranslation()
-  const [entries, setEntries] = useState(
-    () => JSON.parse(localStorage.getItem(storageKey) || "[]")
-  )
+  const [entries, setEntries] = useState([])
   const [input, setInput] = useState("")
+  const [loading, setLoading] = useState(false)
 
-  function addEntry(e) {
+  // Map your old storageKey to API "type"
+  const type = storageKey && storageKey.includes("expected") ? "expected" : "actual"
+
+  useEffect(() => {
+    loadEntries()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [type])
+
+  async function loadEntries() {
+    try {
+      const data = await fetchIncome(type)
+      setEntries(data || [])
+    } catch (error) {
+      console.error("Failed to load income:", error)
+    }
+  }
+
+  async function addEntry(e) {
     e.preventDefault()
     const amount = parseFloat(input)
     if (!amount || amount <= 0) return
-    const updated = [...entries, amount]
-    setEntries(updated)
-    localStorage.setItem(storageKey, JSON.stringify(updated))
-    // Dispatch event to notify other components
-    window.dispatchEvent(new Event("incomeUpdated"))
-    setInput("")
+
+    try {
+      setLoading(true)
+      await createIncome({ type, amount })
+      setInput("")
+      await loadEntries()
+    } catch (error) {
+      console.error("Failed to add income:", error)
+      alert("Failed to add income")
+    } finally {
+      setLoading(false)
+    }
   }
 
-  function handleDeleteLast() {
-    const type = storageKey.includes("expected") ? "expected" : "actual"
-    const updated = removeLastIncome(type)
-    setEntries(updated)
-    // Dispatch event to notify other components
-    window.dispatchEvent(new Event("incomeUpdated"))
+  async function handleDeleteLast() {
+    if (entries.length === 0) return
+    const lastEntry = entries[entries.length - 1]
+
+    try {
+      setLoading(true)
+      await deleteIncome(lastEntry._id)
+      await loadEntries()
+    } catch (error) {
+      console.error("Failed to delete income:", error)
+      alert("Failed to delete income")
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const total = entries.reduce((a, b) => a + b, 0)
+  const total = entries.reduce((a, b) => a + (b.amount || 0), 0)
 
   return (
     <div>
@@ -46,9 +77,9 @@ function IncomeColumn({ title, storageKey, prefix }) {
           ${total.toFixed(2)}
         </span>
       </h4>
-      {entries.map((amt, i) => (
-        <div key={i} style={{ marginBottom: "1rem" }}>
-          {prefix} {i + 1}: ${amt.toFixed(2)}
+      {entries.map((entry, i) => (
+        <div key={entry._id || i} style={{ marginBottom: "1rem" }}>
+          {prefix} {i + 1}: ${entry.amount.toFixed(2)}
         </div>
       ))}
       <form onSubmit={addEntry} style={{ marginTop: "0.5rem" }}>
@@ -63,8 +94,9 @@ function IncomeColumn({ title, storageKey, prefix }) {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           style={{ width: 120, marginRight: "0.5rem" }}
+          disabled={loading}
         />
-        <button className="btn" type="submit">
+        <button className="btn" type="submit" disabled={loading}>
           {t("budget.incomeTracker.add")}
         </button>
         <button
@@ -72,6 +104,7 @@ function IncomeColumn({ title, storageKey, prefix }) {
           onClick={handleDeleteLast}
           style={{ marginLeft: "0.5rem" }}
           type="button"
+          disabled={loading || entries.length === 0}
         >
           {t("budget.incomeTracker.deleteLast")}
         </button>
@@ -88,37 +121,77 @@ function spendFor(name, expenses) {
 
 export default function Budget() {
   const { t } = useTranslation()
-  const [_, force] = useState(0)
+  const [budgets, setBudgets] = useState([])
+  const [expenses, setExpenses] = useState([])
+  const [loading, setLoading] = useState(false)
   const [form, setForm] = useState({ name: "", limit: "", type: "" })
-  const budgets = useMemo(() => getBudgets(), [_])
-  const { recurring, variable, total } = useMemo(
-    () => getBudgetTotalsByType(),
-    [_]
-  )
-  const expenses = useMemo(() => getExpenses(), [_])
 
-  function submit(e) {
+  useEffect(() => {
+    loadData()
+  }, [])
+
+  async function loadData() {
+    try {
+      const [budgetsData, expensesData] = await Promise.all([
+        fetchBudgets(),
+        fetchExpenses()
+      ])
+      setBudgets(budgetsData || [])
+      setExpenses(expensesData || [])
+    } catch (error) {
+      console.error("Failed to load data:", error)
+    }
+  }
+
+  async function submit(e) {
     e.preventDefault()
     if (!form.name || !form.type) {
       window.alert(t("budget.form.missingFieldsAlert"))
       return
     }
-    addBudget({
-      name: form.name,
-      limit: Number(form.limit || 0),
-      type: form.type
-    })
-    setForm({ name: "", limit: "", type: "" })
-    force((x) => x + 1)
+
+    try {
+      setLoading(true)
+      await createBudget({
+        name: form.name,
+        limit: Number(form.limit || 0),
+        type: form.type
+      })
+      setForm({ name: "", limit: "", type: "" })
+      await loadData()
+    } catch (error) {
+      console.error("Failed to create budget:", error)
+      alert("Failed to create budget")
+    } finally {
+      setLoading(false)
+    }
   }
 
-  function del(id) {
-    removeBudget(id)
-    force((x) => x + 1)
+  async function del(id) {
+    try {
+      setLoading(true)
+      await deleteBudget(id)
+      await loadData()
+    } catch (error) {
+      console.error("Failed to delete budget:", error)
+      alert("Failed to delete budget")
+    } finally {
+      setLoading(false)
+    }
   }
 
   const recurringBudgets = budgets.filter((b) => b.type === "recurring")
   const variableBudgets = budgets.filter((b) => b.type !== "recurring")
+
+  const recurring = recurringBudgets.reduce(
+    (sum, b) => sum + (Number(b.limit) || 0),
+    0
+  )
+  const variable = variableBudgets.reduce(
+    (sum, b) => sum + (Number(b.limit) || 0),
+    0
+  )
+  const total = recurring + variable
 
   return (
     <div className="dashboard-container dash">
@@ -140,6 +213,7 @@ export default function Budget() {
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               style={{ width: "100%", maxWidth: 500 }}
+              disabled={loading}
             />
             <div
               className="row"
@@ -153,6 +227,7 @@ export default function Budget() {
                 value={form.limit}
                 onChange={(e) => setForm({ ...form, limit: e.target.value })}
                 style={{ maxWidth: 220 }}
+                disabled={loading}
               />
               <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
                 <label
@@ -170,6 +245,7 @@ export default function Budget() {
                     onChange={(e) =>
                       setForm({ ...form, type: e.target.value })
                     }
+                    disabled={loading}
                   />
                   {t("budget.form.typeRecurring")}
                 </label>
@@ -188,11 +264,12 @@ export default function Budget() {
                     onChange={(e) =>
                       setForm({ ...form, type: e.target.value })
                     }
+                    disabled={loading}
                   />
                   {t("budget.form.typeVariable")}
                 </label>
               </div>
-              <button className="btn" type="submit">
+              <button className="btn" type="submit" disabled={loading}>
                 {t("budget.form.submit")}
               </button>
             </div>
@@ -261,7 +338,7 @@ export default function Budget() {
                   const spent = spendFor(b.name, expenses)
                   const remaining = (Number(b.limit) || 0) - spent
                   return (
-                    <tr key={b.id}>
+                    <tr key={b._id}>
                       <td>{b.name}</td>
                       <td>
                         {b.limit ? (
@@ -285,7 +362,8 @@ export default function Budget() {
                       <td>
                         <button
                           className="btn danger"
-                          onClick={() => del(b.id)}
+                          onClick={() => del(b._id)}
+                          disabled={loading}
                         >
                           {t("budget.table.delete")}
                         </button>
@@ -318,7 +396,7 @@ export default function Budget() {
                   const spent = spendFor(b.name, expenses)
                   const remaining = (Number(b.limit) || 0) - spent
                   return (
-                    <tr key={b.id}>
+                    <tr key={b._id}>
                       <td>{b.name}</td>
                       <td>
                         {b.limit ? (
@@ -342,7 +420,8 @@ export default function Budget() {
                       <td>
                         <button
                           className="btn danger"
-                          onClick={() => del(b.id)}
+                          onClick={() => del(b._id)}
+                          disabled={loading}
                         >
                           {t("budget.table.delete")}
                         </button>
