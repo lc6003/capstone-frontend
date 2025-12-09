@@ -553,3 +553,35 @@ html.dark .nav .btn.ghost.logout{
 html.dark .nav .btn.ghost.logout:hover{
   background:rgba(255,255,255,0.05);
 }
+
+/* Allocation Edit Button */
+.alloc-edit-btn {
+  width: 22px;
+  height: 22px;
+  padding: 0;               /* <-- ADD THIS */
+  border-radius: 50%;
+  border: none;
+  background: #e2e8f0;
+  color: #555;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;   /* <-- ENSURES SVG IS CENTERED */
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.alloc-edit-btn:hover {
+  background: #cbd5e1;
+  transform: scale(1.1);
+}
+
+.alloc-edit-btn:focus {
+  outline: 2px solid #94a3b8;
+}
+
+.alloc-edit-btn svg {
+  width: 14px;
+  height: 14px;
+  color: #475569;
+}

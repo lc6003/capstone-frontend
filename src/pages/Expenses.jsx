@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react"
-import { addExpense, getExpenses, removeExpense, getBudgets, getCreditCards, addCreditCard, removeCreditCard, saveCreditCards, calculateRealTimeBalance } from "../lib/storage.js"
+import { addExpense, getExpenses, removeExpense, getBudgets, getCreditCards, addCreditCard, removeCreditCard, saveCreditCards, calculateRealTimeBalance, getAllocations, saveAllocation } from "../lib/storage.js"
+import { FiEdit2 } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 function CreditCardTracker() {
   const [cards, setCards] = useState(getCreditCards())
@@ -105,7 +107,11 @@ function CreditCardTracker() {
 
 export default function Expenses(){
   const [_, force] = useState(0)
+  const navigate = useNavigate();
   const budgets = getBudgets()
+  const allocations = getAllocations();
+  const [editingCategory, setEditingCategory] = useState(null);
+  const [allocationInput, setAllocationInput] = useState("");
   const [form, setForm] = useState({
     amount: "",
     category: budgets[0]?.name || "",
@@ -127,6 +133,18 @@ export default function Expenses(){
   function del(id){
     removeExpense(id)
     force(x => x + 1)
+  }
+
+  function startAllocationEdit(category) {
+    setEditingCategory(category);
+    setAllocationInput(allocations[category] ?? "");
+  }
+
+  function saveAllocationEdit() {
+    saveAllocation(editingCategory, Number(allocationInput || 0));
+    setEditingCategory(null);
+    setAllocationInput("");
+    force((x) => x + 1);
   }
 
   return (
@@ -158,27 +176,50 @@ export default function Expenses(){
           ) : (
             <table className="table">
               <thead>
-                <tr><th>Date</th><th>Category</th><th>Amount</th><th>Note</th><th></th></tr>
+                <tr><th>Date</th><th>Category</th><th>Amount</th><th>Allocated</th><th>Note</th><th></th></tr>
               </thead>
+
               <tbody>
-                {expenses.map(e => (
-                  <tr key={e.id}>
-                    <td>{new Date(e.date).toLocaleDateString()}</td>
-                    <td>{e.category || "Uncategorized"}</td>
-                    <td>${Number(e.amount).toFixed(2)}</td>
-                    <td>{e.note}</td>
-                    <td><button className="btn danger" onClick={()=>del(e.id)}>Delete</button></td>
-                  </tr>
-                ))}
+                {expenses.map(e => {
+                  const allocated = allocations[e.category] ?? 0;
+                  const isEditing = editingCategory === e.category;
+                  return (
+                    <tr key={e.id}>
+                      <td>{new Date(e.date).toLocaleDateString()}</td>
+                      <td>{e.category || "Uncategorized"}</td>
+                      <td>${Number(e.amount).toFixed(2)}</td>
+                      {/* Allocation column */}
+                      <td>
+                        {isEditing ? (
+                          <div style={{ display: "flex", gap: "0.5rem" }}>
+                            <input type="number" className="input" style={{ width: 90 }} value={allocationInput} onChange={e => setAllocationInput(e.target.value)}/>
+                            <button className="btn" onClick={saveAllocationEdit}>Save</button>
+                          </div>
+                        ) : (
+                          <>
+                            ${allocated.toFixed(2)}
+                            <button className="alloc-edit-btn" title="Edit Allocated" onClick={() => startAllocationEdit(e.category)} style={{ marginLeft: "0.4rem", display: "inline-flex", alignItems: "center", justifyContent: "center", verticalAlign: "middle" }}><FiEdit2 size={14}/></button>
+                          </>
+                        )}
+                      </td>
+                      <td>{e.note}</td>
+                      <td><button className="btn danger" onClick={() => del(e.id)}>Delete</button></td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           )}
         </section>
 
-        <div className="sep col-12"></div>
-
         <CreditCardTracker />
+
+        <section className="card col-12 center">
+          <button className="btn" onClick={() => navigate("/cash-stuffing")}>
+            Open Cash Stuffing Feature
+          </button>
+        </section>
       </div>
     </div>
-  )
+  );
 }

@@ -2,7 +2,8 @@ const KEYS = {
   budgets: 'cv_budgets_v1',
   expenses: 'cv_expenses_v1',
   incomeActual: 'cv_income_actual_v1',
-  incomeExpected: 'cv_income_expected_v1'
+  incomeExpected: 'cv_income_expected_v1',
+  allocations: 'cv_allocations_v1'
 }
 
 // Helpers
@@ -168,4 +169,26 @@ export function calculateRealTimeBalance(card) {
 export function getTotalCreditCardDebt() {
   const cards = getCreditCards() || []
   return cards.reduce((sum, card) => sum + calculateRealTimeBalance(card), 0)
+}
+// CASH ALLOCATIONS
+export function getAllocations() {
+  return read(KEYS.allocations, {});
+}
+
+export function saveAllocations(data) {
+  write(KEYS.allocations, data);
+}
+
+export function saveAllocation(category, amount) {
+  const all = getAllocations();
+  all[category] = Number(amount) || 0;
+  saveAllocations(all);
+  return all;
+}
+
+export function adjustAllocation(category, delta) {
+  const all = getAllocations();
+  all[category] = (all[category] || 0) + Number(delta);
+  saveAllocations(all);
+  return all[category];
 }

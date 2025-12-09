@@ -183,7 +183,7 @@ export default function Budget(){
           </div>
         </section>
 
-        <section className="card col-12 center" style={{ marginTop: "2rem" }}>
+        <section className="card col-12 center">
           <button className="btn" onClick={() => navigate("/cash-stuffing")}>
             Open Cash Stuffing Feature
           </button>

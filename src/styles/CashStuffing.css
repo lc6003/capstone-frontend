@@ -1,17 +1,20 @@
 .cash-container {
   text-align: center;
   padding: 2rem;
+  background: var(--bg); /* ⭐ Make container respect theme */
+  color: var(--text);
 }
 
 .title {
   font-weight: 700;
   font-size: 1.8rem;
   margin-bottom: 0.5rem;
+  color: var(--text);
 }
 
 .subtitle {
   font-size: 1rem;
-  color: #555;
+  color: var(--muted); /* ⭐ Fix hardcoded light gray */
   margin-bottom: 1.5rem;
 }
 
@@ -63,9 +66,13 @@
   }
 }
 
+/* --------------------------------------------------
+   PLACEHOLDER CARDS (Add Binder / Add Wallet)
+--------------------------------------------------- */
+
 .binder-placeholder,
 .wallet-placeholder {
-  border: 2px dashed #ccc;
+  border: 2px dashed var(--border);
   border-radius: 1rem;
   width: 260px;
   height: 180px;
@@ -74,17 +81,17 @@
   justify-content: center;
   align-items: center;
   font-size: 1rem;
-  background-color: #fafafa;
-  color: #777;
+  background-color: var(--panel); /* ⭐ No light backgrounds */
+  color: var(--muted);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .binder-placeholder:hover,
 .wallet-placeholder:hover {
-  background-color: #f4f4f4;
-  border-color: #f4a261;
-  color: #333;
+  background-color: var(--bg-hover, rgba(255,255,255,0.05)); /* subtle theme-safe hover */
+  border-color: var(--primary);
+  color: var(--text);
 }
 
 .binder-placeholder.active,
@@ -92,22 +99,32 @@
   cursor: default;
   border-style: solid;
   padding: 1rem;
-  background: white;
+  background: var(--panel);
 }
+
+/* --------------------------------------------------
+   INPUTS
+--------------------------------------------------- */
 
 .input {
   padding: 0.5rem 0.75rem;
   border-radius: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border);
   width: 100%;
   font-size: 1rem;
+  background: var(--panel);
+  color: var(--text);
 }
+
+/* --------------------------------------------------
+   BUTTONS
+--------------------------------------------------- */
 
 .btn {
   padding: 0.6rem 1rem;
   border: none;
   border-radius: 12px;
-  background: linear-gradient(135deg, #f4a261, #e07a3f);
+  background: linear-gradient(135deg, #f4a261, #e07a3f); /* keep your orange brand */
   color: white;
   cursor: pointer;
   font-weight: 600;
@@ -137,6 +154,7 @@
 }
 
 /* ===== Binder Hover Actions ===== */
+
 .binder-wrapper {
   position: relative;
   text-align: center;
@@ -165,34 +183,44 @@
   text-align: center;
 }
 
-
-
-
-.binder-wrapper {
-  position: relative;
-  text-align: center;
-  transition: transform 0.15s ease;
-}
-
-.binder-wrapper:hover {
-  transform: translateY(-2px);
-}
-
-.binder-actions {
-  opacity: 0;
-  transition: opacity 0.25s ease;
-  margin-top: 0.5rem;
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-.binder-wrapper:hover .binder-actions {
-  opacity: 1;
-}
-
 .binder-edit,
 .binder-confirm {
   margin-top: 0.5rem;
   text-align: center;
+}
+
+/* ============================
+   CASHVELO — Card Styling
+   Match Dashboard Cards
+============================ */
+
+.cv-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 1.25rem;
+  box-shadow: var(--shadow);
+  transition: 0.2s ease;
+  color: var(--text);
+}
+
+.cv-card:hover {
+  box-shadow: 0 0 25px rgba(240,140,60,0.25);
+}
+
+/* Fix inputs + buttons inside dark cards */
+.cv-card .input {
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.cv-card .btn {
+  background: var(--primary);
+  color: white;
+  border-radius: 10px;
+}
+
+.cv-card .btn.danger {
+  background: #c8483f;
 }

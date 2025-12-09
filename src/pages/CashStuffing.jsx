@@ -2,26 +2,58 @@ import { CashStuffingDemo } from "../CashStuffingFeature";
 import { useNavigate } from "react-router-dom";
 
 export default function CashStuffing() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   return (
-    <div className="grid" style={{ backgroundColor: "#f9fafb", minHeight: "100vh" }}>
+    <div className="page-container" 
+      style={{
+        padding: "2rem",
+        color: "var(--text)",
+        background: "var(--bg)",     // ← same background as the whole app
+        minHeight: "100vh"
+      }}
+    >
 
-          <div style={{ display: "flex", justifyContent: "flex-start", marginBottom: "1rem" }}>
-    <button className="btn secondary" onClick={() => navigate("/budget")}style={{ backgroundColor: "#e5e7eb", color: "#111", padding: "0.5rem 1rem", borderRadius: "8px",cursor: "pointer", }}>
-        ← Back to Budget
-    </button>
-    </div>
+      {/* BACK BUTTON */}
+      <div style={{ display: "flex", justifyContent: "flex-start", marginBottom: "1.5rem" }}>
+        <button
+          className="btn secondary"
+          onClick={() => navigate("/budget")}
+          style={{
+            padding: "0.5rem 1rem",
+            borderRadius: "8px",
+          }}
+        >
+          ← Back to Budget
+        </button>
+      </div>
 
-      <h2 style={{ textAlign: "left", marginBottom: "1rem" }}>Cash Stuffing</h2>
-      <p style={{ color: "#555", lineHeight: 1.6, margin: "0 auto", textAlign: "left", marginBottom: "2rem" }}>
-       
+      {/* PAGE TITLE */}
+      <h2 style={{ 
+        textAlign: "left",
+        marginBottom: "0.75rem",
+        color: "var(--text)"
+      }}>
+        Cash Stuffing
+      </h2>
+
+      {/* DESCRIPTION */}
+      <p
+        style={{
+          maxWidth: "none",
+          textAlign: "left",
+          marginBottom: "2rem",
+          lineHeight: 1.6,
+          color: "var(--muted)"
+        }}
+      >
         Cash stuffing is a simple but powerful budgeting method where you divide
-          your money into categories, like groceries, gas, and savings, and assign each category a
-          specific amount of cash. It’s a hands on way to track spending and stay in control of your
-          finances.
+        your money into categories—like groceries, gas, and savings—and assign
+        each category a specific amount of cash. It’s a hands-on way to track
+        spending and take control of your finances.
       </p>
 
+      {/* MAIN FEATURE */}
       <CashStuffingDemo />
     </div>
   );
