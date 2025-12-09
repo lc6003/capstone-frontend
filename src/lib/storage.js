@@ -2,7 +2,8 @@ const KEYS = {
   budgets: 'cv_budgets_v1',
   expenses: 'cv_expenses_v1',
   incomeActual: 'cv_income_actual_v1',
-  incomeExpected: 'cv_income_expected_v1'
+  incomeExpected: 'cv_income_expected_v1',
+  uploadHistory: 'cv_upload_history_v1'
 }
 
 // Helpers
@@ -45,6 +46,31 @@ export function removeExpense(id){
   const expenses = getExpenses().filter(e => e.id !== id)
   saveExpenses(expenses)
   return expenses
+}
+export function updateExpense(id, updatedData){
+  const expenses = getExpenses().map(e => 
+    e.id === id ? { ...e, ...updatedData } : e
+  )
+  saveExpenses(expenses)
+  return expenses
+}
+
+// Upload history functions
+export function getUploadHistory(){
+  return read(KEYS.uploadHistory, [])
+}
+
+export function addUploadHistoryEntry(fileType, importedCount){
+  const history = getUploadHistory()
+  const entry = {
+    id: crypto.randomUUID(),
+    timestamp: Date.now(),
+    fileType: fileType, // "CSV" | "PDF" | "IMAGE"
+    importedCount: importedCount
+  }
+  history.push(entry)
+  write(KEYS.uploadHistory, history)
+  return history
 }
 
 export function totals(){
@@ -97,6 +123,21 @@ export function monthInsights(){
     byCategory[k] = (byCategory[k]||0) + amt
   }
   return {sum, byCategory, expenses}
+}
+
+export function lastMonthInsights(){
+  const now = new Date()
+  const lastMonth = new Date(now.getUTCFullYear(), now.getUTCMonth() - 1, 1)
+  const expenses = getExpenses().filter(e => {
+    const ed = new Date(e.date)
+    return isSameMonth(ed, lastMonth)
+  })
+  let sum = 0
+  for(const e of expenses){
+    const amt = Number(e.amount)||0
+    sum += amt
+  }
+  return {sum, expenses}
 }
 
 //Income helpers
@@ -165,7 +206,46 @@ export function calculateRealTimeBalance(card) {
   return Number(balance) + Number(pending) - Number(payment) - Number(planned)
 }
 
+// New Credit Card Tracker Helpers (userCreditCards)
+const USER_CARD_KEY = 'userCreditCards'
+
+export function getUserCreditCards() {
+  try {
+    return JSON.parse(localStorage.getItem(USER_CARD_KEY) || '[]')
+  } catch {
+    return []
+  }
+}
+
+export function saveUserCreditCards(cards) {
+  localStorage.setItem(USER_CARD_KEY, JSON.stringify(cards))
+}
+
+export function addUserCreditCard(newCard) {
+  const cards = getUserCreditCards()
+  cards.push({ id: crypto.randomUUID(), ...newCard })
+  saveUserCreditCards(cards)
+  return cards
+}
+
+export function removeUserCreditCard(id) {
+  const cards = getUserCreditCards().filter(c => c.id !== id)
+  saveUserCreditCards(cards)
+  return cards
+}
+
 export function getTotalCreditCardDebt() {
-  const cards = getCreditCards() || []
-  return cards.reduce((sum, card) => sum + calculateRealTimeBalance(card), 0)
+  // Calculate debt from old credit card storage (backward compatibility)
+  const oldCards = getCreditCards() || []
+  const oldDebt = oldCards.reduce((sum, card) => sum + calculateRealTimeBalance(card), 0)
+  
+  // Calculate debt from new userCreditCards storage
+  const newCards = getUserCreditCards() || []
+  const newDebt = newCards.reduce((sum, card) => {
+    const balance = Number(card.currentBalance) || 0
+    return sum + balance
+  }, 0)
+  
+  // Return sum of both (in case user has cards in both systems)
+  return oldDebt + newDebt
 }

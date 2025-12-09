@@ -553,3 +553,229 @@ html.dark .nav .btn.ghost.logout{
 html.dark .nav .btn.ghost.logout:hover{
   background:rgba(255,255,255,0.05);
 }
+
+/* Hide mobile bottom nav on desktop */
+.mobile-bottom-nav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  /* Dashboard cards - full width on mobile */
+  .dash .card {
+    width: 100% !important;
+    max-width: none !important;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  /* Dashboard container - reduce side padding and center content */
+  .dashboard-container {
+    padding-left: 16px;
+    padding-right: 16px;
+    max-width: 100%;
+  }
+  
+  /* Stack summary tiles vertically on mobile */
+  .dash .glance-tiles {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  
+  .dash .glance-tile {
+    display: block;
+    width: 100%;
+    padding: 16px 18px;
+  }
+  
+  /* Quick Actions - clean mobile-only button row container */
+  /* Ensure parent wrapper does NOT restrict width */
+  .dashboard-container.dash {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  
+  .dash .grid {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* Clean mobile button row container - no width restrictions */
+  .dash .quick-actions-row {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+    padding: 0 16px !important;
+    margin-top: 12px !important;
+    margin-bottom: 12px !important;
+    box-sizing: border-box !important;
+    flex-wrap: nowrap !important;
+    overflow: visible !important;
+  }
+  
+  /* Style buttons like desktop but scaled for mobile */
+  .dash .quick-action-btn {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    width: auto !important;
+    padding: 10px 0 !important;
+    font-size: 0.9rem !important;
+    border-radius: 8px !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    background: white !important;
+    border: 1px solid var(--border) !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05) !important;
+    color: #F4A261 !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  
+  .dash .quick-action-btn:active {
+    transform: translateY(1px) !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
+  }
+  
+  html.dark .dash .quick-action-btn {
+    background: var(--card) !important;
+    border-color: var(--border) !important;
+    color: #F4A261 !important;
+  }
+  
+  html.dark .dash .quick-action-btn:active {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15) !important;
+  }
+  
+  /* Reduce card padding by 25% */
+  .dash .card {
+    padding: 18px;
+  }
+  
+  /* Reduce section title font-size by 1 step */
+  .dash .card h2 {
+    font-size: 24px;
+  }
+  
+  .dash .card h3 {
+    font-size: 18px;
+  }
+  
+  /* Reduce body text by 1-2px */
+  .dash .card p,
+  .dash .card .description,
+  .dash .card .text-muted,
+  .dash .welcome-summary {
+    font-size: 13px;
+  }
+  
+  /* Hide top nav links on mobile, keep only logo visible */
+  .nav .left > a:not(.logo-img) {
+    display: none;
+  }
+  
+  /* Show theme toggle and logout on mobile - keep right aligned */
+  .nav .right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  /* Mobile bottom navigation bar - show on mobile */
+  .mobile-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex !important;
+    align-items: center;
+    justify-content: space-around;
+    height: 65px;
+    background: #F6F1E7;
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+    z-index: 1000;
+    padding: 0;
+    margin: 0;
+  }
+  
+  html.dark .mobile-bottom-nav {
+    background: #0b0b0d;
+    border-top-color: rgba(148, 163, 184, 0.1);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  .mobile-nav-item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-decoration: none;
+    color: rgba(15, 23, 42, 0.6);
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    border: none;
+    background: transparent;
+    padding: 8px;
+    position: relative;
+  }
+  
+  html.dark .mobile-nav-item {
+    color: rgba(243, 244, 246, 0.6);
+  }
+  
+  .mobile-nav-item.active {
+    color: #F4A261;
+  }
+  
+  html.dark .mobile-nav-item.active {
+    color: #F4A261;
+  }
+  
+  .mobile-nav-item.active::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 3px;
+    background: linear-gradient(135deg, #F4A261, #E07A3F);
+    border-radius: 0 0 3px 3px;
+  }
+  
+  .mobile-nav-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+  }
+  
+  /* Add bottom padding to container so content isn't hidden behind bottom nav */
+  .container {
+    padding-bottom: 65px;
+  }
+  
+  /* Ensure content areas have proper spacing */
+  .dash,
+  .expenses-page,
+  .budget-page,
+  .insights-page {
+    padding-bottom: 20px;
+  }
+}

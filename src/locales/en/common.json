@@ -75,6 +75,13 @@
       "insights": "Insights",
       "logout": "Logout"
     },
+    "monthSummary": {
+  "thisMonth": "So far this month you spent {{amount}} across {{count}} {{unit}}.",
+  "otherMonth": "In {{month}} you spent {{amount}} across {{count}} {{unit}}.",
+  "transaction": "transaction",
+  "transactions": "transactions"
+},
+
 
     "buttons": {
       "addExpense": "Add Expense",

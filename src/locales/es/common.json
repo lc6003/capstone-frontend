@@ -63,6 +63,39 @@
   "dashboard": {
     "welcomeTitle": "Bienvenido de nuevo",
     "welcomeSubtitle": "Resumen rápido de tus presupuestos y gastos.",
+    "monthSwitcher": {
+  "prevAria": "Mes anterior",
+  "nextAria": "Mes siguiente"
+},
+
+"glance": {
+  "title": "Resumen del mes",
+  "spentLabel": "Gastado",
+  "remainingBudgetLabel": "Presupuesto restante",
+  "avgDailySpendLabel": "Promedio diario",
+  "totalDebtLabel": "Deuda total de tarjetas:"
+},
+
+"highlights": {
+  "title": "Destacados"
+},
+
+"projected": {
+  "title": "Gasto proyectado a fin de mes",
+  "estimatedLabel": "Estimado:"
+},
+
+"creditSnapshot": {
+  "title": "Resumen de crédito",
+  "totalDebtLabel": "Deuda total:",
+  "highestUtilizationLabel": "Mayor utilización:"
+},
+"monthSummary": {
+  "thisMonth": "En lo que va del mes has gastado {{amount}} en {{count}} {{unit}}.",
+  "otherMonth": "En {{month}} gastaste {{amount}} en {{count}} {{unit}}.",
+  "transaction": "transacción",
+  "transactions": "transacciones"
+},
    
     "nav": {
       "dashboard": "Panel",
@@ -75,7 +108,9 @@
     "buttons": {
       "addExpense": "Agregar gasto",
       "newBudget": "Nuevo presupuesto",
-      "viewInsights": "Ver estadísticas"
+      "viewInsights": "Ver estadísticas",
+      "addIncome": "Agregar ingreso",
+      "addBudget": "Agregar presupuesto"
     },
 
     "incomeTitle": "Ingresos",

@@ -14,6 +14,7 @@ import Expenses from "./pages/Expenses.jsx"
 import Budget from "./pages/Budget.jsx"
 import Insights from "./pages/Insights.jsx"
 import QuestionnairePage from "./pages/QuestionnairePage.jsx"
+import Settings from "./pages/Settings.jsx"
 import LanguageSwitcher from "./components/LanguageSwitcher.jsx"
 import { useTranslation } from "react-i18next"
 
@@ -92,9 +93,14 @@ export default function App() {
   }, [])
 
   async function handleLogout() {
+    // preserve theme like in their file
+    const theme = localStorage.getItem("cashvelo_theme")
     await signOut(auth)
     localStorage.clear()
     sessionStorage.clear()
+    if (theme) {
+      localStorage.setItem("cashvelo_theme", theme)
+    }
     window.location.href = "/"
   }
 
@@ -122,6 +128,10 @@ export default function App() {
         </div>
         <div className="right">
           <ThemeToggle />
+          {/* settings button from their file */}
+          <NavLink to="/settings" className="btn ghost">
+            ⚙️
+          </NavLink>
           <LanguageSwitcher />
           <button onClick={handleLogout} className="btn ghost logout">
             {t("dashboard.nav.logout", "Logout")}
@@ -168,6 +178,14 @@ export default function App() {
           element={
             <Protected user={user}>
               <Insights />
+            </Protected>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <Protected user={user}>
+              <Settings />
             </Protected>
           }
         />

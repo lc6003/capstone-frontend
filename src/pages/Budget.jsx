@@ -1,10 +1,19 @@
 import { useMemo, useState } from "react"
-import { addBudget, getBudgets, removeBudget, getExpenses, getBudgetTotalsByType, removeLastIncome } from "../lib/storage.js"
+import {
+  addBudget,
+  getBudgets,
+  removeBudget,
+  getExpenses,
+  getBudgetTotalsByType,
+  removeLastIncome
+} from "../lib/storage.js"
 import { useTranslation } from "react-i18next"
 
 function IncomeColumn({ title, storageKey, prefix }) {
   const { t } = useTranslation()
-  const [entries, setEntries] = useState(() => JSON.parse(localStorage.getItem(storageKey) || "[]"))
+  const [entries, setEntries] = useState(
+    () => JSON.parse(localStorage.getItem(storageKey) || "[]")
+  )
   const [input, setInput] = useState("")
 
   function addEntry(e) {
@@ -14,12 +23,17 @@ function IncomeColumn({ title, storageKey, prefix }) {
     const updated = [...entries, amount]
     setEntries(updated)
     localStorage.setItem(storageKey, JSON.stringify(updated))
+    // Dispatch event to notify other components
+    window.dispatchEvent(new Event("incomeUpdated"))
     setInput("")
   }
+
   function handleDeleteLast() {
     const type = storageKey.includes("expected") ? "expected" : "actual"
     const updated = removeLastIncome(type)
     setEntries(updated)
+    // Dispatch event to notify other components
+    window.dispatchEvent(new Event("incomeUpdated"))
   }
 
   const total = entries.reduce((a, b) => a + b, 0)
@@ -27,7 +41,10 @@ function IncomeColumn({ title, storageKey, prefix }) {
   return (
     <div>
       <h4 style={{ marginBottom: "0.5rem" }}>
-        {title}: <span style={{ fontWeight: 800, color: "green" }}>${total.toFixed(2)}</span>
+        {title}:{" "}
+        <span style={{ fontWeight: 800, color: "green" }}>
+          ${total.toFixed(2)}
+        </span>
       </h4>
       {entries.map((amt, i) => (
         <div key={i} style={{ marginBottom: "1rem" }}>
@@ -63,37 +80,45 @@ function IncomeColumn({ title, storageKey, prefix }) {
   )
 }
 
-function spendFor(name, expenses){
+function spendFor(name, expenses) {
   return expenses
-    .filter(e => (e.category || "") === name)
+    .filter((e) => (e.category || "") === name)
     .reduce((s, e) => s + (Number(e.amount) || 0), 0)
 }
 
-export default function Budget(){
+export default function Budget() {
   const { t } = useTranslation()
   const [_, force] = useState(0)
-  const [form, setForm] = useState({ name:"", limit:"", type:"" })
+  const [form, setForm] = useState({ name: "", limit: "", type: "" })
   const budgets = useMemo(() => getBudgets(), [_])
-  const { recurring, variable, total } = useMemo(() => getBudgetTotalsByType(), [_])
+  const { recurring, variable, total } = useMemo(
+    () => getBudgetTotalsByType(),
+    [_]
+  )
   const expenses = useMemo(() => getExpenses(), [_])
 
-  function submit(e){
+  function submit(e) {
     e.preventDefault()
-    if(!form.name || !form.type){
+    if (!form.name || !form.type) {
       window.alert(t("budget.form.missingFieldsAlert"))
       return
     }
-    addBudget({ name: form.name, limit: Number(form.limit || 0), type: form.type })
-    setForm({ name:"", limit:"", type:"" })
-    force(x => x + 1)
-  }
-  function del(id){
-    removeBudget(id)
-    force(x => x + 1)
+    addBudget({
+      name: form.name,
+      limit: Number(form.limit || 0),
+      type: form.type
+    })
+    setForm({ name: "", limit: "", type: "" })
+    force((x) => x + 1)
   }
 
-  const recurringBudgets = budgets.filter(b => b.type === "recurring")
-  const variableBudgets = budgets.filter(b => b.type !== "recurring")
+  function del(id) {
+    removeBudget(id)
+    force((x) => x + 1)
+  }
+
+  const recurringBudgets = budgets.filter((b) => b.type === "recurring")
+  const variableBudgets = budgets.filter((b) => b.type !== "recurring")
 
   return (
     <div className="dashboard-container dash">
@@ -103,43 +128,66 @@ export default function Budget(){
           <form
             className="row"
             onSubmit={submit}
-            style={{ flexDirection:"column", gap:"0.75rem", alignItems:"flex-start" }}
+            style={{
+              flexDirection: "column",
+              gap: "0.75rem",
+              alignItems: "flex-start"
+            }}
           >
             <input
               className="input"
               placeholder={t("budget.form.namePlaceholder")}
               value={form.name}
-              onChange={e => setForm({ ...form, name:e.target.value })}
-              style={{ width:"100%", maxWidth:500 }}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              style={{ width: "100%", maxWidth: 500 }}
             />
-            <div className="row" style={{ gap:"1rem", flexWrap:"wrap", alignItems:"center" }}>
+            <div
+              className="row"
+              style={{ gap: "1rem", flexWrap: "wrap", alignItems: "center" }}
+            >
               <input
                 className="input"
                 type="number"
                 step="0.01"
                 placeholder={t("budget.form.limitPlaceholder")}
                 value={form.limit}
-                onChange={e => setForm({ ...form, limit:e.target.value })}
-                style={{ maxWidth:220 }}
+                onChange={(e) => setForm({ ...form, limit: e.target.value })}
+                style={{ maxWidth: 220 }}
               />
-              <div style={{ display:"flex", gap:"1rem", alignItems:"center" }}>
-                <label style={{ display:"flex", alignItems:"center", gap:"0.3rem" }}>
+              <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+                <label
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.3rem"
+                  }}
+                >
                   <input
                     type="radio"
                     name="budgetType"
                     value="recurring"
                     checked={form.type === "recurring"}
-                    onChange={e => setForm({ ...form, type:e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, type: e.target.value })
+                    }
                   />
                   {t("budget.form.typeRecurring")}
                 </label>
-                <label style={{ display:"flex", alignItems:"center", gap:"0.3rem" }}>
+                <label
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.3rem"
+                  }}
+                >
                   <input
                     type="radio"
                     name="budgetType"
                     value="variable"
                     checked={form.type === "variable"}
-                    onChange={e => setForm({ ...form, type:e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, type: e.target.value })
+                    }
                   />
                   {t("budget.form.typeVariable")}
                 </label>
@@ -153,7 +201,7 @@ export default function Budget(){
 
         <section className="card col-12 center">
           <h3>{t("budget.totalBudgetedTitle")}</h3>
-          <div style={{ fontSize:36, fontWeight:800, marginTop:4 }}>
+          <div style={{ fontSize: 36, fontWeight: 800, marginTop: 4 }}>
             ${total.toFixed(2)}
           </div>
         </section>
@@ -161,26 +209,30 @@ export default function Budget(){
         <section className="card col-12">
           <div className="two-col">
             <div className="center">
-              <h4 style={{ margin:0 }}>{t("budget.summary.recurringTitle")}</h4>
+              <h4 style={{ margin: 0 }}>
+                {t("budget.summary.recurringTitle")}
+              </h4>
               <div
                 style={{
-                  fontSize:24,
-                  fontWeight:700,
-                  color:"#2563eb",
-                  marginTop:4
+                  fontSize: 24,
+                  fontWeight: 700,
+                  color: "#2563eb",
+                  marginTop: 4
                 }}
               >
                 ${recurring.toFixed(2)}
               </div>
             </div>
             <div className="center">
-              <h4 style={{ margin:0 }}>{t("budget.summary.variableTitle")}</h4>
+              <h4 style={{ margin: 0 }}>
+                {t("budget.summary.variableTitle")}
+              </h4>
               <div
                 style={{
-                  fontSize:24,
-                  fontWeight:700,
-                  color:"#f59e0b",
-                  marginTop:4
+                  fontSize: 24,
+                  fontWeight: 700,
+                  color: "#f59e0b",
+                  marginTop: 4
                 }}
               >
                 ${variable.toFixed(2)}
@@ -205,24 +257,36 @@ export default function Budget(){
                 </tr>
               </thead>
               <tbody>
-                {recurringBudgets.map(b => {
+                {recurringBudgets.map((b) => {
                   const spent = spendFor(b.name, expenses)
-                  const remaining = (Number(b.limit)||0) - spent
+                  const remaining = (Number(b.limit) || 0) - spent
                   return (
                     <tr key={b.id}>
                       <td>{b.name}</td>
                       <td>
-                        {b.limit
-                          ? `$${Number(b.limit).toFixed(2)}`
-                          : <span className="pill">{t("budget.noLimitPill")}</span>
-                        }
+                        {b.limit ? (
+                          `$${Number(b.limit).toFixed(2)}`
+                        ) : (
+                          <span className="pill">
+                            {t("budget.noLimitPill")}
+                          </span>
+                        )}
                       </td>
                       <td>${spent.toFixed(2)}</td>
-                      <td style={{ color: remaining < 0 ? "#ef4444" : "#22c55e" }}>
-                        {Number.isFinite(remaining) ? `$${remaining.toFixed(2)}` : "—"}
+                      <td
+                        style={{
+                          color: remaining < 0 ? "#ef4444" : "#22c55e"
+                        }}
+                      >
+                        {Number.isFinite(remaining)
+                          ? `$${remaining.toFixed(2)}`
+                          : "—"}
                       </td>
                       <td>
-                        <button className="btn danger" onClick={() => del(b.id)}>
+                        <button
+                          className="btn danger"
+                          onClick={() => del(b.id)}
+                        >
                           {t("budget.table.delete")}
                         </button>
                       </td>
@@ -250,24 +314,36 @@ export default function Budget(){
                 </tr>
               </thead>
               <tbody>
-                {variableBudgets.map(b => {
+                {variableBudgets.map((b) => {
                   const spent = spendFor(b.name, expenses)
-                  const remaining = (Number(b.limit)||0) - spent
+                  const remaining = (Number(b.limit) || 0) - spent
                   return (
                     <tr key={b.id}>
                       <td>{b.name}</td>
                       <td>
-                        {b.limit
-                          ? `$${Number(b.limit).toFixed(2)}`
-                          : <span className="pill">{t("budget.noLimitPill")}</span>
-                        }
+                        {b.limit ? (
+                          `$${Number(b.limit).toFixed(2)}`
+                        ) : (
+                          <span className="pill">
+                            {t("budget.noLimitPill")}
+                          </span>
+                        )}
                       </td>
                       <td>${spent.toFixed(2)}</td>
-                      <td style={{ color: remaining < 0 ? "#ef4444" : "#22c55e" }}>
-                        {Number.isFinite(remaining) ? `$${remaining.toFixed(2)}` : "—"}
+                      <td
+                        style={{
+                          color: remaining < 0 ? "#ef4444" : "#22c55e"
+                        }}
+                      >
+                        {Number.isFinite(remaining)
+                          ? `$${remaining.toFixed(2)}`
+                          : "—"}
                       </td>
                       <td>
-                        <button className="btn danger" onClick={() => del(b.id)}>
+                        <button
+                          className="btn danger"
+                          onClick={() => del(b.id)}
+                        >
                           {t("budget.table.delete")}
                         </button>
                       </td>
@@ -281,7 +357,7 @@ export default function Budget(){
 
         <section className="card col-12">
           <h3>{t("budget.incomeTracker.title")}</h3>
-          <p className="muted" style={{ marginBottom:"1rem" }}>
+          <p className="muted" style={{ marginBottom: "1rem" }}>
             {t("budget.incomeTracker.subtitle")}
           </p>
           <div className="two-col">
