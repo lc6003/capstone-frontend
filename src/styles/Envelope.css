@@ -1,0 +1,156 @@
+/* ---------------------------
+   ENVELOPE BASE STYLE
+--------------------------- */
+.cv-envelope {
+  width: 250px;
+  height: 120px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 2px solid #e0c9a6;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem 0.75rem;
+  position: relative; /* required for controls */
+}
+
+.cv-envelope-body {
+  flex: 1;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid rgba(224, 201, 166, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.cv-envelope-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #5a3e1b;
+  text-transform: capitalize;
+  margin-bottom: 0.3rem;
+}
+
+.cv-envelope-amount {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #a77128;
+}
+
+.cv-envelope-holes {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.7rem;
+  padding: 0 1.4rem;
+}
+
+.cv-envelope-holes span {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  border: 2px solid #d6b58d;
+  background: #fffaf3;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+/* ---------------------------
+   ALWAYS-VISIBLE BUTTONS
+--------------------------- */
+.envelope-controls {
+  position: absolute;
+  top: 6px;
+  left: 10px;
+  display: flex;
+  gap: 0.4rem;
+  z-index: 50;
+  pointer-events: auto;
+}
+
+.adjust-btn {
+  width: 16px;
+  height: 16px;
+  border-radius: 0;
+  border: none;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  padding: 0;
+}
+
+.adjust-btn.plus {
+  color: #8A9A5B;
+}
+
+.adjust-btn.minus {
+  color: #C56A5A;
+}
+
+/* ---------------------------
+   3D FLIP SYSTEM
+--------------------------- */
+.flip-wrapper {
+  perspective: 1200px;
+  width: 250px;
+  height: 140px;
+}
+
+.envelope-3d {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.95s cubic-bezier(.65,.02,.35,1);
+  transform-origin: bottom center;
+}
+
+.envelope-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+.envelope-front {
+  transform: rotateX(0deg);
+}
+
+.envelope-back {
+  transform: rotateX(180deg);
+}
+
+.flip-next .envelope-3d {
+  transform: rotateX(-90deg);
+}
+
+.flip-prev .envelope-3d {
+  transform: rotateX(90deg);
+}
+
+/* back envelope style */
+.cv-envelope-back {
+  background: #ffffff;
+  border: 2px solid #e0c9a6;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  border-radius: 18px;
+  padding: 1.25rem 1.5rem 0.75rem;
+}
+
+.cv-envelope-body-back {
+  flex: 1;
+  background: #ffffff;
+  border: 1px solid rgba(224, 201, 166, 0.7);
+  border-radius: 12px;
+}
+
+/* - and + icons on */
+.adjust-btn svg {
+  width: 22px;
+  height: 22px;
+}

@@ -1,0 +1,226 @@
+.cash-container {
+  text-align: center;
+  padding: 2rem;
+  background: var(--bg); /* ⭐ Make container respect theme */
+  color: var(--text);
+}
+
+.title {
+  font-weight: 700;
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: var(--muted); /* ⭐ Fix hardcoded light gray */
+  margin-bottom: 1.5rem;
+}
+
+.wallets-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.binder-section {
+  margin-top: 2rem;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text);
+}
+
+.wallets-grid {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.binder-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  justify-items: center;
+}
+
+@media (max-width: 900px) {
+  .binder-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .binder-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --------------------------------------------------
+   PLACEHOLDER CARDS (Add Binder / Add Wallet)
+--------------------------------------------------- */
+
+.binder-placeholder,
+.wallet-placeholder {
+  border: 2px dashed var(--border);
+  border-radius: 1rem;
+  width: 260px;
+  height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  background-color: var(--panel); /* ⭐ No light backgrounds */
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.binder-placeholder:hover,
+.wallet-placeholder:hover {
+  background-color: var(--bg-hover, rgba(255,255,255,0.05)); /* subtle theme-safe hover */
+  border-color: var(--primary);
+  color: var(--text);
+}
+
+.binder-placeholder.active,
+.wallet-placeholder.active {
+  cursor: default;
+  border-style: solid;
+  padding: 1rem;
+  background: var(--panel);
+}
+
+/* --------------------------------------------------
+   INPUTS
+--------------------------------------------------- */
+
+.input {
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  width: 100%;
+  font-size: 1rem;
+  background: var(--panel);
+  color: var(--text);
+}
+
+/* --------------------------------------------------
+   BUTTONS
+--------------------------------------------------- */
+
+.btn {
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f4a261, #e07a3f); /* keep your orange brand */
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(240, 140, 60, 0.3);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(240, 140, 60, 0.45);
+}
+
+.btn.danger {
+  background: #dc2626;
+  color: white;
+}
+
+.btn.danger:hover {
+  background: #b91c1c;
+}
+
+.btn.small {
+  width: auto;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
+  border-radius: 10px;
+}
+
+/* ===== Binder Hover Actions ===== */
+
+.binder-wrapper {
+  position: relative;
+  text-align: center;
+  transition: transform 0.15s ease;
+}
+
+.binder-wrapper:hover {
+  transform: translateY(-2px);
+}
+
+.binder-actions {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.binder-wrapper:hover .binder-actions {
+  opacity: 1;
+}
+
+.binder-edit {
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.binder-edit,
+.binder-confirm {
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+/* ============================
+   CASHVELO — Card Styling
+   Match Dashboard Cards
+============================ */
+
+.cv-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 1.25rem;
+  box-shadow: var(--shadow);
+  transition: 0.2s ease;
+  color: var(--text);
+}
+
+.cv-card:hover {
+  box-shadow: 0 0 25px rgba(240,140,60,0.25);
+}
+
+/* Fix inputs + buttons inside dark cards */
+.cv-card .input {
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.cv-card .btn {
+  background: var(--primary);
+  color: white;
+  border-radius: 10px;
+}
+
+.cv-card .btn.danger {
+  background: #c8483f;
+}
