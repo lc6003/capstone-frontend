@@ -35,18 +35,21 @@ function parseLocalDate(dateString) {
 
 // Helper function to get month insights for a specific date
 function getMonthInsightsForDate(targetDate) {
+  // Filter expenses: exclude Income category and normalize negative amounts
   const expenses = getExpenses().filter(e => {
     // Parse expense date as local date to match with local 'targetDate'
     const ed = parseLocalDate(e.date)
-    return isSameMonth(ed, targetDate)
+    return isSameMonth(ed, targetDate) && e.category !== 'Income'
   })
   const byCategory = {}
   let sum = 0
   for(const e of expenses){
+    // Normalize negative amounts: convert to positive for spending calculations
     const amt = Number(e.amount)||0
-    sum += amt
+    const normalizedAmt = amt < 0 ? Math.abs(amt) : amt
+    sum += normalizedAmt
     const k = e.category || 'Uncategorized'
-    byCategory[k] = (byCategory[k]||0) + amt
+    byCategory[k] = (byCategory[k]||0) + normalizedAmt
   }
   return {sum, byCategory, expenses}
 }
@@ -143,7 +146,10 @@ export default function Dashboard(){
         if (!dailyTotals[day]) {
           dailyTotals[day] = 0
         }
-        dailyTotals[day] += Number(exp.amount) || 0
+        // Normalize negative amounts: convert to positive for spending calculations
+        const amt = Number(exp.amount) || 0
+        const normalizedAmt = amt < 0 ? Math.abs(amt) : amt
+        dailyTotals[day] += normalizedAmt
       }
     })
     

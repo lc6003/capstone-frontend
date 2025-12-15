@@ -1,7 +1,7 @@
 import { useMemo, useState, useEffect } from "react"
 import { monthInsights, lastMonthInsights, getIncomeTotals, getBudgets, getExpenses, isSameMonth, saveExpenses, saveBudgets, syncExpensesFromAPI, syncBudgetsFromAPI, syncIncomeFromAPI } from "../lib/storage.js"
 import { PieChart, Pie, Cell, Tooltip, LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts"
-import { FiTrendingUp, FiTrendingDown, FiAlertTriangle, FiBarChart, FiInfo, FiTarget, FiRefreshCw, FiDollarSign, FiCreditCard } from "react-icons/fi"
+import { FiTrendingUp, FiTrendingDown, FiAlertTriangle, FiBarChart, FiInfo, FiTarget, FiDollarSign, FiCreditCard } from "react-icons/fi"
 import "../styles/dashboard.css"
 
 // Helper to parse YYYY-MM-DD date strings as local dates (not UTC)
@@ -42,20 +42,40 @@ export default function Insights(){
     return months.map((monthName, monthIndex) => {
       const monthDate = new Date(currentYear, monthIndex, 1)
       
-      // Calculate spending for this month
+      // Calculate spending for this month (exclude Income, normalize negative amounts)
       const monthExpenses = allExpenses.filter(e => {
         // Parse expense date as local date to match with local 'monthDate'
         const ed = parseLocalDate(e.date)
-        return isSameMonth(ed, monthDate)
+        return isSameMonth(ed, monthDate) && e.category !== 'Income'
       })
-      const spend = monthExpenses.reduce((sum, e) => sum + (Number(e.amount) || 0), 0)
+      const spend = monthExpenses.reduce((sum, e) => {
+        const amt = Number(e.amount) || 0
+        const normalizedAmt = amt < 0 ? Math.abs(amt) : amt
+        return sum + normalizedAmt
+      }, 0)
       
-      // For income, we'll use the actual income if it's the current month, otherwise 0
-      // Note: Income data structure might need adjustment based on your actual implementation
+      // Calculate income for this month from both sources:
+      // 1. Budget page income entries (for current month only)
+      // 2. Expenses with category "Income" (for any month)
       let income = 0
+      
+      // Get income from Budget page (only for current month)
       if (monthIndex === currentMonth) {
         income = allIncome.actual || 0
       }
+      
+      // Add income from expenses with category "Income" for this month
+      const incomeExpenses = allExpenses.filter(e => {
+        const ed = parseLocalDate(e.date)
+        return isSameMonth(ed, monthDate) && e.category === 'Income'
+      })
+      
+      const expenseIncome = incomeExpenses.reduce((sum, e) => {
+        const amt = Number(e.amount) || 0
+        return sum + Math.abs(amt) // Income should always be positive
+      }, 0)
+      
+      income += expenseIncome
       
       return {
         month: monthName,
@@ -70,19 +90,22 @@ export default function Insights(){
   const { byCategory, expenses, sum } = useMemo(() => {
     const selectedMonthDate = new Date(now.getFullYear(), selectedMonth, 1) // Use local time consistently
     const allExpenses = getExpenses()
+    // Filter expenses: exclude Income category and normalize negative amounts
     const expenses = allExpenses.filter(e => {
       // Parse expense date as local date to match with local 'selectedMonthDate'
       const ed = parseLocalDate(e.date)
-      return isSameMonth(ed, selectedMonthDate)
+      return isSameMonth(ed, selectedMonthDate) && e.category !== 'Income'
     })
     
     const byCategory = {}
     let sum = 0
     for(const e of expenses){
+      // Normalize negative amounts: convert to positive for spending calculations
       const amt = Number(e.amount)||0
-      sum += amt
+      const normalizedAmt = amt < 0 ? Math.abs(amt) : amt
+      sum += normalizedAmt
       const k = e.category || 'Uncategorized'
-      byCategory[k] = (byCategory[k]||0) + amt
+      byCategory[k] = (byCategory[k]||0) + normalizedAmt
     }
     
     
@@ -94,15 +117,18 @@ export default function Insights(){
     const selectedMonthDate = new Date(now.getFullYear(), selectedMonth, 1) // Use local time consistently
     const lastMonthDate = new Date(selectedMonthDate.getFullYear(), selectedMonthDate.getMonth() - 1, 1) // Use local time consistently
     const allExpenses = getExpenses()
+    // Filter expenses: exclude Income category and normalize negative amounts
     const expenses = allExpenses.filter(e => {
       // Parse expense date as local date to match with local 'lastMonthDate'
       const ed = parseLocalDate(e.date)
-      return isSameMonth(ed, lastMonthDate)
+      return isSameMonth(ed, lastMonthDate) && e.category !== 'Income'
     })
     let sum = 0
     for(const e of expenses){
+      // Normalize negative amounts: convert to positive for spending calculations
       const amt = Number(e.amount)||0
-      sum += amt
+      const normalizedAmt = amt < 0 ? Math.abs(amt) : amt
+      sum += normalizedAmt
     }
     return {sum, expenses}
   }, [selectedMonth])
@@ -122,14 +148,34 @@ export default function Insights(){
     }
   }, [])
   
-  const incomeData = useMemo(() => {
-    // Always return current month income (income doesn't have month tracking)
-    return getIncomeTotals()
-  }, [incomeUpdateTrigger])
+  // Calculate income for selected month from both sources:
+  // 1. Budget page income entries (for current month only)
+  // 2. Expenses with category "Income" (for selected month)
+  const totalIncome = useMemo(() => {
+    const selectedMonthDate = new Date(now.getFullYear(), selectedMonth, 1)
+    const isCurrentMonth = selectedMonth === currentMonth
+    
+    // Get income from Budget page (only for current month)
+    const budgetIncome = isCurrentMonth ? (getIncomeTotals().actual || 0) : 0
+    
+    // Get income from expenses with category "Income" for selected month
+    const allExpenses = getExpenses()
+    const incomeExpenses = allExpenses.filter(e => {
+      const ed = parseLocalDate(e.date)
+      return isSameMonth(ed, selectedMonthDate) && e.category === 'Income'
+    })
+    
+    // Sum up income from expenses (use absolute value to handle negative amounts)
+    const expenseIncome = incomeExpenses.reduce((sum, e) => {
+      const amt = Number(e.amount) || 0
+      return sum + Math.abs(amt) // Income should always be positive
+    }, 0)
+    
+    return budgetIncome + expenseIncome
+  }, [selectedMonth, incomeUpdateTrigger, expenses])
 
   // Calculate metrics
   const totalSpent = sum
-  const totalIncome = incomeData.actual || 0
   const netDifference = totalIncome - totalSpent
   
   // Top spending category
@@ -220,9 +266,14 @@ export default function Insights(){
     }
     
     // Map all categories using absolute values for the chart
+    // Exclude Income from Spending Breakdown chart
     // This allows negative categories (like refunds) to appear in the chart
     const validData = sortedCategories
       .filter(cat => {
+        // Exclude Income from Spending Breakdown
+        if (cat.name === 'Income') {
+          return false
+        }
         const val = Number(cat.value)
         return val !== 0 && Number.isFinite(val) // Include both positive and negative (but not zero)
       })
@@ -257,7 +308,10 @@ export default function Insights(){
       if (!isSameMonth(date, selectedMonthDate)) return
       const dayIndex = date.getDate() // Use local time consistently
       if (!Number.isFinite(dayIndex) || dayIndex < 1 || dayIndex > daysInMonth) return
-      totals[dayIndex - 1].value += Number(exp.amount) || 0
+      // Normalize negative amounts: convert to positive for spending calculations
+      const amt = Number(exp.amount) || 0
+      const normalizedAmt = amt < 0 ? Math.abs(amt) : amt
+      totals[dayIndex - 1].value += normalizedAmt
     })
 
     return totals
@@ -305,193 +359,17 @@ export default function Insights(){
   const lastMonthByCategory = useMemo(() => {
     const categoryMap = {}
     for (const e of lastMonth.expenses) {
+      // Normalize negative amounts: convert to positive for spending calculations
       const amt = Number(e.amount) || 0
+      const normalizedAmt = amt < 0 ? Math.abs(amt) : amt
       const key = e.category || 'Uncategorized'
-      categoryMap[key] = (categoryMap[key] || 0) + amt
+      categoryMap[key] = (categoryMap[key] || 0) + normalizedAmt
     }
     return categoryMap
   }, [lastMonth.expenses])
 
   // Get budgets for budget usage insights
   const budgets = useMemo(() => getBudgets(), [])
-  
-  // Recurring payments state
-  const [recurringPayments, setRecurringPayments] = useState([])
-  
-  // Merchant normalization map for cleaning up messy merchant names
-  const merchantNormalizationMap = {
-    "STARBUCKS": "Starbucks",
-    "UBER": "Uber",
-    "UBER *TRIP": "Uber",
-    "AMZN": "Amazon",
-    "AMAZON MKTPLACE": "Amazon",
-    "MCDONALDS": "McDonald's"
-  }
-  
-  // Function to normalize merchant names using the map
-  const normalizeMerchant = (name) => {
-    if (!name) return name
-    
-    // Convert to uppercase
-    const nameUpper = name.toUpperCase().trim()
-    
-    // Check if it includes any key from merchantNormalizationMap
-    for (const [key, cleanVersion] of Object.entries(merchantNormalizationMap)) {
-      if (nameUpper.includes(key)) {
-        return cleanVersion
-      }
-    }
-    
-    // If no match, return the original name cleaned (trim spaces, remove numbers like #4321)
-    let cleaned = name.trim()
-    
-    // Remove numbers like #4321, #1234, etc.
-    cleaned = cleaned.replace(/#\d+/g, '')
-    
-    // Remove standalone numbers at the end (e.g., "STORE 123" -> "STORE")
-    cleaned = cleaned.replace(/\s+\d+$/, '')
-    
-    // Clean up multiple spaces
-    cleaned = cleaned.replace(/\s+/g, ' ').trim()
-    
-    return cleaned
-  }
-  
-  // Function to detect recurring payments
-  const detectRecurringPayments = (transactions) => {
-    if (!transactions || transactions.length === 0) return []
-    
-    // Group transactions by merchant (description) - normalize first
-    const merchantGroups = {}
-    
-    transactions.forEach(transaction => {
-      const rawMerchant = (transaction.description || '').trim()
-      if (!rawMerchant) return
-      
-      // Normalize merchant name
-      const merchant = normalizeMerchant(rawMerchant)
-      
-      const amount = Math.abs(Number(transaction.amount) || 0)
-      // Parse transaction date as local date for consistency
-      const date = parseLocalDate(transaction.date)
-      
-      if (!isNaN(date.getTime()) && amount > 0) {
-        if (!merchantGroups[merchant]) {
-          merchantGroups[merchant] = []
-        }
-        merchantGroups[merchant].push({ date, amount })
-      }
-    })
-    
-    const recurring = []
-    
-    // Analyze each merchant group
-    Object.entries(merchantGroups).forEach(([merchant, transactions]) => {
-      if (transactions.length < 2) return // Need at least 2 transactions
-      
-      // Sort by date (oldest first)
-      const sorted = [...transactions].sort((a, b) => a.date - b.date)
-      
-      // Group by similar amounts (within +/- 10%)
-      const amountGroups = []
-      sorted.forEach(trans => {
-        let foundGroup = false
-        for (let group of amountGroups) {
-          const avgAmount = group.reduce((sum, t) => sum + t.amount, 0) / group.length
-          const percentDiff = Math.abs((trans.amount - avgAmount) / avgAmount)
-          
-          if (percentDiff <= 0.1) { // Within 10%
-            group.push(trans)
-            foundGroup = true
-            break
-          }
-        }
-        if (!foundGroup) {
-          amountGroups.push([trans])
-        }
-      })
-      
-      // Check each amount group for recurring pattern
-      amountGroups.forEach(group => {
-        if (group.length < 2) return
-        
-        // Calculate time differences between consecutive transactions
-        const timeDiffs = []
-        for (let i = 1; i < group.length; i++) {
-          const diffMs = group[i].date - group[i - 1].date
-          const diffDays = diffMs / (1000 * 60 * 60 * 24)
-          timeDiffs.push(diffDays)
-        }
-        
-        // Check if time differences match weekly (7 days) or monthly (30-32 days) pattern
-        // Count how many intervals match each pattern
-        let weeklyMatches = 0
-        let monthlyMatches = 0
-        
-        for (let diff of timeDiffs) {
-          // Weekly: 6-8 days (allow some flexibility for 7 days)
-          if (diff >= 6 && diff <= 8) {
-            weeklyMatches++
-          }
-          // Monthly: 30-32 days as specified
-          if (diff >= 30 && diff <= 32) {
-            monthlyMatches++
-          }
-        }
-        
-        // Determine frequency - need at least 50% of intervals to match
-        const threshold = Math.ceil(timeDiffs.length / 2)
-        let frequency = null
-        
-        if (weeklyMatches >= threshold && weeklyMatches > 0) {
-          frequency = 'weekly'
-        } else if (monthlyMatches >= threshold && monthlyMatches > 0) {
-          frequency = 'monthly'
-        }
-        
-        if (frequency) {
-          const averageAmount = group.reduce((sum, t) => sum + t.amount, 0) / group.length
-          const lastCharge = group[group.length - 1].date
-          
-          recurring.push({
-            merchant,
-            averageAmount: Math.round(averageAmount * 100) / 100, // Round to 2 decimals
-            frequency,
-            lastCharge
-          })
-        }
-      })
-    })
-    
-    // Sort by last charge date (most recent first)
-    return recurring.sort((a, b) => b.lastCharge - a.lastCharge)
-  }
-  
-  // Detect recurring payments when expenses change
-  useEffect(() => {
-    const allExpenses = getExpenses()
-    const detected = detectRecurringPayments(allExpenses)
-    setRecurringPayments(detected)
-  }, [expenses])
-  
-  // Also recalculate when storage changes (expenses added/removed)
-  useEffect(() => {
-    const handleStorageChange = () => {
-      const allExpenses = getExpenses()
-      const detected = detectRecurringPayments(allExpenses)
-      setRecurringPayments(detected)
-    }
-    
-    window.addEventListener('storage', handleStorageChange)
-    
-    // Also listen for custom events (when expenses are modified in the same tab)
-    window.addEventListener('expensesUpdated', handleStorageChange)
-    
-    return () => {
-      window.removeEventListener('storage', handleStorageChange)
-      window.removeEventListener('expensesUpdated', handleStorageChange)
-    }
-  }, [])
 
   // Generate key insights
   const keyInsights = useMemo(() => {
@@ -765,13 +643,13 @@ export default function Insights(){
               <div className="category-list">
                 {sortedCategories
                   .filter(category => {
+                    // Exclude Income from Spending Breakdown
+                    if (category.name === 'Income') {
+                      return false
+                    }
                     // Show all categories that have non-zero values (same filter as chart)
                     const val = Number(category.value)
                     const isZero = val === 0 || !Number.isFinite(val)
-                    // Always show Income even if zero, so user can see it
-                    if (category.name === 'Income') {
-                      return true
-                    }
                     return !isZero
                   })
                   .map((category, index) => (
@@ -894,155 +772,6 @@ export default function Insights(){
           </section>
         )}
 
-        {/* Subscriptions Card */}
-        <section className="card col-12">
-          <h3 className="chart-title">Subscriptions</h3>
-          {recurringPayments.length === 0 ? (
-            <p className="muted" style={{ padding: "20px 0", textAlign: "center" }}>
-              No recurring payments detected yet.
-            </p>
-          ) : (
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-              gap: "16px",
-              marginTop: "16px"
-            }}>
-              {recurringPayments.map((subscription, index) => {
-                // Calculate next expected charge
-                const lastChargeDate = new Date(subscription.lastCharge)
-                const nextChargeDate = new Date(lastChargeDate)
-                
-                if (subscription.frequency === 'weekly') {
-                  nextChargeDate.setDate(nextChargeDate.getDate() + 7)
-                } else if (subscription.frequency === 'monthly') {
-                  nextChargeDate.setMonth(nextChargeDate.getMonth() + 1)
-                }
-                
-                const formatDate = (date) => {
-                  return date.toLocaleDateString('en-US', { 
-                    month: 'short', 
-                    day: 'numeric',
-                    year: 'numeric'
-                  })
-                }
-                
-                const isUpcoming = nextChargeDate <= new Date(new Date().setDate(new Date().getDate() + 7))
-                
-                return (
-                  <div
-                    key={index}
-                    style={{
-                      padding: "20px",
-                      backgroundColor: "var(--card)",
-                      border: "1px solid var(--border)",
-                      borderRadius: "12px",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "12px",
-                      transition: "all 0.2s ease"
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.borderColor = "var(--primary)"
-                      e.currentTarget.style.boxShadow = "0 2px 8px rgba(244, 162, 97, 0.15)"
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = "var(--border)"
-                      e.currentTarget.style.boxShadow = "none"
-                    }}
-                  >
-                    <div style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "flex-start",
-                      marginBottom: "4px"
-                    }}>
-                      <h4 style={{
-                        margin: 0,
-                        fontSize: "16px",
-                        fontWeight: 600,
-                        color: "var(--text)",
-                        flex: 1
-                      }}>
-                        {subscription.merchant}
-                      </h4>
-                      <div style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "4px",
-                        padding: "4px 10px",
-                        backgroundColor: "rgba(244, 162, 97, 0.15)",
-                        borderRadius: "999px",
-                        fontSize: "11px",
-                        fontWeight: 600,
-                        color: "var(--primary)",
-                        textTransform: "capitalize"
-                      }}>
-                        <FiRefreshCw size={12} />
-                        {subscription.frequency}
-                      </div>
-                    </div>
-                    
-                    <div style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      padding: "8px 0",
-                      borderTop: "1px solid var(--border)",
-                      borderBottom: "1px solid var(--border)"
-                    }}>
-                      <div>
-                        <div style={{
-                          fontSize: "12px",
-                          color: "var(--muted)",
-                          marginBottom: "2px"
-                        }}>
-                          Average Amount
-                        </div>
-                        <div style={{
-                          fontSize: "18px",
-                          fontWeight: 700,
-                          color: "var(--text)"
-                        }}>
-                          ${subscription.averageAmount.toFixed(2)}
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <div style={{
-                        fontSize: "12px",
-                        color: "var(--muted)",
-                        marginBottom: "4px"
-                      }}>
-                        Next Expected Charge
-                      </div>
-                      <div style={{
-                        fontSize: "14px",
-                        fontWeight: 500,
-                        color: isUpcoming ? "var(--primary)" : "var(--text)"
-                      }}>
-                        {formatDate(nextChargeDate)}
-                        {isUpcoming && (
-                          <span style={{
-                            marginLeft: "8px",
-                            fontSize: "11px",
-                            padding: "2px 6px",
-                            backgroundColor: "rgba(244, 162, 97, 0.2)",
-                            borderRadius: "4px",
-                            color: "var(--primary)"
-                          }}>
-                            Soon
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          )}
-        </section>
       </div>
     </div>
   )

@@ -1,8 +1,8 @@
 import { useMemo, useState, useEffect, useRef } from "react"
-import { FiTrash2, FiX, FiFile, FiUpload, FiFileText, FiCheckCircle, FiBarChart2, FiDollarSign, FiTag, FiCalendar, FiEdit3, FiFilter, FiCreditCard, FiTrendingUp } from "react-icons/fi"
+import { FiTrash2, FiX, FiFile, FiUpload, FiFileText, FiCheckCircle, FiBarChart2, FiDollarSign, FiTag, FiCalendar, FiEdit3, FiFilter, FiCreditCard } from "react-icons/fi"
 import Papa from "papaparse"
 import * as pdfjsLib from "pdfjs-dist"
-import { addExpense, getExpenses, removeExpense, updateExpense, getUserCreditCards, addUserCreditCard, removeUserCreditCard, saveUserCreditCards, monthInsights, getBudgets, saveExpenses, addUploadHistoryEntry, getUploadHistory, syncExpensesFromAPI } from "../lib/storage.js"
+import { addExpense, getExpenses, removeExpense, updateExpense, getUserCreditCards, addUserCreditCard, removeUserCreditCard, saveUserCreditCards, monthInsights, getBudgets, saveExpenses, addUploadHistoryEntry, getUploadHistory, syncExpensesFromAPI, syncUserCreditCardsFromAPI } from "../lib/storage.js"
 
 // Development-only logging helpers
 const isDev = import.meta.env.DEV
@@ -45,7 +45,7 @@ const configurePDFWorker = () => {
 // Configure immediately at module load (safely)
 configurePDFWorker()
 
-function CreditCardTracker({ expenses, onFilterByCard, scrollToTable }) {
+function CreditCardTracker({ expenses }) {
   const [cards, setCards] = useState(getUserCreditCards())
   const [showAddForm, setShowAddForm] = useState(false)
   const [formData, setFormData] = useState({
@@ -55,6 +55,21 @@ function CreditCardTracker({ expenses, onFilterByCard, scrollToTable }) {
     dueDate: ""
   })
   const [logo, setLogo] = useState("")
+  
+  // Sync credit cards from API on mount
+  useEffect(() => {
+    const syncCards = async () => {
+      try {
+        const syncedCards = await syncUserCreditCardsFromAPI()
+        if (syncedCards && syncedCards.length >= 0) {
+          setCards(syncedCards)
+        }
+      } catch (error) {
+        console.warn('Failed to sync credit cards from API:', error)
+      }
+    }
+    syncCards()
+  }, [])
   
   // Calculate monthly spending for each card
   const getMonthlyCharges = (cardName) => {
@@ -73,26 +88,26 @@ function CreditCardTracker({ expenses, onFilterByCard, scrollToTable }) {
       .reduce((sum, exp) => sum + (Number(exp.amount) || 0), 0)
   }
   
-  const handleViewTransactions = (cardName) => {
-    if (onFilterByCard) {
-      onFilterByCard(cardName)
-    }
-    if (scrollToTable) {
-      scrollToTable()
-    }
-  }
-
   const bankLogos = {
     chase: "/Chase-Logo-2.svg",
     citi: "/Citi-Logo-6.svg",
     "capital one": "/Capital-One-Logo-1.svg",
+    "capitalone": "/Capital-One-Logo-1.svg",
     discover: "/Discover-Logo-3.svg",
-    "bank of america": "/Bank-of-America-Logo-5.svg"
+    "bank of america": "/Bank-of-America-Logo-5.svg",
+    "bankofamerica": "/Bank-of-America-Logo-5.svg",
+    "bofa": "/Bank-of-America-Logo-5.svg"
   }
 
   useEffect(() => {
-    const cardNameLower = formData.cardName.toLowerCase()
-    const matchedBank = Object.keys(bankLogos).find(bank => 
+    if (!formData.cardName || typeof formData.cardName !== 'string') {
+      setLogo("")
+      return
+    }
+    const cardNameLower = formData.cardName.toLowerCase().trim()
+    // Sort keys by length (longest first) to match "capital one" before "capital"
+    const sortedBanks = Object.keys(bankLogos).sort((a, b) => b.length - a.length)
+    const matchedBank = sortedBanks.find(bank => 
       cardNameLower.includes(bank.toLowerCase())
     )
     
@@ -104,14 +119,17 @@ function CreditCardTracker({ expenses, onFilterByCard, scrollToTable }) {
   }, [formData.cardName])
 
   function getLogoFromCardName(cardName) {
-    const cardNameLower = cardName.toLowerCase()
-    const matchedBank = Object.keys(bankLogos).find(bank => 
+    if (!cardName || typeof cardName !== 'string') return ""
+    const cardNameLower = cardName.toLowerCase().trim()
+    // Sort keys by length (longest first) to match "capital one" before "capital"
+    const sortedBanks = Object.keys(bankLogos).sort((a, b) => b.length - a.length)
+    const matchedBank = sortedBanks.find(bank => 
       cardNameLower.includes(bank.toLowerCase())
     )
     return matchedBank ? bankLogos[matchedBank] : ""
   }
 
-  function handleAddCard(e) {
+  async function handleAddCard(e) {
     e.preventDefault()
     if (!formData.cardName || !formData.creditLimit || !formData.currentBalance || !formData.dueDate) {
       return
@@ -124,16 +142,24 @@ function CreditCardTracker({ expenses, onFilterByCard, scrollToTable }) {
       dueDate: formData.dueDate,
       logo: cardLogo
     }
-    const updated = addUserCreditCard(newCard)
-    setCards(updated)
-    setFormData({ cardName: "", creditLimit: "", currentBalance: "", dueDate: "" })
-    setLogo("")
-    setShowAddForm(false)
+    try {
+      const updated = await addUserCreditCard(newCard)
+      setCards(updated)
+      setFormData({ cardName: "", creditLimit: "", currentBalance: "", dueDate: "" })
+      setLogo("")
+      setShowAddForm(false)
+    } catch (error) {
+      console.error('Failed to add credit card:', error)
+    }
   }
 
-  function handleDelete(id) {
-    const updated = removeUserCreditCard(id)
-    setCards(updated)
+  async function handleDelete(id) {
+    try {
+      const updated = await removeUserCreditCard(id)
+      setCards(updated)
+    } catch (error) {
+      console.error('Failed to delete credit card:', error)
+    }
   }
 
   function getUtilizationPercentage(card) {
@@ -343,14 +369,6 @@ function CreditCardTracker({ expenses, onFilterByCard, scrollToTable }) {
                 
                 <div className="credit-card-footer">
                   <span className="credit-card-due-date">Due: {formatDate(card.dueDate)}</span>
-                  <button
-                    onClick={() => handleViewTransactions(card.cardName)}
-                    type="button"
-                    className="btn secondary credit-card-view-btn credit-card-view-btn-pill"
-                  >
-                    <FiTrendingUp size={14} />
-                    <span>View transactions</span>
-                  </button>
                 </div>
               </div>
             )
@@ -1998,13 +2016,25 @@ export default function Expenses(){
     return filtered
   }, [expenses, filterCategory, filterDateRange, filterCardName])
 
-  // Calculate filtered total
+  // Calculate filtered total (exclude Income, normalize negative amounts)
   const filteredTotal = useMemo(() => {
-    return filteredExpenses.reduce((sum, exp) => sum + (Number(exp.amount) || 0), 0)
+    return filteredExpenses
+      .filter(exp => exp.category !== 'Income')
+      .reduce((sum, exp) => {
+        const amt = Number(exp.amount) || 0
+        const normalizedAmt = amt < 0 ? Math.abs(amt) : amt
+        return sum + normalizedAmt
+      }, 0)
   }, [filteredExpenses])
 
-  // Calculate total spending
-  const totalSpending = expenses.reduce((sum, exp) => sum + (Number(exp.amount) || 0), 0)
+  // Calculate total spending (exclude Income, normalize negative amounts)
+  const totalSpending = expenses
+    .filter(exp => exp.category !== 'Income')
+    .reduce((sum, exp) => {
+      const amt = Number(exp.amount) || 0
+      const normalizedAmt = amt < 0 ? Math.abs(amt) : amt
+      return sum + normalizedAmt
+    }, 0)
   const monthlyBudget = budgets.reduce((sum, b) => sum + (Number(b.limit) || 0), 0)
   const remainingBudget = monthlyBudget > 0 ? Math.max(0, monthlyBudget - monthData.sum) : 0
   const now = new Date()
@@ -2530,7 +2560,15 @@ export default function Expenses(){
                               <tr key={index} style={{ borderBottom: "1px solid var(--border)" }}>
                                 <td style={{ padding: "12px", fontSize: "13px" }}>{transaction.date || '—'}</td>
                                 <td style={{ padding: "12px", fontSize: "13px", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{transaction.description || '—'}</td>
-                                <td style={{ padding: "12px", textAlign: "right", fontSize: "13px", fontWeight: 500 }}>
+                                <td style={{ 
+                                  padding: "12px", 
+                                  textAlign: "right", 
+                                  fontSize: "13px", 
+                                  fontWeight: 500,
+                                  color: transaction.amount !== null && transaction.amount !== 0 && transaction.amount < 0 
+                                    ? "#dc2626" 
+                                    : "var(--text)"
+                                }}>
                                   {transaction.amount !== null && transaction.amount !== 0 
                                     ? `$${Math.abs(transaction.amount).toFixed(2)}` 
                                     : '—'}
@@ -2997,12 +3035,14 @@ export default function Expenses(){
                       <td style={{ 
                         padding: "12px", 
                         textAlign: "right",
-                        color: transaction.amount !== 0 ? "var(--text)" : "var(--muted)",
+                        color: transaction.amount !== 0 
+                          ? (transaction.amount < 0 ? "#dc2626" : "var(--text)")
+                          : "var(--muted)",
                         fontSize: "13px",
                         fontWeight: transaction.amount !== 0 ? 500 : 400
                       }}>
                         {transaction.amount !== null && transaction.amount !== 0 
-                          ? `$${transaction.amount.toFixed(2)}` 
+                          ? `$${Math.abs(transaction.amount).toFixed(2)}` 
                           : <span style={{ color: "var(--muted)", fontStyle: "italic" }}>—</span>}
                       </td>
                       <td style={{ 
@@ -3266,11 +3306,13 @@ export default function Expenses(){
                     <div style={{ 
                       fontSize: "13px", 
                       fontWeight: 500,
-                      color: transaction.amount !== 0 ? "var(--text)" : "var(--muted)",
+                      color: transaction.amount !== 0 
+                        ? (transaction.amount < 0 ? "#dc2626" : "var(--text)")
+                        : "var(--muted)",
                       textAlign: "right"
                     }}>
                       {transaction.amount !== null && transaction.amount !== 0 
-                        ? `$${transaction.amount.toFixed(2)}` 
+                        ? `$${Math.abs(transaction.amount).toFixed(2)}` 
                         : <span style={{ color: "var(--muted)", fontStyle: "italic" }}>—</span>}
                     </div>
                     <div style={{ 
@@ -3414,7 +3456,10 @@ export default function Expenses(){
                     const categoryColor = categoryColors[e.category] || categoryColors['Other']
                     const amount = Number(e.amount)
                     const isIncome = e.category === 'Income'
-                    const isExpense = !isIncome && amount > 0
+                    // Normalize negative amounts: treat as expenses (positive display, red color)
+                    const isNegative = amount < 0
+                    const displayAmount = isNegative ? Math.abs(amount) : amount
+                    const isExpense = !isIncome && (amount > 0 || isNegative)
                     
                     return (
                     <tr 
@@ -3432,7 +3477,7 @@ export default function Expenses(){
                           </div>
                       </td>
                         <td className={`text-right amount-cell ${isIncome ? 'amount-income' : isExpense ? 'amount-expense' : ''}`}>
-                          ${amount.toFixed(2)}
+                          ${displayAmount.toFixed(2)}
                       </td>
                       <td className="note-cell">
                         {e.note || <span className="muted-text">—</span>}
@@ -3504,8 +3549,6 @@ export default function Expenses(){
 
         <CreditCardTracker 
           expenses={expenses}
-          onFilterByCard={handleFilterByCard}
-          scrollToTable={scrollToTable}
         />
       </div>
     </div>

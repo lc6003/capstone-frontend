@@ -252,18 +252,21 @@ export function isSameMonth(d1, d2){
 }
 export function monthInsights(){
   const now = new Date()
+  // Filter expenses: exclude Income category and normalize negative amounts
   const expenses = getExpenses().filter(e => {
     // Parse expense date as local date to match with local 'now'
     const ed = parseLocalDate(e.date)
-    return isSameMonth(ed, now)
+    return isSameMonth(ed, now) && e.category !== 'Income'
   })
   const byCategory = {}
   let sum = 0
   for(const e of expenses){
+    // Normalize negative amounts: convert to positive for spending calculations
     const amt = Number(e.amount)||0
-    sum += amt
+    const normalizedAmt = amt < 0 ? Math.abs(amt) : amt
+    sum += normalizedAmt
     const k = e.category || 'Uncategorized'
-    byCategory[k] = (byCategory[k]||0) + amt
+    byCategory[k] = (byCategory[k]||0) + normalizedAmt
   }
   return {sum, byCategory, expenses}
 }
@@ -271,18 +274,21 @@ export function monthInsights(){
 export function lastMonthInsights(){
   const now = new Date()
   const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1)
+  // Filter expenses: exclude Income category and normalize negative amounts
   const expenses = getExpenses().filter(e => {
     // Parse expense date as local date to match with local 'lastMonth'
     const ed = parseLocalDate(e.date)
-    return isSameMonth(ed, lastMonth)
+    return isSameMonth(ed, lastMonth) && e.category !== 'Income'
   })
   const byCategory = {}
   let sum = 0
   for(const e of expenses){
+    // Normalize negative amounts: convert to positive for spending calculations
     const amt = Number(e.amount)||0
-    sum += amt
+    const normalizedAmt = amt < 0 ? Math.abs(amt) : amt
+    sum += normalizedAmt
     const k = e.category || 'Uncategorized'
-    byCategory[k] = (byCategory[k]||0) + amt
+    byCategory[k] = (byCategory[k]||0) + normalizedAmt
   }
   return {sum, byCategory, expenses}
 }
@@ -470,8 +476,15 @@ export function calculateRealTimeBalance(card) {
 }
 
 export function getTotalCreditCardDebt() {
-  const cards = getCreditCards() || []
-  return cards.reduce((sum, card) => sum + calculateRealTimeBalance(card), 0)
+  // Get old format cards
+  const oldCards = getCreditCards() || []
+  const oldDebt = oldCards.reduce((sum, card) => sum + calculateRealTimeBalance(card), 0)
+  
+  // Get new format cards (userCreditCards)
+  const newCards = getUserCreditCards() || []
+  const newDebt = newCards.reduce((sum, card) => sum + (Number(card.currentBalance) || 0), 0)
+  
+  return oldDebt + newDebt
 }
 
 // New Credit Card Tracker Helpers (userCreditCards)
@@ -489,14 +502,88 @@ export function saveUserCreditCards(cards) {
   localStorage.setItem(USER_CARD_KEY, JSON.stringify(cards))
 }
 
-export function addUserCreditCard(newCard) {
+// Async version that syncs from API first
+export async function syncUserCreditCardsFromAPI() {
+  if (isAuthenticated()) {
+    try {
+      const apiCards = await fetchCreditCards()
+      if (apiCards && Array.isArray(apiCards)) {
+        // Filter for new format cards (have cardName field) or transform old format
+        const newFormatCards = apiCards
+          .filter(card => card.cardName) // New format cards
+          .map(card => ({
+            id: card.id,
+            cardName: card.cardName,
+            creditLimit: card.creditLimit || card.limit || 0,
+            currentBalance: card.currentBalance || card.balance || 0,
+            dueDate: card.dueDate || '',
+            logo: card.logo || ''
+          }))
+        saveUserCreditCards(newFormatCards)
+        return newFormatCards
+      }
+    } catch (error) {
+      console.warn('Failed to fetch user credit cards from API:', error)
+    }
+  }
+  return getUserCreditCards()
+}
+
+export async function addUserCreditCard(newCard) {
+  const cardToAdd = { id: crypto.randomUUID(), ...newCard }
+  
+  // Try API first if authenticated
+  if (isAuthenticated()) {
+    try {
+      // Transform to API format (API might accept both formats)
+      const apiCard = {
+        ...cardToAdd,
+        name: newCard.cardName, // Some APIs might expect 'name' field
+        limit: newCard.creditLimit,
+        balance: newCard.currentBalance
+      }
+      const createdCard = await createCreditCard(apiCard)
+      // Sync to localStorage
+      const cards = getUserCreditCards()
+      // Transform back to new format
+      const transformedCard = {
+        id: createdCard.id,
+        cardName: createdCard.cardName || createdCard.name,
+        creditLimit: createdCard.creditLimit || createdCard.limit || 0,
+        currentBalance: createdCard.currentBalance || createdCard.balance || 0,
+        dueDate: createdCard.dueDate || '',
+        logo: createdCard.logo || ''
+      }
+      const updatedCards = [...cards.filter(c => c.id !== transformedCard.id), transformedCard]
+      saveUserCreditCards(updatedCards)
+      return updatedCards
+    } catch (error) {
+      console.warn('Failed to create user credit card via API, using localStorage:', error)
+    }
+  }
+  
+  // Fallback to localStorage only
   const cards = getUserCreditCards()
-  cards.push({ id: crypto.randomUUID(), ...newCard })
+  cards.push(cardToAdd)
   saveUserCreditCards(cards)
   return cards
 }
 
-export function removeUserCreditCard(id) {
+export async function removeUserCreditCard(id) {
+  // Try API first if authenticated
+  if (isAuthenticated()) {
+    try {
+      await deleteCreditCard(id)
+      // Sync to localStorage
+      const cards = getUserCreditCards().filter(c => c.id !== id)
+      saveUserCreditCards(cards)
+      return cards
+    } catch (error) {
+      console.warn('Failed to delete user credit card via API, using localStorage:', error)
+    }
+  }
+  
+  // Fallback to localStorage only
   const cards = getUserCreditCards().filter(c => c.id !== id)
   saveUserCreditCards(cards)
   return cards
