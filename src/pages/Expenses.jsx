@@ -2008,7 +2008,8 @@ export default function Expenses(){
   const monthlyBudget = budgets.reduce((sum, b) => sum + (Number(b.limit) || 0), 0)
   const remainingBudget = monthlyBudget > 0 ? Math.max(0, monthlyBudget - monthData.sum) : 0
   const now = new Date()
-  const currentDay = now.getUTCDate()
+  // Use local date to be consistent with the pattern established elsewhere in the codebase
+  const currentDay = now.getDate()
   const avgDailySpend = currentDay > 0 ? monthData.sum / currentDay : 0
 
   async function submit(e){
