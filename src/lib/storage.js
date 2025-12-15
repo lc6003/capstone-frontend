@@ -125,6 +125,24 @@ export function monthInsights(){
   return {sum, byCategory, expenses}
 }
 
+export function lastMonthInsights(){
+  const now = new Date()
+  const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1)
+  const expenses = getExpenses().filter(e => {
+    const ed = new Date(e.date)
+    return isSameMonth(ed, lastMonth)
+  })
+  const byCategory = {}
+  let sum = 0
+  for(const e of expenses){
+    const amt = Number(e.amount)||0
+    sum += amt
+    const k = e.category || 'Uncategorized'
+    byCategory[k] = (byCategory[k]||0) + amt
+  }
+  return {sum, byCategory, expenses}
+}
+
 //Income helpers
 export function getIncomeTotals() {
   const actual = JSON.parse(localStorage.getItem(KEYS.incomeActual) || '[]')
