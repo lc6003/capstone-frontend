@@ -1,13 +1,21 @@
 import { useMemo, useState, useEffect } from "react"
-import { monthInsights, lastMonthInsights, getIncomeTotals, getBudgets, getExpenses, isSameMonth, saveExpenses, saveBudgets } from "../lib/storage.js"
-import { fetchExpenses, fetchBudgets } from "../lib/api.js"
+import { monthInsights, lastMonthInsights, getIncomeTotals, getBudgets, getExpenses, isSameMonth, saveExpenses, saveBudgets, syncExpensesFromAPI, syncBudgetsFromAPI, syncIncomeFromAPI } from "../lib/storage.js"
 import { PieChart, Pie, Cell, Tooltip, LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts"
 import { FiTrendingUp, FiTrendingDown, FiAlertTriangle, FiBarChart, FiInfo, FiTarget, FiRefreshCw, FiDollarSign, FiCreditCard } from "react-icons/fi"
 import "../styles/dashboard.css"
 
+// Helper to parse YYYY-MM-DD date strings as local dates (not UTC)
+function parseLocalDate(dateString) {
+  if (typeof dateString === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+    const [year, month, day] = dateString.split('-').map(Number)
+    return new Date(year, month - 1, day)
+  }
+  return new Date(dateString)
+}
+
 export default function Insights(){
   const now = new Date()
-  const currentMonth = now.getUTCMonth()
+  const currentMonth = now.getMonth() // Use local time, not UTC
   
   // State for selected month (default to current month)
   const [selectedMonth, setSelectedMonth] = useState(currentMonth)
@@ -15,45 +23,10 @@ export default function Insights(){
   // Fetch and sync data from API on mount
   useEffect(() => {
     const syncDataFromAPI = async () => {
-      try {
-        // Fetch expenses from API
-        const apiExpenses = await fetchExpenses()
-        if (apiExpenses && apiExpenses.length > 0) {
-          const localExpenses = getExpenses()
-          // Merge API expenses with local expenses, avoiding duplicates
-          const mergedExpenses = [...localExpenses]
-          apiExpenses.forEach(apiExp => {
-            const exists = mergedExpenses.some(localExp => localExp.id === apiExp.id)
-            if (!exists) {
-              mergedExpenses.push(apiExp)
-            }
-          })
-          saveExpenses(mergedExpenses)
-        }
-      } catch (error) {
-        console.warn('Failed to fetch expenses from API:', error)
-        // Continue with local storage if API fails
-      }
-
-      try {
-        // Fetch budgets from API
-        const apiBudgets = await fetchBudgets()
-        if (apiBudgets && apiBudgets.length > 0) {
-          const localBudgets = getBudgets()
-          // Merge API budgets with local budgets, avoiding duplicates
-          const mergedBudgets = [...localBudgets]
-          apiBudgets.forEach(apiBudget => {
-            const exists = mergedBudgets.some(localBudget => localBudget.id === apiBudget.id)
-            if (!exists) {
-              mergedBudgets.push(apiBudget)
-            }
-          })
-          saveBudgets(mergedBudgets)
-        }
-      } catch (error) {
-        console.warn('Failed to fetch budgets from API:', error)
-        // Continue with local storage if API fails
-      }
+      // Use storage.js sync functions which handle API calls and localStorage sync
+      await syncExpensesFromAPI()
+      await syncBudgetsFromAPI()
+      await syncIncomeFromAPI()
     }
     syncDataFromAPI()
   }, [])
@@ -62,7 +35,7 @@ export default function Insights(){
   const monthlyData = useMemo(() => {
     const allExpenses = getExpenses()
     const allIncome = getIncomeTotals()
-    const currentYear = now.getUTCFullYear()
+    const currentYear = now.getFullYear() // Use local time, not UTC
     
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     
@@ -71,7 +44,8 @@ export default function Insights(){
       
       // Calculate spending for this month
       const monthExpenses = allExpenses.filter(e => {
-        const ed = new Date(e.date)
+        // Parse expense date as local date to match with local 'monthDate'
+        const ed = parseLocalDate(e.date)
         return isSameMonth(ed, monthDate)
       })
       const spend = monthExpenses.reduce((sum, e) => sum + (Number(e.amount) || 0), 0)
@@ -94,10 +68,11 @@ export default function Insights(){
   
   // Get insights for selected month
   const { byCategory, expenses, sum } = useMemo(() => {
-    const selectedMonthDate = new Date(now.getUTCFullYear(), selectedMonth, 1)
+    const selectedMonthDate = new Date(now.getFullYear(), selectedMonth, 1) // Use local time consistently
     const allExpenses = getExpenses()
     const expenses = allExpenses.filter(e => {
-      const ed = new Date(e.date)
+      // Parse expense date as local date to match with local 'selectedMonthDate'
+      const ed = parseLocalDate(e.date)
       return isSameMonth(ed, selectedMonthDate)
     })
     
@@ -116,11 +91,12 @@ export default function Insights(){
   
   // Get last month insights (month before selected month)
   const lastMonth = useMemo(() => {
-    const selectedMonthDate = new Date(now.getUTCFullYear(), selectedMonth, 1)
-    const lastMonthDate = new Date(selectedMonthDate.getUTCFullYear(), selectedMonthDate.getUTCMonth() - 1, 1)
+    const selectedMonthDate = new Date(now.getFullYear(), selectedMonth, 1) // Use local time consistently
+    const lastMonthDate = new Date(selectedMonthDate.getFullYear(), selectedMonthDate.getMonth() - 1, 1) // Use local time consistently
     const allExpenses = getExpenses()
     const expenses = allExpenses.filter(e => {
-      const ed = new Date(e.date)
+      // Parse expense date as local date to match with local 'lastMonthDate'
+      const ed = parseLocalDate(e.date)
       return isSameMonth(ed, lastMonthDate)
     })
     let sum = 0
@@ -266,17 +242,20 @@ export default function Insights(){
   
   
   const dailySeries = useMemo(() => {
-    const selectedMonthDate = new Date(now.getUTCFullYear(), selectedMonth, 1)
-    const daysInMonth = new Date(selectedMonthDate.getUTCFullYear(), selectedMonthDate.getUTCMonth() + 1, 0).getUTCDate()
+    const selectedMonthDate = new Date(now.getFullYear(), selectedMonth, 1) // Use local time consistently
+    const daysInMonth = new Date(selectedMonthDate.getFullYear(), selectedMonthDate.getMonth() + 1, 0).getDate() // Use local time consistently
     const totals = Array.from({ length: daysInMonth }, (_, idx) => ({
       day: idx + 1,
       value: 0
     }))
 
     expenses.forEach(exp => {
-      const date = new Date(exp.date)
+      // Parse expense date as local date for consistent day extraction
+      const date = parseLocalDate(exp.date)
       if (Number.isNaN(date.getTime())) return
-      const dayIndex = date.getUTCDate()
+      // Only include expenses from the selected month
+      if (!isSameMonth(date, selectedMonthDate)) return
+      const dayIndex = date.getDate() // Use local time consistently
       if (!Number.isFinite(dayIndex) || dayIndex < 1 || dayIndex > daysInMonth) return
       totals[dayIndex - 1].value += Number(exp.amount) || 0
     })
@@ -393,7 +372,8 @@ export default function Insights(){
       const merchant = normalizeMerchant(rawMerchant)
       
       const amount = Math.abs(Number(transaction.amount) || 0)
-      const date = new Date(transaction.date)
+      // Parse transaction date as local date for consistency
+      const date = parseLocalDate(transaction.date)
       
       if (!isNaN(date.getTime()) && amount > 0) {
         if (!merchantGroups[merchant]) {

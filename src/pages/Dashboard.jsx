@@ -15,18 +15,29 @@ import {
   isSameMonth,
   saveExpenses,
   getBudgets,
-  saveBudgets
+  saveBudgets,
+  syncExpensesFromAPI,
+  syncBudgetsFromAPI
 } from "../lib/storage.js"
-import { fetchExpenses, fetchBudgets } from "../lib/api.js"
 import "../styles/dashboard.css"
 
 
 const money = (n) => (Number.isFinite(n) ? `$${n.toFixed(2)}` : "—")
 
+// Helper function to parse YYYY-MM-DD date strings as local dates (not UTC)
+function parseLocalDate(dateString) {
+  if (typeof dateString === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+    const [year, month, day] = dateString.split('-').map(Number)
+    return new Date(year, month - 1, day)
+  }
+  return new Date(dateString)
+}
+
 // Helper function to get month insights for a specific date
 function getMonthInsightsForDate(targetDate) {
   const expenses = getExpenses().filter(e => {
-    const ed = new Date(e.date)
+    // Parse expense date as local date to match with local 'targetDate'
+    const ed = parseLocalDate(e.date)
     return isSameMonth(ed, targetDate)
   })
   const byCategory = {}
@@ -49,45 +60,9 @@ export default function Dashboard(){
   // Fetch and sync data from API on mount
   useEffect(() => {
     const syncDataFromAPI = async () => {
-      try {
-        // Fetch expenses from API
-        const apiExpenses = await fetchExpenses()
-        if (apiExpenses && apiExpenses.length > 0) {
-          const localExpenses = getExpenses()
-          // Merge API expenses with local expenses, avoiding duplicates
-          const mergedExpenses = [...localExpenses]
-          apiExpenses.forEach(apiExp => {
-            const exists = mergedExpenses.some(localExp => localExp.id === apiExp.id)
-            if (!exists) {
-              mergedExpenses.push(apiExp)
-            }
-          })
-          saveExpenses(mergedExpenses)
-        }
-      } catch (error) {
-        console.warn('Failed to fetch expenses from API:', error)
-        // Continue with local storage if API fails
-      }
-
-      try {
-        // Fetch budgets from API
-        const apiBudgets = await fetchBudgets()
-        if (apiBudgets && apiBudgets.length > 0) {
-          const localBudgets = getBudgets()
-          // Merge API budgets with local budgets, avoiding duplicates
-          const mergedBudgets = [...localBudgets]
-          apiBudgets.forEach(apiBudget => {
-            const exists = mergedBudgets.some(localBudget => localBudget.id === apiBudget.id)
-            if (!exists) {
-              mergedBudgets.push(apiBudget)
-            }
-          })
-          saveBudgets(mergedBudgets)
-        }
-      } catch (error) {
-        console.warn('Failed to fetch budgets from API:', error)
-        // Continue with local storage if API fails
-      }
+      // Use storage.js sync functions which handle API calls and localStorage sync
+      await syncExpensesFromAPI()
+      await syncBudgetsFromAPI()
     }
     syncDataFromAPI()
   }, [])
@@ -161,7 +136,8 @@ export default function Dashboard(){
     const dailyTotals = {}
     
     expenses.forEach(exp => {
-      const expDate = new Date(exp.date)
+      // Parse expense date as local date to match with local 'selectedMonth'
+      const expDate = parseLocalDate(exp.date)
       if (isSameMonth(expDate, selectedMonth)) {
         const day = expDate.getDate()
         if (!dailyTotals[day]) {

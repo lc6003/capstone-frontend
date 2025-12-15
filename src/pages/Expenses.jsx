@@ -2,8 +2,7 @@ import { useMemo, useState, useEffect, useRef } from "react"
 import { FiTrash2, FiX, FiFile, FiUpload, FiFileText, FiCheckCircle, FiBarChart2, FiDollarSign, FiTag, FiCalendar, FiEdit3, FiFilter, FiCreditCard, FiTrendingUp } from "react-icons/fi"
 import Papa from "papaparse"
 import * as pdfjsLib from "pdfjs-dist"
-import { addExpense, getExpenses, removeExpense, updateExpense, getUserCreditCards, addUserCreditCard, removeUserCreditCard, saveUserCreditCards, monthInsights, getBudgets, saveExpenses, addUploadHistoryEntry, getUploadHistory } from "../lib/storage.js"
-import { fetchExpenses, createExpense, deleteExpense } from "../lib/api.js"
+import { addExpense, getExpenses, removeExpense, updateExpense, getUserCreditCards, addUserCreditCard, removeUserCreditCard, saveUserCreditCards, monthInsights, getBudgets, saveExpenses, addUploadHistoryEntry, getUploadHistory, syncExpensesFromAPI } from "../lib/storage.js"
 
 // Development-only logging helpers
 const isDev = import.meta.env.DEV
@@ -1945,28 +1944,12 @@ export default function Expenses(){
 
   // Fetch expenses from API on mount and sync with local storage
   useEffect(() => {
-    const syncExpensesFromAPI = async () => {
-      try {
-        const apiExpenses = await fetchExpenses()
-        if (apiExpenses && apiExpenses.length > 0) {
-          const localExpenses = getExpenses()
-          // Merge API expenses with local expenses, avoiding duplicates
-          const mergedExpenses = [...localExpenses]
-          apiExpenses.forEach(apiExp => {
-            const exists = mergedExpenses.some(localExp => localExp.id === apiExp.id)
-            if (!exists) {
-              mergedExpenses.push(apiExp)
-            }
-          })
-          saveExpenses(mergedExpenses)
-          force(x => x + 1)
-        }
-      } catch (error) {
-        devWarn('Failed to fetch expenses from API:', error)
-        // Continue with local storage if API fails
-      }
+    const syncData = async () => {
+      // Use storage.js sync function which handles API calls and localStorage sync
+      await syncExpensesFromAPI()
+      force(x => x + 1)
     }
-    syncExpensesFromAPI()
+    syncData()
   }, [])
 
   // Filter expenses
