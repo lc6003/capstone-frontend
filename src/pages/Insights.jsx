@@ -671,7 +671,7 @@ export default function Insights(){
             <p className="muted">No data yet.</p>
           ) : (
             <div className="daily-chart-container">
-              <ResponsiveContainer width="100%" height={300}>
+              <ResponsiveContainer width="100%" height={380}>
                 <LineChart data={dailySeries}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
                   <XAxis

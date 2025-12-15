@@ -247,7 +247,10 @@ html.dark .month-switcher-current:hover:not(:disabled){
   flex-direction: column;
   gap: 14px;
   position: relative;
+  box-sizing: border-box;
 }
+
+/* Make cards with daily chart fill available space */
 
 .dash .card::before{
   content: '';
@@ -1287,12 +1290,27 @@ html.dark .dash .credit-snapshot-card::before{
 
 .daily-chart-container{
   width: 100%;
-  min-height: 320px;
+  min-height: 380px;
+  height: 380px;
+  position: relative;
+}
+
+.daily-chart-container .recharts-responsive-container {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+@media(max-width: 880px){
+  .daily-chart-container{
+    min-height: 320px;
+    height: 320px;
+  }
 }
 
 @media(max-width: 640px){
   .daily-chart-container{
-    min-height: 260px;
+    min-height: 280px;
+    height: 280px;
   }
 }
 
