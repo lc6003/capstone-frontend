@@ -13,6 +13,8 @@ import {
   deleteIncome
 } from './api.js'
 
+import { resetEnvelope } from "./cashStuffingStorage";
+
 const KEYS = {
   budgets: 'cv_budgets_v1',
   expenses: 'cv_expenses_v1',
@@ -84,6 +86,47 @@ export async function addBudget(newBudget){
   return budgets
 }
 
+export async function removeBudget(id) {
+  let removed;
+
+  // Try API first if authenticated
+  if (isAuthenticated()) {
+    try {
+      const budgets = read(KEYS.budgets, []);
+      removed = budgets.find(b => b.id === id);
+
+      await deleteBudget(id);
+
+      const updated = budgets.filter(b => b.id !== id);
+      saveBudgets(updated);
+
+      // 🔥 Reset envelope balance when budget is deleted
+      if (removed?.name) {
+        resetEnvelope(removed.name);
+      }
+
+      return updated;
+    } catch (error) {
+      console.warn('Failed to delete budget via API, using localStorage:', error);
+    }
+  }
+
+  // Fallback to localStorage only
+  const budgets = read(KEYS.budgets, []);
+  removed = budgets.find(b => b.id === id);
+
+  const updated = budgets.filter(b => b.id !== id);
+  saveBudgets(updated);
+
+  // 🔥 Reset envelope balance when budget is deleted
+  if (removed?.name) {
+    resetEnvelope(removed.name);
+  }
+
+  return updated;
+}
+
+/*
 export async function removeBudget(id){
   // Try API first if authenticated
   if (isAuthenticated()) {
@@ -103,6 +146,7 @@ export async function removeBudget(id){
   saveBudgets(budgets)
   return budgets
 }
+*/
 
 // Sync version for immediate access (used in useMemo, etc.)
 export function getExpenses(){

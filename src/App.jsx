@@ -14,6 +14,8 @@ import Expenses from "./pages/Expenses.jsx"
 import Budget from "./pages/Budget.jsx"
 import Insights from "./pages/Insights.jsx"
 import Settings from "./pages/Settings.jsx"  
+import CashStuffing from "./pages/CashStuffing.jsx";
+import EnvelopePage from "./pages/EnvelopePage.jsx";
 
 
 function Protected({ user, children }) {
@@ -67,6 +69,7 @@ export default function App() {
           <img src="/cat-envelope.jpg" className="logo-img" alt="Cashvelo" />
           <NavLink to="/dashboard" end>Dashboard</NavLink>
           <NavLink to="/budget">Budget</NavLink>
+          <NavLink to="/cash-stuffing">Cash Stuffing</NavLink>
           <NavLink to="/expenses">Spending</NavLink>
           <NavLink to="/insights">Insights</NavLink>
         </div>
@@ -85,6 +88,8 @@ export default function App() {
         <Route path="/budget" element={<Protected user={user}><Budget/></Protected>} />
         <Route path="/expenses" element={<Protected user={user}><Expenses/></Protected>} />
         <Route path="/insights" element={<Protected user={user}><Insights/></Protected>} />
+        <Route path="/cash-stuffing" element={<Protected user={user}><CashStuffing/></Protected>} />
+        <Route path="/:type/:name"element={<Protected user={user}><EnvelopePage /></Protected>} />
         <Route path="/settings" element={<Protected user={user}><Settings/></Protected>} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
