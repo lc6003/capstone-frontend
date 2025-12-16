@@ -4,6 +4,7 @@ import Envelope from "../CashStuffingFeature/components/Envelope";
 import { getEnvelopesForRoute } from "../lib/cashSync.js";
 import { adjustEnvelopeBalance, getCashEnvelopes } from "../lib/cashStuffingStorage.js";
 import { useParams, useNavigate } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa";
 
 /* ----------------------------------------
    BILL CONFIG (largest → smallest)
@@ -198,22 +199,24 @@ export default function EnvelopePage() {
       {/* BACK BUTTON */}
       <div
         style={{
-          width: "100%",
+          maxWidth: "1140px",
+          margin: "0 auto",
           padding: "1rem 2rem",
           display: "flex",
           justifyContent: "flex-start",
+          marginBottom: "1.5rem",
         }}
       >
         <button
           className="btn secondary"
           onClick={() => navigate("/cash-stuffing")}
+          title="Back"
           style={{
-            padding: "0.6rem 1.4rem",
-            borderRadius: "10px",
-            fontWeight: 600,
+            borderRadius: "15px",
+            width: "auto",
           }}
         >
-          ← Back to Cash Stuffing Page
+          <FaArrowLeft size={16} />
         </button>
       </div>
 

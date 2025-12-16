@@ -87,8 +87,8 @@ useEffect(() => {
   }
 
   return (
-    <div className="page-container cash-container">
-      <h1 className="title" style={{ color: "var(--text)" }}>
+    <div className="demo">
+      <h1 className="title" style={{ maxWidth: "1140px", margin: "0 auto", textAlign:"center", marginBottom: "1rem", color: "var(--text)" }}>
         {t("cashStuffingDemo.binders", "Your Wallet and Binders")}
       </h1>
 
@@ -144,7 +144,7 @@ useEffect(() => {
             }));
 
             return (
-              <div key={b.id} className="binder-wrapper">
+              <div key={b.id} className="binder-card">
                 <Binder
                   name={b.name}
                   envelopes={envs}
@@ -189,7 +189,10 @@ useEffect(() => {
                     </div>
                   </div>
                 ) : (
-                  <div className="binder-actions">
+                  <div 
+                    className="binder-actions"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <button className="btn" onClick={() => handleStartRename(b.id, b.name)}>
                       {t("common.rename", "Rename")}
                     </button>
@@ -204,7 +207,7 @@ useEffect(() => {
         </div>
 
         {/* ADD BINDER */}
-        <div style={{ marginTop: "2rem", textAlign: "center" }}>
+        <div style={{ marginTop: "3rem", textAlign: "center" }}>
           {!addingBinder ? (
             <button className="btn" onClick={() => setAddingBinder(true)} style={{ width: "fit-content" }} >
               + {t("cashStuffingDemo.addBinder", "Add Binder")}
