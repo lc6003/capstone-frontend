@@ -262,6 +262,11 @@ export default function Dashboard(){
 
         <section className="card col-12 glance-section">
           <h3>This Month at a Glance</h3>
+          <div className="glance-actions-row">
+            <Link to="/expenses" className="quick-action-btn">Add Expense</Link>
+            <Link to="/budget" className="quick-action-btn">Add Income</Link>
+            <Link to="/budget" className="quick-action-btn">Add Budget</Link>
+          </div>
           <div className="glance-tiles">
             <div className="glance-tile">
               <div className="glance-label">Spent</div>
@@ -294,12 +299,6 @@ export default function Dashboard(){
             )}
           </div>
         </section>
-
-        <div className="quick-actions-row">
-          <Link to="/expenses" className="quick-action-btn">Add Expense</Link>
-          <Link to="/budget" className="quick-action-btn">Add Income</Link>
-          <Link to="/budget" className="quick-action-btn">Add Budget</Link>
-        </div>
 
         <section className="card col-12 highlights-card">
           <h3>Highlights</h3>
