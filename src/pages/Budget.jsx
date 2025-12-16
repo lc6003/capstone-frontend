@@ -61,11 +61,46 @@ function IncomeColumn({ title, type, prefix }) {
       <h4 style={{ marginBottom: "0.5rem" }}>
         {title}: <span style={{ fontWeight: 800, color: "green" }}>${total.toFixed(2)}</span>
       </h4>
-      {entries.map((entry, i) => (
-        <div key={entry._id} style={{ marginBottom: "1rem" }}>
-          Paycheck {i + 1}: ${entry.amount.toFixed(2)}
-        </div>
-      ))}
+      {entries.map((entry, i) => {
+        const isLast = i === entries.length - 1;
+
+        return (
+          <div
+            key={entry._id}
+            style={{
+              marginBottom: "0.75rem",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+            }}
+          >
+            <span>
+              Paycheck {i + 1}: ${entry.amount.toFixed(2)}
+            </span>
+            {isLast && (
+              <button
+                className="btn danger"
+                onClick={handleDeleteLast}
+                title="Delete last entry"
+                type="button"
+                disabled={loading}
+                style={{
+                  minWidth: "40px",
+                  height: "40px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "0 12px",
+                  position: "relative",
+                  top: "-4px"
+                }}
+              >
+                <FaRegTrashAlt size={16} color="white" />
+              </button>
+            )}
+          </div>
+        );
+      })}
       <form onSubmit={addEntry} style={{ marginTop: "0.5rem", display: "flex", alignItems: "center", flexWrap:"nowrap" }}>
         <label style={{ marginRight: "0.5rem" }}>{prefix} {entries.length + 1}:</label>
         <input 
@@ -79,16 +114,6 @@ function IncomeColumn({ title, type, prefix }) {
           disabled={loading}
         />
         <button className="btn" type="submit" disabled={loading}>Add</button>
-        <button 
-          className="btn danger" 
-          onClick={handleDeleteLast} 
-          title="Delete last entry" 
-          type="button"
-          disabled={loading || entries.length === 0}
-          style={{ marginLeft: "0.5rem", minWidth: "40px", height: "40px", display: "inline-flex", alignItems: "center", justifyContent: "center", verticalAlign: "middle", background: "crimson"}}
-        >
-          <FaRegTrashAlt size={16} color="white" />
-        </button>
       </form>
     </div>
   )

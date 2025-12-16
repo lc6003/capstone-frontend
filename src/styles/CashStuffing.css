@@ -154,3 +154,90 @@
   width: 22px;
   height: 22px;
 }
+
+/* ---------------------------
+   CASH STUFFING PAGE LAYOUT
+--------------------------- */
+
+.cv-wallet-binders {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.wallets-grid,
+.binder-grid {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+/* ---------------------------
+   HOVER BUTTONS FOR BINDERS
+--------------------------- */
+
+.binder-card {
+  position: relative;
+}
+
+.binder-actions {
+  position: absolute;
+  bottom: -2.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.binder-card:hover .binder-actions {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+
+
+/* ---------------------------
+   DANGER BUTTONS (Delete / Cancel / Yes)
+--------------------------- */
+
+.btn.danger {
+  background: #dc2626;               /* red-600 */
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.35);
+  transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+}
+
+.btn.danger:hover {
+  background: #b91c1c;               /* red-700 */
+  box-shadow: 0 6px 16px rgba(220, 38, 38, 0.5);
+  transform: translateY(-1px);
+}
+
+.btn.danger:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 8px rgba(220, 38, 38, 0.4);
+}
+
+.btn.danger:focus {
+  outline: 3px solid rgba(220, 38, 38, 0.45);
+  outline-offset: 2px;
+}
+
+/* Disabled state */
+.btn.danger:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
