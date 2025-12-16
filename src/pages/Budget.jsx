@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react"
 import { fetchBudgets, createBudget, deleteBudget, fetchIncome, createIncome, deleteIncome, fetchExpenses } from "../lib/api.js"
 import { FaRegTrashAlt } from "react-icons/fa"
+import { useTranslation } from "react-i18next"
 
 function IncomeColumn({ title, type, prefix }) {
+  const { t } = useTranslation("common")
   const [entries, setEntries] = useState([])
   const [input, setInput] = useState("")
   const [loading, setLoading] = useState(false)
@@ -32,7 +34,7 @@ function IncomeColumn({ title, type, prefix }) {
       await loadEntries()
     } catch (error) {
       console.error('Failed to add income:', error)
-      alert('Failed to add income')
+      alert(t("budget.alerts.failedAddIncome"))
     } finally {
       setLoading(false)
     }
@@ -48,7 +50,7 @@ function IncomeColumn({ title, type, prefix }) {
       await loadEntries()
     } catch (error) {
       console.error('Failed to delete income:', error)
-      alert('Failed to delete income')
+      alert(t("budget.alerts.failedDeleteIncome"))
     } finally {
       setLoading(false)
     }
@@ -63,7 +65,7 @@ function IncomeColumn({ title, type, prefix }) {
       </h4>
       {entries.map((entry, i) => (
         <div key={entry._id} style={{ marginBottom: "1rem" }}>
-          Paycheck {i + 1}: ${entry.amount.toFixed(2)}
+          {t("budget.income.paycheckLabel")} {i + 1}: ${entry.amount.toFixed(2)}
         </div>
       ))}
       <form onSubmit={addEntry} style={{ marginTop: "0.5rem", display: "flex", alignItems: "center", flexWrap:"nowrap" }}>
@@ -72,17 +74,17 @@ function IncomeColumn({ title, type, prefix }) {
           className="input" 
           type="number" 
           step="0.01" 
-          placeholder="$ amount" 
+          placeholder={t("budget.income.amountPlaceholder")} 
           value={input} 
           onChange={(e) => setInput(e.target.value)} 
           style={{ width: 120, marginRight: "0.5rem" }}
           disabled={loading}
         />
-        <button className="btn" type="submit" disabled={loading}>Add</button>
+        <button className="btn" type="submit" disabled={loading}>{t("budget.actions.add")}</button>
         <button 
           className="btn danger" 
           onClick={handleDeleteLast} 
-          title="Delete last entry" 
+          title={t("budget.income.deleteLastTitle")} 
           type="button"
           disabled={loading || entries.length === 0}
           style={{ marginLeft: "0.5rem", minWidth: "40px", height: "40px", display: "inline-flex", alignItems: "center", justifyContent: "center", verticalAlign: "middle", background: "crimson"}}
@@ -99,6 +101,7 @@ function spendFor(name, expenses){
 }
 
 export default function Budget() {
+  const { t } = useTranslation("common")
   const [budgets, setBudgets] = useState([])
   const [expenses, setExpenses] = useState([])
   const [loading, setLoading] = useState(false)
@@ -124,7 +127,7 @@ export default function Budget() {
   async function submit(e) {
     e.preventDefault()
     if(!form.name || !form.type){
-      window.alert("Please write a category name and select either 'Recurring' or 'Variable' before adding a budget.")
+      window.alert(t("budget.alerts.missingFields"))
       return
     }
 
@@ -135,7 +138,7 @@ export default function Budget() {
       await loadData()
     } catch (error) {
       console.error('Failed to create budget:', error)
-      alert('Failed to create budget')
+      alert(t("budget.alerts.failedCreateBudget"))
     } finally {
       setLoading(false)
     }
@@ -148,7 +151,7 @@ export default function Budget() {
       await loadData()
     } catch (error) {
       console.error('Failed to delete budget:', error)
-      alert('Failed to delete budget')
+      alert(t("budget.alerts.failedDeleteBudget"))
     } finally {
       setLoading(false)
     }
@@ -165,11 +168,11 @@ export default function Budget() {
     <div className="dashboard-container dash">
       <div className="grid">
         <section className="card col-12">
-          <h2>Budget</h2>
+          <h2>{t("budget.title")}</h2>
           <form className="row" onSubmit={submit} style={{ flexDirection:"column", gap:"0.75rem", alignItems:"flex-start" }}>
             <input 
               className="input" 
-              placeholder="Category name (e.g., Groceries)" 
+              placeholder={t("budget.form.categoryPlaceholder")} 
               value={form.name} 
               onChange={e => setForm({ ...form, name:e.target.value })} 
               style={{ width:"100%", maxWidth:500 }}
@@ -180,7 +183,7 @@ export default function Budget() {
                 className="input" 
                 type="number" 
                 step="0.01" 
-                placeholder="Monthly limit (optional)" 
+                placeholder={t("budget.form.limitPlaceholder")} 
                 value={form.limit} 
                 onChange={e => setForm({ ...form, limit:e.target.value })} 
                 style={{ maxWidth:220 }}
@@ -196,7 +199,7 @@ export default function Budget() {
                     onChange={e => setForm({ ...form, type:e.target.value })}
                     disabled={loading}
                   />
-                  Recurring (monthly)
+                  {t("budget.types.recurring")}
                 </label>
                 <label style={{ display:"flex", alignItems:"center", gap:"0.3rem" }}>
                   <input 
@@ -207,39 +210,47 @@ export default function Budget() {
                     onChange={e => setForm({ ...form, type:e.target.value })}
                     disabled={loading}
                   />
-                  Variable
+                  {t("budget.types.variable")}
                 </label>
               </div>
-              <button className="btn" type="submit" disabled={loading}>Add</button>
+              <button className="btn" type="submit" disabled={loading}>{t("budget.actions.add")}</button>
             </div>
           </form>
         </section>
 
         <section className="card col-12 center">
-          <h3>Total Budgeted</h3>
+          <h3>{t("budget.summary.totalBudgeted")}</h3>
           <div style={{ fontSize:36, fontWeight:800, marginTop:4 }}>${total.toFixed(2)}</div>
         </section>
 
         <section className="card col-12">
           <div className="two-col">
             <div className="center">
-              <h4 style={{ margin:0 }}>Recurring Expenses</h4>
+              <h4 style={{ margin:0 }}>{t("budget.summary.recurringExpenses")}</h4>
               <div style={{ fontSize:24, fontWeight:700, color:"#2563eb", marginTop:4 }}>${recurring.toFixed(2)}</div>
             </div>
             <div className="center">
-              <h4 style={{ margin:0 }}>Variable Expenses</h4>
+              <h4 style={{ margin:0 }}>{t("budget.summary.variableExpenses")}</h4>
               <div style={{ fontSize:24, fontWeight:700, color:"#f59e0b", marginTop:4 }}>${variable.toFixed(2)}</div>
             </div>
           </div>
         </section>
 
         <section className="card col-6">
-          <h3>Recurring</h3>
+          <h3>{t("budget.tables.recurringTitle")}</h3>
           {recurringBudgets.length === 0 ? (
-            <p className="muted">No recurring budgets yet.</p>
+            <p className="muted">{t("budget.tables.noneRecurring")}</p>
           ) : (
             <table className="table">
-              <thead><tr><th>Category</th><th>Limit</th><th>Spent</th><th>Remaining</th><th></th></tr></thead>
+              <thead>
+                <tr>
+                  <th>{t("budget.table.category")}</th>
+                  <th>{t("budget.table.limit")}</th>
+                  <th>{t("budget.table.spent")}</th>
+                  <th>{t("budget.table.remaining")}</th>
+                  <th></th>
+                </tr>
+              </thead>
               <tbody>
                 {recurringBudgets.map(b => {
                   const spent = spendFor(b.name, expenses)
@@ -247,12 +258,12 @@ export default function Budget() {
                   return (
                     <tr key={b._id}>
                       <td>{b.name}</td>
-                      <td>{b.limit ? `$${Number(b.limit).toFixed(2)}` : <span className="pill">No limit</span>}</td>
+                      <td>{b.limit ? `$${Number(b.limit).toFixed(2)}` : <span className="pill">{t("budget.table.noLimit")}</span>}</td>
                       <td>${spent.toFixed(2)}</td>
                       <td style={{ color: remaining < 0 ? "#ef4444" : "#22c55e" }}>
                         {Number.isFinite(remaining) ? `$${remaining.toFixed(2)}` : "—"}
                       </td>
-                      <td><button className="btn danger" onClick={() => del(b._id)} disabled={loading}>Delete</button></td>
+                      <td><button className="btn danger" onClick={() => del(b._id)} disabled={loading}>{t("budget.actions.delete")}</button></td>
                     </tr>
                   )
                 })}
@@ -262,12 +273,20 @@ export default function Budget() {
         </section>
 
         <section className="card col-6">
-          <h3>Variable</h3>
+          <h3>{t("budget.tables.variableTitle")}</h3>
           {variableBudgets.length === 0 ? (
-            <p className="muted">No variable budgets yet.</p>
+            <p className="muted">{t("budget.tables.noneVariable")}</p>
           ) : (
             <table className="table">
-              <thead><tr><th>Category</th><th>Limit</th><th>Spent</th><th>Remaining</th><th></th></tr></thead>
+              <thead>
+                <tr>
+                  <th>{t("budget.table.category")}</th>
+                  <th>{t("budget.table.limit")}</th>
+                  <th>{t("budget.table.spent")}</th>
+                  <th>{t("budget.table.remaining")}</th>
+                  <th></th>
+                </tr>
+              </thead>
               <tbody>
                 {variableBudgets.map(b => {
                   const spent = spendFor(b.name, expenses)
@@ -275,12 +294,12 @@ export default function Budget() {
                   return (
                     <tr key={b._id}>
                       <td>{b.name}</td>
-                      <td>{b.limit ? `$${Number(b.limit).toFixed(2)}` : <span className="pill">No limit</span>}</td>
+                      <td>{b.limit ? `$${Number(b.limit).toFixed(2)}` : <span className="pill">{t("budget.table.noLimit")}</span>}</td>
                       <td>${spent.toFixed(2)}</td>
                       <td style={{ color: remaining < 0 ? "#ef4444" : "#22c55e" }}>
                         {Number.isFinite(remaining) ? `$${remaining.toFixed(2)}` : "—"}
                       </td>
-                      <td><button className="btn danger" onClick={() => del(b._id)} disabled={loading}>Delete</button></td>
+                      <td><button className="btn danger" onClick={() => del(b._id)} disabled={loading}>{t("budget.actions.delete")}</button></td>
                     </tr>
                   )
                 })}
@@ -290,11 +309,11 @@ export default function Budget() {
         </section>
 
         <section className="card col-12">
-          <h3>Income Tracker</h3>
-          <p className="muted" style={{ marginBottom:"1rem" }}>Track your actual and expected income below.</p>
+          <h3>{t("budget.income.title")}</h3>
+          <p className="muted" style={{ marginBottom:"1rem" }}>{t("budget.income.subtitle")}</p>
           <div className="two-col">
-            <IncomeColumn title="Actual Income" type="actual" prefix="Paycheck" />
-            <IncomeColumn title="Expected Income" type="expected" prefix="Expected Paycheck" />
+            <IncomeColumn title={t("budget.income.actualTitle")} type="actual" prefix={t("budget.income.paycheck")} />
+            <IncomeColumn title={t("budget.income.expectedTitle")} type="expected" prefix={t("budget.income.expectedPaycheck")} />
           </div>
         </section>
       </div>

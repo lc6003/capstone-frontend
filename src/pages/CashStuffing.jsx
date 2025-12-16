@@ -1,8 +1,10 @@
 import { CashStuffingDemo } from "../CashStuffingFeature";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export default function CashStuffing() {
   const navigate = useNavigate();
+  const { t } = useTranslation("common");
 
   return (
     <div className="page-container" 
@@ -24,7 +26,7 @@ export default function CashStuffing() {
             borderRadius: "8px",
           }}
         >
-          ← Back to Budget
+          ← {t("cashStuffing.back", "Back to Budget")}
         </button>
       </div>
 
@@ -34,7 +36,7 @@ export default function CashStuffing() {
         marginBottom: "0.75rem",
         color: "var(--text)"
       }}>
-        Cash Stuffing
+        {t("cashStuffing.title", "Cash Stuffing")}
       </h2>
 
       {/* DESCRIPTION */}
@@ -47,10 +49,10 @@ export default function CashStuffing() {
           color: "var(--muted)"
         }}
       >
-        Cash stuffing is a simple but powerful budgeting method where you divide
-        your money into categories—like groceries, gas, and savings—and assign
-        each category a specific amount of cash. It’s a hands-on way to track
-        spending and take control of your finances.
+        {t(
+          "cashStuffing.description",
+          "Cash stuffing is a simple but powerful budgeting method where you divide your money into categories—like groceries, gas, and savings—and assign each category a specific amount of cash. It's a hands-on way to track spending and take control of your finances."
+        )}
       </p>
 
       {/* MAIN FEATURE */}
