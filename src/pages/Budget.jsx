@@ -182,12 +182,6 @@ export default function Budget(){
             <IncomeColumn title="Expected Income" storageKey="cv_income_expected_v1" prefix="Expected Paycheck" />
           </div>
         </section>
-
-        <section className="card col-12 center">
-          <button className="btn" onClick={() => navigate("/cash-stuffing")}>
-            Open Cash Stuffing Feature
-          </button>
-        </section>
       </div>
     </div>
   )

@@ -65,6 +65,7 @@ export default function App() {
           <img src="/cat-envelope.jpg" className="logo-img" alt="Cashvelo" />
           <NavLink to="/dashboard" end>Dashboard</NavLink>
           <NavLink to="/budget">Budget</NavLink>
+          <NavLink to="/cash-stuffing">Cash Stuffing</NavLink>
           <NavLink to="/expenses">Spending</NavLink>
           <NavLink to="/insights">Insights</NavLink>
         </div>

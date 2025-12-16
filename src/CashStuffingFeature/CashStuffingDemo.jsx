@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Binder from "./components/Binder";
 import Wallet from "./components/Wallet";
-import { getBudgetTotalsByType, getExpenses, getBudgets } from "../lib/storage.js";
 import "../styles/CashStuffing.css";
 
 import {
@@ -14,32 +13,16 @@ import {
 } from "../lib/cashSync.js";
 
 import {
-  getAllocations,
-  saveAllocation
-} from "../lib/storage.js";
+  getCashEnvelopes,
+  ensureEnvelope
+} from "../lib/cashStuffingStorage.js";
+
 
 export default function CashStuffingDemo() {
-  /* -------------------------------
-     LOAD ALLOCATIONS + SPENDING
-  --------------------------------*/
-  const [allocations, _setAllocLocal] = useState(() => getAllocations());
-  const expenses = getExpenses();
-
-  function updateAllocation(category, delta) {
-    const current = allocations[category] || 0;
-    const updated = saveAllocation(category, current + delta);
-    _setAllocLocal({ ...updated });
-  }
-
-  function amountAvailableFor(category) {
-    const allocated = allocations[category] || 0;
-
-    const spent = expenses
-      .filter((e) => e.category === category)
-      .reduce((sum, e) => sum + Number(e.amount || 0), 0);
-
-    const value = allocated - spent;
-    return value > 0 ? value : 0;
+ 
+  function envelopeBalance(name) {
+    const data = getCashEnvelopes();
+    return data[name]?.balance ?? 0;
   }
 
   /* -------------------------------
@@ -53,6 +36,13 @@ export default function CashStuffingDemo() {
 
   const walletEnvelopes = getWalletEnvelopes();
   const variableEnvelopes = getVariableBinderEnvelopes();
+
+  // To prevent undefined balances in envelopes
+useEffect(() => {
+  [...walletEnvelopes, ...variableEnvelopes].forEach(env =>
+    ensureEnvelope(env.name)
+  );
+}, [walletEnvelopes, variableEnvelopes]);
 
   function envelopesForBinder(binder) {
     const lower = binder.name.toLowerCase();
@@ -95,7 +85,6 @@ export default function CashStuffingDemo() {
   }
 
   return (
-    // ⭐ FIXED: This allows dark mode to work
     <div className="page-container cash-container">
       <h1 className="title" style={{ color: "var(--text)" }}>
         Your Wallet and Binders
@@ -111,9 +100,8 @@ export default function CashStuffingDemo() {
           color: "var(--muted)"
         }}
       >
-        These envelopes reflect your real Budget categories.
-        Cash = Allocated − Spent.  
-        Use the green and red buttons to adjust your allocation.
+        These envelopes reflect your Budget categories. 
+        Track your cash manually using the envelope system.
       </p>
 
       {/* ===============================
@@ -129,9 +117,9 @@ export default function CashStuffingDemo() {
             name="Daily Wallet"
             envelopes={walletEnvelopes.map((env) => ({
               ...env,
-              amount: amountAvailableFor(env.name),
+              amount: envelopeBalance(env.name),
             }))}
-            onAdjust={(category, delta) => updateAllocation(category, delta)}
+            onAdjust={() => {}}
           />
         </div>
       </section>
@@ -148,7 +136,7 @@ export default function CashStuffingDemo() {
           {binders.map((b) => {
             const envs = envelopesForBinder(b).map((env) => ({
               ...env,
-              amount: amountAvailableFor(env.name),
+              amount: envelopeBalance(env.name),
             }));
 
             return (
@@ -156,7 +144,7 @@ export default function CashStuffingDemo() {
                 <Binder
                   name={b.name}
                   envelopes={envs}
-                  onAdjust={(category, delta) => updateAllocation(category, delta)}
+                  onAdjust={() => {}}
                 />
 
                 {editingId === b.id ? (

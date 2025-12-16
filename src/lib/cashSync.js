@@ -1,30 +1,15 @@
-import { getBudgets, getExpenses, getAllocations } from "./storage";
+import { getBudgets } from "./storage";
 
 export const WALLET_ID = "wallet-recurring";
 export const VARIABLE_BINDER_ID = "binder-variable";
 
-function computeRemainingForCategory(category, expenses, allocations) {
-  const allocated = Number(allocations[category] || 0);
-
-  const spent = expenses
-    .filter((e) => (e.category || "") === category)
-    .reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
-
-  const remaining = allocated - spent;
-  return remaining > 0 ? remaining : 0;
-}
-
 export function getAllEnvelopes() {
   const budgets = getBudgets();
-  const expenses = getExpenses();
-  const allocations = getAllocations();
 
   return budgets.map((b) => ({
     id: b.id,
     name: b.name,
     type: b.type === "recurring" ? "recurring" : "variable",
-    allocated: Number(allocations[b.name] || 0),
-    remaining: computeRemainingForCategory(b.name, expenses, allocations),
   }));
 }
 

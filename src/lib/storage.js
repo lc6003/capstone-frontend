@@ -1,3 +1,5 @@
+import { resetEnvelope } from "./cashStuffingStorage";
+
 const KEYS = {
   budgets: 'cv_budgets_v1',
   expenses: 'cv_expenses_v1',
@@ -25,11 +27,16 @@ export function addBudget(newBudget){
   return budgets
 }
 export function removeBudget(id){
-  const budgets = getBudgets().filter(b => b.id !== id)
-  saveBudgets(budgets)
-  return budgets
+  const budgets = getBudgets();
+  const removed = budgets.find(b => b.id === id);
+  const updated = budgets.filter(b => b.id !== id);
+  saveBudgets(updated);
+  // Reset cash envelope balance if it exists
+  if (removed?.name) {
+    resetEnvelope(removed.name);
+  }
+  return updated;
 }
-
 export function getExpenses(){
   return read(KEYS.expenses, [])
 }

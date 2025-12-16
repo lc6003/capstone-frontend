@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Envelope from "../CashStuffingFeature/components/Envelope";
 import { getEnvelopesForRoute } from "../lib/cashSync.js";
-import { adjustAllocation } from "../lib/storage.js";
+import { adjustEnvelopeBalance, getCashEnvelopes } from "../lib/cashStuffingStorage.js";
 import { useParams, useNavigate } from "react-router-dom";
 
 /* ----------------------------------------
@@ -71,7 +71,15 @@ export default function EnvelopePage() {
   --------------------------------*/
   useEffect(() => {
     const envs = getEnvelopesForRoute(type, name);
-    setEnvelopes(envs);
+    const data = getCashEnvelopes();
+
+    setEnvelopes(
+      envs.map((env) => ({
+        ...env,
+        amount: data[env.name]?.balance ?? 0,
+      }))
+    );
+
     setCurrentIndex(0);
     setIsFlipping(false);
     setFlippingFromIndex(null);
@@ -144,10 +152,16 @@ export default function EnvelopePage() {
 
     const signed = adjustMode === "plus" ? amt : -amt;
 
-    adjustAllocation(active.name, signed);
+    adjustEnvelopeBalance(active.name, signed);
 
-    const updated = getEnvelopesForRoute(type, name);
-    setEnvelopes(updated);
+    const data = getCashEnvelopes();
+    setEnvelopes((prev) =>
+      prev.map((env) => ({
+        ...env,
+        amount: data[env.name]?.balance ?? 0,
+      }))
+    );
+
 
     setBillAnimations(buildBillSequence(amt, adjustMode));
 
@@ -370,7 +384,7 @@ export default function EnvelopePage() {
             >
               <Envelope
                 label={envelopes[underIndex].name}
-                amount={envelopes[underIndex].remaining}
+                amount={envelopes[underIndex].amount}
                 flat
                 onOpenAdjust={handleOpenAdjust}
               />
@@ -392,7 +406,7 @@ export default function EnvelopePage() {
             {isFlipping && flippingFromIndex != null ? (
               <Envelope
                 label={envelopes[flippingFromIndex].name}
-                amount={envelopes[flippingFromIndex].remaining}
+                amount={envelopes[flippingFromIndex].amount}
                 flipping
                 flipDirection={flipDirection}
                 onFlipComplete={handleFlipComplete}
@@ -402,7 +416,7 @@ export default function EnvelopePage() {
               hasEnvelopes && (
                 <Envelope
                   label={envelopes[currentIndex].name}
-                  amount={envelopes[currentIndex].remaining}
+                  amount={envelopes[currentIndex].amount}
                   flat
                   onOpenAdjust={handleOpenAdjust}
                 />
