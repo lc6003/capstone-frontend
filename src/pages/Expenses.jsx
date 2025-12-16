@@ -402,7 +402,11 @@ export default function Expenses(){
   const [importedCount, setImportedCount] = useState(0)
   const [importedTransactionsSummary, setImportedTransactionsSummary] = useState([])
   const [showImportSummary, setShowImportSummary] = useState(false)
-  const [pdfParsedTransactions, setPdfParsedTransactions] = useState([])
+  // Initialize PDF parsed transactions from localStorage (like CreditCardTracker pattern)
+  const [pdfParsedTransactions, setPdfParsedTransactions] = useState(() => {
+    const saved = getPdfParsedTransactions()
+    return (saved && Array.isArray(saved) && saved.length > 0) ? saved : []
+  })
   const [pdfImportSuccess, setPdfImportSuccess] = useState(false)
   const [pdfImportedCount, setPdfImportedCount] = useState(0)
   const [pdfTransactionsApproved, setPdfTransactionsApproved] = useState(false)
@@ -1551,16 +1555,6 @@ export default function Expenses(){
       const updatedExpenses = [...existingExpenses, ...newExpenses]
       saveExpenses(updatedExpenses)
       
-      // Track expenses via API
-      try {
-        for (const expense of newExpenses) {
-          await createExpense(expense)
-        }
-      } catch (error) {
-        devWarn('Failed to create some expenses via API:', error)
-        // Continue even if API calls fail
-      }
-      
       setImportedCount(newExpenses.length)
       setImportSuccess(true)
       
@@ -1585,6 +1579,13 @@ export default function Expenses(){
       const fileInput = document.getElementById('bank-statement-file')
       if (fileInput) {
         fileInput.value = ''
+      }
+      
+      // Reload expenses from localStorage to update state
+      const loadedExpenses = getExpenses()
+      if (loadedExpenses && Array.isArray(loadedExpenses)) {
+        const sorted = loadedExpenses.sort((a,b)=> new Date(b.date) - new Date(a.date))
+        setExpensesState(sorted)
       }
       
       // Force re-render to show new transactions
@@ -1758,16 +1759,6 @@ export default function Expenses(){
       const updatedExpenses = [...existingExpenses, ...newExpenses]
       saveExpenses(updatedExpenses)
       
-      // Track expenses via API
-      try {
-        for (const expense of newExpenses) {
-          await createExpense(expense)
-        }
-      } catch (error) {
-        devWarn('Failed to create some expenses via API:', error)
-        // Continue even if API calls fail
-      }
-      
       setPdfImportedCount(newExpenses.length)
       setPdfImportSuccess(true)
       
@@ -1795,6 +1786,13 @@ export default function Expenses(){
       const fileInput = document.getElementById('bank-statement-file')
       if (fileInput) {
         fileInput.value = ''
+      }
+      
+      // Reload expenses from localStorage to update state
+      const loadedExpenses = getExpenses()
+      if (loadedExpenses && Array.isArray(loadedExpenses)) {
+        const sorted = loadedExpenses.sort((a,b)=> new Date(b.date) - new Date(a.date))
+        setExpensesState(sorted)
       }
       
       // Force re-render to show new transactions
@@ -1945,12 +1943,26 @@ export default function Expenses(){
     return recurring.sort((a, b) => b.lastCharge - a.lastCharge)
   }
   
-  const expenses = useMemo(
-    () => getExpenses().sort((a,b)=> new Date(b.date) - new Date(a.date)),
-    [_]
-  )
-  const monthData = useMemo(() => monthInsights(), [_])
-  const budgets = useMemo(() => getBudgets(), [_])
+  // Initialize expenses state from localStorage (like CreditCardTracker pattern)
+  const [expensesState, setExpensesState] = useState(() => {
+    return getExpenses().sort((a,b)=> new Date(b.date) - new Date(a.date))
+  })
+  
+  const expenses = expensesState
+  const monthData = useMemo(() => monthInsights(), [expenses])
+  const budgets = useMemo(() => getBudgets(), [expenses])
+  
+  // Load expenses from localStorage on mount and when force updates
+  useEffect(() => {
+    const loadExpenses = () => {
+      const loadedExpenses = getExpenses()
+      if (loadedExpenses && Array.isArray(loadedExpenses)) {
+        const sorted = loadedExpenses.sort((a,b)=> new Date(b.date) - new Date(a.date))
+        setExpensesState(sorted)
+      }
+    }
+    loadExpenses()
+  }, [_]) // Reload when force state changes
   
   // Detect recurring payments when expenses change
   useEffect(() => {
@@ -1971,24 +1983,29 @@ export default function Expenses(){
     reloadUploadHistory()
   }, [])
 
-  // Fetch expenses from API on mount and sync with local storage
+  // Load expenses from localStorage on mount
   useEffect(() => {
-    const syncData = async () => {
-      // Use storage.js sync function which handles API calls and localStorage sync
-      await syncExpensesFromAPI()
-      force(x => x + 1)
+    const loadExpenses = () => {
+      const loadedExpenses = getExpenses()
+      if (loadedExpenses && Array.isArray(loadedExpenses)) {
+        const sorted = loadedExpenses.sort((a,b)=> new Date(b.date) - new Date(a.date))
+        setExpensesState(sorted)
+      }
     }
-    syncData()
+    loadExpenses()
   }, [])
 
-  // Restore PDF parsed transactions from localStorage on mount
+  // Restore PDF parsed transactions from localStorage on mount and when navigating back
   useEffect(() => {
-    const savedPdfTransactions = getPdfParsedTransactions()
-    if (savedPdfTransactions && savedPdfTransactions.length > 0) {
-      setPdfParsedTransactions(savedPdfTransactions)
-      setPdfProcessingInitiated(true) // Mark as processed so UI shows the transactions
+    const loadPdfTransactions = () => {
+      const savedPdfTransactions = getPdfParsedTransactions()
+      if (savedPdfTransactions && Array.isArray(savedPdfTransactions) && savedPdfTransactions.length > 0) {
+        setPdfParsedTransactions(savedPdfTransactions)
+        setPdfProcessingInitiated(true) // Mark as processed so UI shows the transactions
+      }
     }
-  }, [])
+    loadPdfTransactions()
+  }, []) // Run on mount
 
   // Filter expenses
   const filteredExpenses = useMemo(() => {
@@ -2062,7 +2079,7 @@ export default function Expenses(){
   const currentDay = now.getDate()
   const avgDailySpend = currentDay > 0 ? monthData.sum / currentDay : 0
 
-  async function submit(e){
+  function submit(e){
     e.preventDefault()
     if(!form.amount) return
     // Normalize merchant name from note field
@@ -2074,28 +2091,31 @@ export default function Expenses(){
       note: normalizedDescription, // Normalize note field
       description: normalizedDescription // Also set description for consistency
     }
-    // Add to local storage first
-    const updatedExpenses = addExpense(expenseData)
-    // Track via API
-    try {
-      const newExpense = updatedExpenses[updatedExpenses.length - 1]
-      await createExpense(newExpense)
-    } catch (error) {
-      devWarn('Failed to create expense via API:', error)
-      // Continue even if API call fails
+    // Add to local storage only (synchronous for instant updates)
+    addExpense(expenseData)
+    // Reload expenses from localStorage to update state
+    const loadedExpenses = getExpenses()
+    if (loadedExpenses && Array.isArray(loadedExpenses)) {
+      const sorted = loadedExpenses.sort((a,b)=> new Date(b.date) - new Date(a.date))
+      setExpensesState(sorted)
     }
     setForm(f => ({ ...f, amount:"", note:"", category:"" }))
     force(x => x + 1)
   }
   async function del(id){
-    // Remove from local storage first
-    removeExpense(id)
-    // Track deletion via API
+    // Remove from local storage first (await to ensure it completes before re-render)
     try {
-      await deleteExpense(id)
+      await removeExpense(id)
+      // Note: removeExpense already handles API call if authenticated, so no need for separate deleteExpense call
+      // Reload expenses from localStorage to update state
+      const loadedExpenses = getExpenses()
+      if (loadedExpenses && Array.isArray(loadedExpenses)) {
+        const sorted = loadedExpenses.sort((a,b)=> new Date(b.date) - new Date(a.date))
+        setExpensesState(sorted)
+      }
     } catch (error) {
-      devWarn('Failed to delete expense via API:', error)
-      // Continue even if API call fails
+      devWarn('Failed to delete expense:', error)
+      // Continue even if it fails
     }
     force(x => x + 1)
   }

@@ -3,7 +3,6 @@ import {
   createBudget,
   deleteBudget,
   fetchExpenses,
-  createExpense,
   deleteExpense,
   fetchCreditCards,
   createCreditCard,
@@ -111,19 +110,9 @@ export function getExpenses(){
 }
 
 // Async version that syncs from API first
+// NOTE: Now localStorage-only - does not overwrite local data with API data
 export async function syncExpensesFromAPI(){
-  if (isAuthenticated()) {
-    try {
-      const apiExpenses = await fetchExpenses()
-      if (apiExpenses && Array.isArray(apiExpenses)) {
-        // Sync to localStorage for offline access
-        write(KEYS.expenses, apiExpenses)
-        return apiExpenses
-      }
-    } catch (error) {
-      console.warn('Failed to fetch expenses from API:', error)
-    }
-  }
+  // Return local expenses only - no API sync to prevent overwriting local data
   return getExpenses()
 }
 
@@ -131,24 +120,9 @@ export function saveExpenses(expenses){
   write(KEYS.expenses, expenses)
 }
 
-export async function addExpense(exp){
+export function addExpense(exp){
+  // Use localStorage only for instant updates
   const expenseToAdd = { id: crypto.randomUUID(), ...exp }
-  
-  // Try API first if authenticated
-  if (isAuthenticated()) {
-    try {
-      const createdExpense = await createExpense(expenseToAdd)
-      // Sync to localStorage
-      const expenses = getExpenses()
-      const updatedExpenses = [...expenses.filter(e => e.id !== createdExpense.id), createdExpense]
-      saveExpenses(updatedExpenses)
-      return updatedExpenses
-    } catch (error) {
-      console.warn('Failed to create expense via API, using localStorage:', error)
-    }
-  }
-  
-  // Fallback to localStorage only
   const expenses = read(KEYS.expenses, [])
   expenses.push(expenseToAdd)
   saveExpenses(expenses)

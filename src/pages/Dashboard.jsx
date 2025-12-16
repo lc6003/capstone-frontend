@@ -60,11 +60,10 @@ export default function Dashboard(){
     return new Date(now.getFullYear(), now.getMonth(), 1)
   })
 
-  // Fetch and sync data from API on mount
+  // Fetch and sync data from API on mount (budgets still sync from API)
   useEffect(() => {
     const syncDataFromAPI = async () => {
-      // Use storage.js sync functions which handle API calls and localStorage sync
-      await syncExpensesFromAPI()
+      // Only sync budgets from API - expenses are localStorage-only
       await syncBudgetsFromAPI()
     }
     syncDataFromAPI()

@@ -20,11 +20,10 @@ export default function Insights(){
   // State for selected month (default to current month)
   const [selectedMonth, setSelectedMonth] = useState(currentMonth)
 
-  // Fetch and sync data from API on mount
+  // Fetch and sync data from API on mount (budgets and income still sync from API)
   useEffect(() => {
     const syncDataFromAPI = async () => {
-      // Use storage.js sync functions which handle API calls and localStorage sync
-      await syncExpensesFromAPI()
+      // Only sync budgets and income from API - expenses are localStorage-only
       await syncBudgetsFromAPI()
       await syncIncomeFromAPI()
     }
