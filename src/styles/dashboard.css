@@ -443,6 +443,53 @@ html.dark .dash .card.welcome-card h2{
   gap: 20px;
 }
 
+.dash .glance-actions-row{
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.dash .glance-actions-row .quick-action-btn{
+  flex: 0 0 auto;
+  padding: 12px 20px;
+  background: var(--card);
+  border: 1px solid #F4A261;
+  border-radius: 10px;
+  color: #F4A261;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.dash .glance-actions-row .quick-action-btn:hover{
+  background: var(--card);
+  border-color: #E07A3F;
+  color: #E07A3F;
+  box-shadow: 0 0 12px rgba(244, 162, 97, 0.3);
+  transform: translateY(-1px);
+}
+
+html.dark .dash .glance-actions-row .quick-action-btn{
+  background: var(--card);
+  border-color: #F4A261;
+  color: #F4A261;
+}
+
+html.dark .dash .glance-actions-row .quick-action-btn:hover{
+  border-color: #E07A3F;
+  color: #E07A3F;
+  box-shadow: 0 0 16px rgba(244, 162, 97, 0.4);
+}
+
 .dash .glance-tiles{
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -624,6 +671,18 @@ html.dark .dash .quick-action-btn:hover{
   
   .dash .glance-section h3{
     font-size: 18px;
+  }
+  
+  .dash .glance-actions-row{
+    justify-content: flex-end;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  
+  .dash .glance-actions-row .quick-action-btn{
+    padding: 10px 16px;
+    font-size: 13px;
   }
   
   .dash .glance-tiles{
