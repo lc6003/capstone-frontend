@@ -20,10 +20,6 @@
   --shadow: 0 10px 30px rgba(2,10,40,.12);
 
   min-height: 100vh;
-  width: 100%;
-  position: relative;
-  margin: 0;
-  padding: 0;
 
   background:
     radial-gradient(1200px 800px at -10% -10%, rgba(240,168,84,.06), transparent 60%),
@@ -31,7 +27,6 @@
     var(--bg) !important;
   color: var(--text);
   overflow-x: hidden;
-  box-sizing: border-box;
 }
 
 /* Dark mode swap (orange accents kept) */
@@ -277,3 +272,22 @@ html.dark .feature-band{ background: linear-gradient(180deg, rgba(15,23,42,.6), 
 @media (max-width: 1024px){ .hero-grid{ grid-template-columns: 1fr; } }
 @media (max-width: 900px){ .feature-grid{ grid-template-columns: 1fr; } }
 @media (max-width: 640px){ .nav-links{ gap: .35rem; } .nav-link{ padding: .5rem .7rem; } .feature-card{ grid-template-columns: 1fr; } .feature-with-image .feature-img{ height: 160px; } }
+.lang-switch{
+  display:inline-flex;
+  gap:.35rem;
+  align-items:center;
+}
+
+.lang-pill{
+  padding: .55rem .75rem; /* slightly tighter than other pills */
+  min-width: 52px;
+  text-align:center;
+}
+
+/* nice on mobile */
+@media (max-width: 640px){
+  .lang-pill{
+    padding: .5rem .6rem;
+    min-width: 48px;
+  }
+}

@@ -8,8 +8,11 @@ import { useNavigate, Link } from "react-router-dom"
 import { auth, googleProvider } from "../firebase"
 const API_URL = "/api"
 
+import { useTranslation } from "react-i18next"
+
 export default function Login() {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const [showPassword, setShowPassword] = useState(false)
   const [values, setValues] = useState({ email: "", password: "", remember: true })
   const [errors, setErrors] = useState({})
@@ -41,9 +44,9 @@ export default function Login() {
 
   function validate() {
     const next = {}
-    if (!values.email.trim()) next.email = "Email is required."
-    else if (!/^\S+@\S+\.\S+$/.test(values.email)) next.email = "Enter a valid email."
-    if (!values.password) next.password = "Password is required."
+    if (!values.email.trim()) next.email = t("login.emailRequired")
+    else if (!/^\S+@\S+\.\S+$/.test(values.email)) next.email = t("login.emailInvalid")
+    if (!values.password) next.password = t("login.passwordRequired")
     return next
   }
 
@@ -71,11 +74,11 @@ export default function Login() {
         localStorage.setItem("user", JSON.stringify(data.user))
         window.location.href = "/dashboard"   
       } 
-     else {
-        setErrors({ email: data.error || "Login failed" })
+      else {
+        setErrors({ email: data.error || t("login.loginFailed") })
       }
     } catch {
-      setErrors({ email: "Unable to connect to server. Please try again." })
+      setErrors({ email: t("login.serverError") })
     } finally {
       setLoginLoading(false)
     }
@@ -98,7 +101,7 @@ export default function Login() {
       if (code === "auth/popup-blocked") {
         await signInWithRedirect(auth, googleProvider)
       } else {
-        setGoogleError(err?.message || "Google sign-in failed")
+        setGoogleError(err?.message || t("login.loginFailed"))
       }
     } finally {
       setGoogleLoading(false)
@@ -124,21 +127,21 @@ export default function Login() {
                 className="cat-hero"
               />
             </div>
-            <h1>Welcome back 🐱</h1>
+            <h1>{t("login.title")}</h1>
             <p className="subtitle">
-              Sign in to continue building strong financial habits with Cashvelo.
+              {t("login.subtitle")}
             </p>
           </div>
 
           <form onSubmit={onSubmit} noValidate>
             <div className="form-group">
-              <label htmlFor="email" className="label">Email</label>
+              <label htmlFor="email" className="label">{t("login.emailLabel")}</label>
               <input
                 id="email"
                 name="email"
                 type="email"
                 className="input"
-                placeholder="you@example.com"
+                placeholder={t("login.emailPlaceholder")}
                 value={values.email}
                 onChange={onChange}
                 autoComplete="email"
@@ -151,14 +154,14 @@ export default function Login() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="password" className="label">Password</label>
+              <label htmlFor="password" className="label">{t("login.passwordLabel")}</label>
               <div className="password-wrap">
                 <input
                   id="password"
                   name="password"
                   type={showPassword ? "text" : "password"}
                   className="input"
-                  placeholder="••••••••"
+                  placeholder={t("login.passwordPlaceholder")}
                   value={values.password}
                   onChange={onChange}
                   autoComplete="current-password"
@@ -181,21 +184,36 @@ export default function Login() {
                   checked={values.remember}
                   onChange={onChange}
                 />
-                Remember me
+                {t("login.rememberMe")}
               </label>
-              <Link className="link" to="/forgot-password">Forgot password?</Link>
+              <Link className="link" to="/forgot-password">{t("login.forgotPassword")}</Link>
             </div>
 
             <button type="submit" className="btn" disabled={loginLoading}>
-              {loginLoading ? "Signing in…" : "Log in"}
+              {loginLoading ? t("login.submitLoading") : t("login.submit")}
             </button>
-
-            <p className="center subtitle" style={{ marginTop: 16 }}>
-              New here? <Link className="link" to="/signup">Create an account</Link>
-            </p>
           </form>
+
+          {googleError && (
+            <div style={{ color: "crimson", marginTop: 10, fontSize: 14 }}>{googleError}</div>
+          )}
+
+          <div className="divider" aria-hidden="true">
+            <span className="line" /><span>{t("login.or")}</span><span className="line" />
+          </div>
+
+          <div className="social">
+            <button type="button" onClick={handleGoogle} disabled={googleLoading}>
+              {googleLoading ? t("login.googleLoading") : t("login.google")}
+            </button>
+            <button type="button">{t("login.microsoft")}</button>
+          </div>
+
+          <p className="center subtitle" style={{ marginTop: 16 }}>
+            {t("login.newHere")} <Link className="link" to="/signup">{t("login.createAccount")}</Link>
+          </p>
         </div>
       </div>
     </div>
   )
-}
+} 

@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
-import Binder from "./components/Binder";
-import Wallet from "./components/Wallet";
-import "../styles/CashStuffing.css";
+import { useState, useEffect } from "react"
+import { useTranslation } from "react-i18next"
+import Binder from "./components/Binder"
+import Wallet from "./components/Wallet"
+import "../styles/CashStuffing.css"
 
 import {
   getWalletEnvelopes,
@@ -9,85 +10,79 @@ import {
   getBinders,
   addBinder,
   renameBinder,
-  removeBinder,
-} from "../lib/cashSync.js";
+  removeBinder
+} from "../lib/cashSync.js"
 
 import {
   getCashEnvelopes,
   ensureEnvelope
-} from "../lib/cashStuffingStorage.js";
-
+} from "../lib/cashStuffingStorage.js"
 
 export default function CashStuffingDemo() {
- 
+  const { t } = useTranslation("common")
+
   function envelopeBalance(name) {
-    const data = getCashEnvelopes();
-    return data[name]?.balance ?? 0;
+    const data = getCashEnvelopes()
+    return data[name]?.balance ?? 0
   }
 
-  /* -------------------------------
-     BINDER SYSTEM
-  --------------------------------*/
-  const [binders, setBinders] = useState(() => getBinders());
-  const [addingBinder, setAddingBinder] = useState(false);
-  const [newBinderName, setNewBinderName] = useState("");
-  const [editingId, setEditingId] = useState(null);
-  const [editedName, setEditedName] = useState("");
+  const [binders, setBinders] = useState(() => getBinders())
+  const [addingBinder, setAddingBinder] = useState(false)
+  const [newBinderName, setNewBinderName] = useState("")
+  const [editingId, setEditingId] = useState(null)
+  const [editedName, setEditedName] = useState("")
 
-  const walletEnvelopes = getWalletEnvelopes();
-  const variableEnvelopes = getVariableBinderEnvelopes();
+  const walletEnvelopes = getWalletEnvelopes()
+  const variableEnvelopes = getVariableBinderEnvelopes()
 
-  // To prevent undefined balances in envelopes
-useEffect(() => {
-  [...walletEnvelopes, ...variableEnvelopes].forEach(env =>
-    ensureEnvelope(env.name)
-  );
-}, [walletEnvelopes, variableEnvelopes]);
+  useEffect(() => {
+    ;[...walletEnvelopes, ...variableEnvelopes].forEach(env =>
+      ensureEnvelope(env.name)
+    )
+  }, [walletEnvelopes, variableEnvelopes])
 
   function envelopesForBinder(binder) {
-    const lower = binder.name.toLowerCase();
-
-    if (lower.includes("recurring")) return walletEnvelopes;
-    if (lower.includes("variable")) return variableEnvelopes;
-
-    return [];
+    const lower = binder.name.toLowerCase()
+    if (lower.includes("recurring")) return walletEnvelopes
+    if (lower.includes("variable")) return variableEnvelopes
+    return []
   }
 
   function handleSaveBinder() {
-    if (!newBinderName.trim()) return;
-    const updated = addBinder(newBinderName);
-    setBinders(updated);
-    setNewBinderName("");
-    setAddingBinder(false);
+    if (!newBinderName.trim()) return
+    const updated = addBinder(newBinderName)
+    setBinders(updated)
+    setNewBinderName("")
+    setAddingBinder(false)
   }
 
   function handleConfirmDelete(id) {
-    const updated = removeBinder(id);
-    setBinders(updated);
-    setEditingId(null);
+    const updated = removeBinder(id)
+    setBinders(updated)
+    setEditingId(null)
   }
 
   function handleStartRename(id, currentName) {
-    setEditingId(id);
-    setEditedName(currentName);
+    setEditingId(id)
+    setEditedName(currentName)
   }
 
   function handleSaveRename(id) {
-    if (!editedName.trim()) return;
-    const updated = renameBinder(id, editedName);
-    setBinders(updated);
-    setEditingId(null);
-    setEditedName("");
+    if (!editedName.trim()) return
+    const updated = renameBinder(id, editedName)
+    setBinders(updated)
+    setEditingId(null)
+    setEditedName("")
   }
 
   function handleDeleteRequest(id) {
-    setEditingId(`confirm-${id}`);
+    setEditingId(`confirm-${id}`)
   }
 
   return (
     <div className="page-container cash-container">
       <h1 className="title" style={{ color: "var(--text)" }}>
-        Your Wallet and Binders
+        {t("cashStuffingDemo.binders", "Binders")}
       </h1>
 
       <p
@@ -100,145 +95,113 @@ useEffect(() => {
           color: "var(--muted)"
         }}
       >
-        These envelopes reflect your Budget categories. 
-        Track your cash manually using the envelope system.
+        {t(
+          "cashStuffingDemo.walletDescription",
+          "These envelopes reflect your Budget categories. Track your cash manually using the envelope system."
+        )}
       </p>
 
-      {/* ===============================
-          DAILY WALLET
-      ===============================*/}
+      {/* DAILY WALLET */}
       <section className="wallets-section">
         <h3 className="section-title" style={{ color: "var(--text)" }}>
-          Daily Wallet
+          {t("cashStuffingDemo.dailyWallet", "Daily Wallet")}
         </h3>
 
         <div className="wallets-grid">
           <Wallet
-            name="Daily Wallet"
-            envelopes={walletEnvelopes.map((env) => ({
+            name={t("cashStuffingDemo.dailyWallet", "Daily Wallet")}
+            envelopes={walletEnvelopes.map(env => ({
               ...env,
-              amount: envelopeBalance(env.name),
+              amount: envelopeBalance(env.name)
             }))}
             onAdjust={() => {}}
           />
         </div>
       </section>
 
-      {/* ===============================
-          BINDERS
-      ===============================*/}
+      {/* BINDERS */}
       <section className="binder-section">
         <h3 className="section-title" style={{ color: "var(--text)" }}>
-          Binders
+          {t("cashStuffingDemo.binders", "Binders")}
         </h3>
 
         <div className="binder-grid">
-          {binders.map((b) => {
-            const envs = envelopesForBinder(b).map((env) => ({
+          {binders.map(b => {
+            const envs = envelopesForBinder(b).map(env => ({
               ...env,
-              amount: envelopeBalance(env.name),
-            }));
+              amount: envelopeBalance(env.name)
+            }))
 
             return (
               <div key={b.id} className="binder-wrapper">
-                <Binder
-                  name={b.name}
-                  envelopes={envs}
-                  onAdjust={() => {}}
-                />
+                <Binder name={b.name} envelopes={envs} onAdjust={() => {}} />
 
                 {editingId === b.id ? (
                   <div className="binder-edit">
                     <input
                       className="input"
-                      style={{
-                        width: "80%",
-                        marginBottom: "0.5rem",
-                        background: "var(--panel)",
-                        borderColor: "var(--border)",
-                        color: "var(--text)"
-                      }}
                       value={editedName}
-                      onChange={(e) => setEditedName(e.target.value)}
+                      onChange={e => setEditedName(e.target.value)}
                     />
                     <div style={{ display: "flex", justifyContent: "center", gap: "0.5rem" }}>
                       <button className="btn" onClick={() => handleSaveRename(b.id)}>
-                        Save
+                        {t("common.save", "Save")}
                       </button>
                       <button className="btn danger" onClick={() => setEditingId(null)}>
-                        Cancel
+                        {t("common.cancel", "Cancel")}
                       </button>
                     </div>
                   </div>
                 ) : editingId === `confirm-${b.id}` ? (
                   <div className="binder-confirm">
                     <p style={{ color: "var(--text)", marginBottom: "0.5rem" }}>
-                      Delete <strong>{b.name}</strong>?
+                      {t("cashStuffingDemo.deleteConfirm", "Delete")} <strong>{b.name}</strong>?
                     </p>
                     <div style={{ display: "flex", justifyContent: "center", gap: "0.5rem" }}>
                       <button className="btn danger" onClick={() => handleConfirmDelete(b.id)}>
-                        Yes
+                        {t("common.yes", "Yes")}
                       </button>
                       <button className="btn" onClick={() => setEditingId(null)}>
-                        No
+                        {t("common.no", "No")}
                       </button>
                     </div>
                   </div>
                 ) : (
                   <div className="binder-actions">
                     <button className="btn" onClick={() => handleStartRename(b.id, b.name)}>
-                      Rename
+                      {t("common.rename", "Rename")}
                     </button>
                     <button className="btn danger" onClick={() => handleDeleteRequest(b.id)}>
-                      Delete
+                      {t("common.delete", "Delete")}
                     </button>
                   </div>
                 )}
               </div>
-            );
+            )
           })}
         </div>
 
         {/* ADD BINDER */}
         <div style={{ marginTop: "2rem", textAlign: "center" }}>
           {!addingBinder ? (
-            <button className="btn" onClick={() => setAddingBinder(true)} style={{ width: "fit-content" }} >
-              + Add Binder
+            <button className="btn" onClick={() => setAddingBinder(true)}>
+              + {t("cashStuffingDemo.addBinder", "Add Binder")}
             </button>
           ) : (
-            <div
-              className="binder-placeholder active"
-              style={{
-                margin: "1rem auto",
-                maxWidth: "260px",
-                background: "var(--panel)",
-                borderColor: "var(--border)"
-              }}
-            >
+            <div className="binder-placeholder active">
               <input
                 type="text"
                 className="input"
-                placeholder="Binder name"
+                placeholder={t("cashStuffingDemo.binderName", "Binder name")}
                 value={newBinderName}
-                onChange={(e) => setNewBinderName(e.target.value)}
-                style={{
-                  background: "var(--panel)",
-                  borderColor: "var(--border)",
-                  color: "var(--text)"
-                }}
+                onChange={e => setNewBinderName(e.target.value)}
               />
               <div style={{ marginTop: "0.75rem", display: "flex", justifyContent: "center", gap: "0.5rem" }}>
                 <button className="btn" onClick={handleSaveBinder}>
-                  Save
+                  {t("common.save", "Save")}
                 </button>
-                <button
-                  className="btn danger"
-                  onClick={() => {
-                    setAddingBinder(false);
-                    setNewBinderName("");
-                  }}
-                >
-                  Cancel
+                <button className="btn danger" onClick={() => setAddingBinder(false)}>
+                  {t("common.cancel", "Cancel")}
                 </button>
               </div>
             </div>
@@ -246,5 +209,5 @@ useEffect(() => {
         </div>
       </section>
     </div>
-  );
+  )
 }

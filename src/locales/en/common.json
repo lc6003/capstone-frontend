@@ -1,0 +1,624 @@
+{
+  "appName": "Cashvelo",
+  "app": {
+    "logoAlt": "Cashvelo"
+  },
+
+  "auth": {
+    "login": "Log in",
+    "signup": "Create account"
+  },
+  "home": {
+  "logoAria": "Cashvelo home",
+  "logoAlt": "Cashvelo logo",
+
+  "nav": {
+    "home": "Home",
+    "how": "How it works",
+    "features": "Features",
+    "why": "Why Cashvelo",
+    "login": "Log in",
+    "signup": "Create account",
+    "signupAria": "Create free account"
+  },
+
+  "hero": {
+    "titleLine1": "Budget beautifully.",
+    "titleLine2": "Spend confidently.",
+    "subtitle": "Cashvelo turns your income into simple envelopes, gives you crystal clear insights, and helps you stay consistent without spreadsheets or stress.",
+    "primaryCta": "Start in 60 seconds →",
+    "secondaryCta": "See a live demo"
+  },
+
+  "envelopes": {
+    "groceries": "Groceries",
+    "transport": "Transport",
+    "savings": "Savings",
+    "fun": "Fun"
+  },
+
+  "demo": {
+    "aria": "Demo of envelopes and insights",
+    "title": "Envelopes",
+    "chip": "Demo",
+    "insights": {
+      "mtd": "Month to date:",
+      "mtdSuffix": "tracked",
+      "safe": "Safe to spend:",
+      "upcoming": "Upcoming:",
+      "upcomingSuffix": "in 5 days"
+    }
+  },
+
+  "badges": {
+    "envelope": "Envelope budgeting",
+    "insights": "Clear insights"
+  },
+
+  "description": "Cashvelo uses the cash envelope system, a visual method for setting limits, tracking spending, and keeping momentum month to month.",
+
+  "how": {
+    "title": "How Cashvelo keeps you on track",
+    "subtitle": "Three steps. Minutes to set up. Habits that last.",
+    "step1": {
+      "title": "Create smart envelopes",
+      "body": "Assign money to categories you actually use. We guide your splits based on goals and a typical month."
+    },
+    "step2": {
+      "title": "Track without friction",
+      "body": "Log spending in seconds, import bank CSVs, and let rules auto tag transactions."
+    },
+    "step3": {
+      "title": "Protect your plan",
+      "body": "See safe to spend at a glance, get nudges before you overshoot, and roll leftovers to savings."
+    }
+  },
+
+  "features": {
+    "goals": {
+      "title": "Goals that feel doable",
+      "copy": "Targets for travel, emergency fund, or debt payoff broken into weekly bites."
+    },
+    "fast": {
+      "title": "Delightfully fast",
+      "copy": "Zero lag UI and offline first so your budget is ready the moment you open the app."
+    },
+    "private": {
+      "title": "Private by design",
+      "copy": "Your data stays on your device with optional encrypted backup. No selling data."
+    },
+    "reminders": {
+      "title": "Gentle reminders",
+      "copy": "Notifications arrive at the right moment, after a purchase or before a bill."
+    }
+  },
+
+  "why": {
+    "title": "Why people stick with Cashvelo",
+    "item1": "Visual envelope system that clicks instantly",
+    "item2": "Clear safe to spend so decisions feel easy",
+    "item3": "Rollovers keep momentum month to month",
+    "item4": "Works great solo or with a partner"
+  },
+
+  "cta": {
+    "title": "Ready to feel in control of money?",
+    "subtitle": "Get started in minutes.",
+    "primaryCta": "Create account",
+    "secondaryCta": "I already have an account"
+  }
+},
+  
+  "login": {
+    "title": "Welcome back 🐱",
+    "subtitle": "Sign in to continue building strong financial habits with Cashvelo.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "emailRequired": "Email is required.",
+    "emailInvalid": "Enter a valid email.",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "••••••••",
+    "passwordRequired": "Password is required.",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "submit": "Log in",
+    "submitLoading": "Signing in…",
+    "or": "or",
+    "google": "Continue with Google",
+    "googleLoading": "Signing in...",
+    "microsoft": "Continue with Microsoft",
+    "newHere": "New here?",
+    "createAccount": "Create an account",
+    "serverError": "Unable to connect to server. Please try again.",
+    "loginFailed": "Login failed"
+  },
+
+  "signup": {
+    "title": "Create your account",
+    "subtitle": "Join Cashvelo to budget smarter.",
+    "nameLabel": "Full name (optional)",
+    "namePlaceholder": "e.g., Alex Doe",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "At least 6 characters",
+    "confirmLabel": "Confirm password",
+    "confirmPlaceholder": "Re-enter password",
+
+    "errorRequired": "Please fill in all required fields.",
+    "errorShortPassword": "Password must be at least 6 characters",
+    "errorMismatch": "Passwords do not match.",
+    "errorDefault": "Something went wrong. Please try again.",
+    "serverError": "Unable to connect to server. Please try again.",
+
+    "submit": "Create account",
+    "submitLoading": "Creating account...",
+
+    "or": "or",
+    "google": "Continue with Google",
+    "googleLoading": "Signing up...",
+    "microsoft": "Continue with Microsoft",
+
+    "alreadyHaveAccount": "Already have an account?",
+    "login": "Log in"
+  },
+  "forgot": {
+    "title": "Forgot your password? 🐱",
+    "subtitle": {
+      "default": "Enter your email and we'll send you a reset link",
+      "success": "Check your email for the reset link"
+    },
+    "form": {
+      "emailLabel": "Email address",
+      "emailPlaceholder": "you@example.com"
+    },
+    "actions": {
+      "sendLink": "Send reset link",
+      "sending": "Sending..."
+    },
+    "footer": {
+      "remember": "Remember your password?",
+      "backToLogin": "Back to login"
+    },
+    "success": {
+      "banner": "If an account exists with this email, you will receive a password reset link shortly.",
+      "instructions": "Check your email inbox and spam folder for the reset link."
+    },
+    "errors": {
+      "enterEmail": "Please enter your email address",
+      "validEmail": "Please enter a valid email address",
+      "generic": "Something went wrong",
+      "server": "Unable to connect to server. Please try again."
+    },
+    "aria": {
+      "card": "Forgot password card",
+      "imageAlt": "Cat placing cash into an envelope"
+    }
+  },
+  "reset": {
+    "verifying": "Verifying reset link...",
+    "title": "Reset your password 🐱",
+    "subtitle": {
+      "default": "Enter your new password below",
+      "success": "Your password has been reset!"
+    },
+    "invalid": {
+      "title": "Invalid Reset Link 🐱",
+      "defaultError": "This password reset link is invalid or has expired.",
+      "requestNew": "Request new reset link"
+    },
+    "form": {
+      "newPassword": "New password",
+      "confirmPassword": "Confirm new password",
+      "minChars": "At least 6 characters",
+      "reenter": "Re-enter password",
+      "show": "Show",
+      "hide": "Hide",
+      "showPasswordAria": "Show password",
+      "hidePasswordAria": "Hide password"
+    },
+    "actions": {
+      "reset": "Reset password",
+      "resetting": "Resetting password...",
+      "goLogin": "Go to login"
+    },
+    "success": {
+      "banner": "Your password has been reset successfully!"
+    },
+    "errors": {
+      "noToken": "No reset token provided",
+      "invalidOrExpired": "Invalid or expired reset link",
+      "verifyFail": "Unable to verify reset link",
+      "fillAll": "Please fill in all fields",
+      "minLen": "Password must be at least 6 characters",
+      "noMatch": "Passwords do not match",
+      "failed": "Failed to reset password",
+      "server": "Unable to connect to server. Please try again."
+    },
+    "aria": {
+      "logoAlt": "Cashvelo logo"
+    }
+  },
+  "settings": {
+    "title": "Account Settings",
+    "subtitle": "Manage your account information and preferences.",
+    "loading": "Loading...",
+    "profile": { "title": "Profile Information" },
+    "fields": {
+      "username": "Username",
+      "fullName": "Full Name",
+      "email": "Email",
+      "memberSince": "Member Since"
+    },
+    "actions": {
+      "title": "Account Actions",
+      "edit": "Edit Profile",
+      "save": "Save Changes",
+      "cancel": "Cancel",
+      "logout": "Logout",
+      "delete": "Delete Account"
+    },
+    "success": {
+      "updated": "Profile updated successfully!"
+    },
+    "errors": {
+      "loadUser": "Failed to load user data",
+      "updateUser": "Failed to update profile",
+      "deleteUser": "Failed to delete account"
+    },
+    "confirmDelete": "Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently deleted."
+  },
+    "nav": {
+      "dashboard": "Dashboard",
+      "budget": "Budget",
+      "cashStuffing": "Cash Stuffing",
+      "spending": "Spending",
+      "insights": "Insights",
+      "settings": "Settings",
+      "logout": "Log out"
+    },
+    "cashStuffing": {
+      "back": "Back to Budget",
+      "title": "Cash Stuffing",
+      "description": "Cash stuffing is a simple but powerful budgeting method where you divide your money into categories—like groceries, gas, and savings—and assign each category a specific amount of cash. It’s a hands-on way to track spending and take control of your finances."
+    },
+    "cashStuffingDemo": {
+    "walletDescription": "These envelopes reflect your Budget categories. Track your cash manually using the envelope system.",
+    "dailyWallet": "Daily Wallet",
+    "binders": "Binders",
+    "addBinder": "Add Binder",
+    "binderName": "Binder name",
+    "deleteConfirm": "Delete"
+  },
+  
+  "dashboard": {
+    "month": {
+      "prevAria": "Previous month",
+      "nextAria": "Next month"
+    },
+    "welcome": {
+      "title": "Welcome back",
+      "soFar": "So far this month you spent",
+      "in": "In",
+      "youSpent": "you spent",
+      "across": "across",
+      "txnOne": "transaction",
+      "txnMany": "transactions"
+    },
+    "glance": {
+      "title": "This Month at a Glance",
+      "spent": "Spent",
+      "remaining": "Remaining Budget",
+      "avgDaily": "Avg Daily Spend",
+      "totalDebt": "Total Credit Card Debt:"
+    },
+    "actions": {
+      "addExpense": "Add Expense",
+      "addIncome": "Add Income",
+      "addBudget": "Add Budget"
+    },
+    "highlights": {
+      "title": "Highlights",
+      "topCategoryPrefix": "Top category this month:",
+      "youAdded": "You added",
+      "thisMonthSuffix": "this month",
+      "youSpent": "You spent",
+      "inTop": "in your top category"
+    },
+    "projected": {
+      "title": "Projected End-of-Month Spending",
+      "estimated": "Estimated:"
+    },
+    "credit": {
+      "title": "Credit Snapshot",
+      "totalDebt": "Total Debt:",
+      "highestUtil": "Highest Utilization:",
+      "unknown": "Unknown"
+    }
+  },
+  "common": {
+    "add": "Add",
+    "cancel": "Cancel",
+    "dash": "—",
+    "na": "N/A",
+    "close": "Close",
+    "dismiss": "Dismiss",
+    "save": "Save",
+    "delete": "Delete",
+    "rename": "Rename",
+    "yes": "Yes",
+    "no": "No"
+  },
+"expenses": {
+  "title": "Spending Overview",
+  "summaryBadge": "Spending Summary",
+  "totalSpent": "Total Spent",
+  "avgDailySpend": "Avg Daily Spend",
+  "transactions": "Transactions",
+  "remainingBudget": "Remaining budget",
+
+  "addTransaction": "Add Transaction",
+
+  "form": {
+    "amount": "Amount",
+    "selectCategory": "Select Category",
+    "note": "Note",
+    "add": "Add",
+    "date": "Date"
+  },
+
+  "upload": {
+    "title": "Upload Bank Statement",
+    "subtitle": "Upload your CSV or PDF bank statement",
+    "chooseFile": "Choose File",
+    "fileReady": "File is ready.",
+    "type": "Type"
+  },
+
+  "pdf": {
+    "ready": "PDF file is ready. Click below to extract text and parse transactions.",
+    "process": "Process PDF",
+    "failedPrompt": "PDF processing failed. Would you like to try again?",
+    "retry": "Retry Processing",
+    "processing": "Processing PDF...",
+    "processingSub": "Extracting text and parsing transactions",
+    "unableTitle": "Unable to process PDF",
+    "tryAgain": "Try Again",
+    "cancel": "Cancel",
+
+    "correct": {
+      "title": "Correct Before Import",
+      "subtitle": "Edit or delete transactions before importing. Click \"Approve All\" when ready.",
+      "datePlaceholder": "MM/DD/YYYY",
+      "descPlaceholder": "Transaction description",
+      "amountPlaceholder": "0.00",
+      "deleteTxn": "Delete transaction",
+      "approveAll": "Approve All",
+      "approvedReady": "✓ Transactions approved. Ready to import.",
+      "reviewApprove": "Review and approve transactions before importing.",
+      "importPdf": "Import PDF Transactions"
+    },
+
+    "success": {
+      "title": "PDF transactions imported successfully."
+    }
+  },
+
+  "preview": {
+    "title": "Preview",
+    "detected": "Detected Transactions",
+    "parsing": "Parsing CSV File...",
+    "showingFirst": "Showing first {{shown}} of {{total}} transactions",
+    "parsingBody": "Parsing CSV file...",
+    "parsingSub": "Extracting transactions from your file"
+  },
+
+  "csvPreview": {
+    "title": "Transaction Preview",
+    "showingFirst": "Showing first {{shown}} of {{total}} transactions",
+    "more": "... and {{count}} more transactions",
+    "review": "Review the data above and click Import to add these transactions to your spending records.",
+    "import": "Import Transactions"
+  },
+
+  "importSuccess": {
+    "title": "Transactions imported successfully.",
+    "addedCount": "{{count}} transactions added to your spending records.",
+    "duplicates": "All transactions were duplicates and were skipped."
+  },
+
+  "history": {
+    "title": "Upload History",
+    "subtitle": "Recent file uploads and imports",
+    "at": "{{date}} at {{time}}",
+    "noneImported": "No transactions imported",
+    "count": "{{count}} transactions"
+  },
+
+  "summary": {
+    "title": "Imported Transactions Summary",
+    "subtitle": "You have imported {{count}} new transactions.",
+    "more": "... and {{count}} more transactions (showing first 10)",
+    "hide": "Hide Summary"
+  },
+
+  "recent": {
+    "title": "Recent Transactions",
+    "empty": "No expenses yet.",
+    "noMatch": "No expenses match the selected filters."
+  },
+
+  "filters": {
+    "clearCard": "Clear card filter",
+    "allCategories": "All Categories",
+    "allTime": "All Time",
+    "today": "Today",
+    "last7Days": "Last 7 Days",
+    "thisMonth": "This Month",
+    "thisYear": "This Year",
+    "filteredTotal": "Filtered total:"
+  },
+
+  "table": {
+    "date": "Date",
+    "description": "Description",
+    "amount": "Amount",
+    "category": "Category",
+    "note": "Note",
+    "actions": "Actions"
+  },
+
+  "actions": {
+    "deleteExpense": "Delete expense",
+    "deleteTransaction": "Delete transaction",
+    "dismiss": "Dismiss",
+    "close": "Close"
+  },
+
+  "modal": {
+    "title": "Expense Details",
+    "amount": "Amount",
+    "category": "Category",
+    "date": "Date",
+    "note": "Note",
+    "noNote": "No note"
+  },
+
+  "categories": {
+    "uncategorized": "Uncategorized",
+    "other": "Other"
+  },
+
+  "ccTracker": {
+    "title": "Credit Card Tracker",
+    "addCard": "Add Credit Card",
+    "empty": "No credit card data yet.",
+    "deleteTitle": "Delete card",
+    "deleteAria": "Delete card",
+
+    "form": {
+      "cardName": "Card Name",
+      "creditLimit": "Credit Limit",
+      "currentBalance": "Current Balance",
+      "dueDate": "Due Date",
+      "add": "Add",
+      "cancel": "Cancel"
+    },
+
+    "labels": {
+      "balance": "Balance",
+      "limit": "Limit",
+      "utilization": "Utilization",
+      "monthCharges": "This month's charges:",
+      "due": "Due:"
+    }
+  }
+},
+
+  "insights": {
+    "uncategorized": "Uncategorized",
+    "monthlyOverview": "Monthly Overview",
+    "legend": { "income": "Income", "spending": "Spending" },
+    "aria": { "selectMonth": "Select {{month}} month" },
+    "tooltips": {
+      "income": "Income: ${{amt}}",
+      "spending": "Spending: ${{amt}}"
+    },
+    "hero": {
+      "earned": "You earned ${{amt}} this month.",
+      "noIncome": "No income recorded this month.",
+      "spentMoreThanEarned": "You spent {{pct}}% more than you earned.",
+      "spentOfIncome": "You spent {{pct}}% of your income.",
+      "spentAmount": "You spent ${{amt}} this month.",
+      "noSpending": "No spending recorded this month.",
+      "saved": "You saved ${{amt}} this month.",
+      "overspent": "You overspent by ${{amt}}.",
+      "equal": "Income and spending are equal."
+    },
+    "breakdown": {
+      "title": "Spending Breakdown",
+      "none": "No category data yet."
+    },
+    "daily": {
+      "title": "Daily Spending Trend",
+      "none": "No data yet.",
+      "spentLabel": "Spent"
+    },
+    "compare": {
+      "title": "This Month vs Last Month",
+      "thisMonth": "This Month",
+      "lastMonth": "Last Month",
+      "totalSpending": "Total Spending",
+      "transactions": "Transactions",
+      "avgDaily": "Avg Daily Spend",
+      "firstMonthData": "This is your first month with spending data.",
+      "noData": "No spending data available for comparison.",
+      "up": "Spending is up by ${{amt}} (+{{pct}}%) compared to last month.",
+      "down": "You spent ${{amt}} ({{pct}}%) less than last month.",
+      "same": "Your spending matches last month exactly."
+    },
+    "key": {
+      "title": "Key Insights",
+      "topCategory": "{{cat}} is your highest spending category this month ({{pct}}%).",
+      "categoryUp": "{{cat}} spending increased by {{pct}}% compared to last month.",
+      "categoryDown": "{{cat}} spending decreased by {{pct}}% compared to last month.",
+      "budgetUsed": "You have used {{pct}}% of your monthly budget.",
+      "overallUp": "Overall spending is up {{pct}}% from last month.",
+      "overallDown": "Overall spending is down {{pct}}% from last month."
+    },
+    "summary": {
+      "trendingOverspend": "You're trending to overspend by ${{amt}}.",
+      "firstMonth": "This is your first month tracking expenses.",
+      "noneYet": "No expenses recorded yet this month.",
+      "lessThanLast": "You're spending {{pct}}% less than last month.",
+      "moreThanLast": "You're spending {{pct}}% more than last month.",
+      "sameAsLast": "Your spending matches last month."
+    }
+  },
+
+  "budget": {
+    "title": "Budget",
+    "actions": { "add": "Add", "delete": "Delete" },
+    "types": { "recurring": "Recurring (monthly)", "variable": "Variable" },
+    "form": {
+      "categoryPlaceholder": "Category name (e.g., Groceries)",
+      "limitPlaceholder": "Monthly limit (optional)"
+    },
+    "summary": {
+      "totalBudgeted": "Total Budgeted",
+      "recurringExpenses": "Recurring Expenses",
+      "variableExpenses": "Variable Expenses"
+    },
+    "tables": {
+      "recurringTitle": "Recurring",
+      "variableTitle": "Variable",
+      "noneRecurring": "No recurring budgets yet.",
+      "noneVariable": "No variable budgets yet."
+    },
+    "table": {
+      "category": "Category",
+      "limit": "Limit",
+      "spent": "Spent",
+      "remaining": "Remaining",
+      "noLimit": "No limit"
+    },
+    "income": {
+      "title": "Income Tracker",
+      "subtitle": "Track your actual and expected income below.",
+      "actualTitle": "Actual Income",
+      "expectedTitle": "Expected Income",
+      "paycheck": "Paycheck",
+      "expectedPaycheck": "Expected Paycheck",
+      "paycheckLabel": "Paycheck",
+      "amountPlaceholder": "$ amount",
+      "deleteLastTitle": "Delete last entry"
+    },
+    "alerts": {
+      "missingFields": "Please write a category name and select either 'Recurring' or 'Variable' before adding a budget.",
+      "failedCreateBudget": "Failed to create budget",
+      "failedDeleteBudget": "Failed to delete budget",
+      "failedAddIncome": "Failed to add income",
+      "failedDeleteIncome": "Failed to delete income"
+    }
+  }
+}
