@@ -14,24 +14,12 @@ export default function CashStuffing() {
       }}
     >
 
-      {/* BACK BUTTON */}
-      <div style={{ display: "flex", justifyContent: "flex-start", marginBottom: "1.5rem" }}>
-        <button
-          className="btn secondary"
-          onClick={() => navigate("/budget")}
-          style={{
-            padding: "0.5rem 1rem",
-            borderRadius: "8px",
-          }}
-        >
-          ← Back to Budget
-        </button>
-      </div>
-
       {/* PAGE TITLE */}
       <h2 style={{ 
+        maxWidth: "1140px",
+        margin: "0 auto",
         textAlign: "left",
-        marginBottom: "0.75rem",
+        marginBottom: "1rem",
         color: "var(--text)"
       }}>
         Cash Stuffing
@@ -40,9 +28,10 @@ export default function CashStuffing() {
       {/* DESCRIPTION */}
       <p
         style={{
-          maxWidth: "none",
+          maxWidth: "1140px",
+          margin: "0 auto",
           textAlign: "left",
-          marginBottom: "2rem",
+          marginBottom: "5rem",
           lineHeight: 1.6,
           color: "var(--muted)"
         }}

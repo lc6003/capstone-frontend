@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { fetchBudgets, createBudget, deleteBudget, fetchIncome, createIncome, deleteIncome, fetchExpenses } from "../lib/api.js"
+import { fetchBudgets, createBudget, deleteBudget, fetchIncome, createIncome, deleteIncome } from "../lib/api.js"
 import { FaRegTrashAlt } from "react-icons/fa"
 
 function IncomeColumn({ title, type, prefix }) {
@@ -119,13 +119,8 @@ function IncomeColumn({ title, type, prefix }) {
   )
 }
 
-function spendFor(name, expenses){
-  return expenses.filter(e => (e.category || "") === name).reduce((s, e) => s + (Number(e.amount) || 0), 0)
-}
-
 export default function Budget() {
   const [budgets, setBudgets] = useState([])
-  const [expenses, setExpenses] = useState([])
   const [loading, setLoading] = useState(false)
   const [form, setForm] = useState({ name: "", limit: "", type: "" })
 
@@ -135,12 +130,8 @@ export default function Budget() {
 
   async function loadData() {
     try {
-      const [budgetsData, expensesData] = await Promise.all([
-        fetchBudgets(),
-        fetchExpenses()
-      ])
+      const budgetsData = await fetchBudgets()
       setBudgets(budgetsData)
-      setExpenses(expensesData)
     } catch (error) {
       console.error('Failed to load data:', error)
     }
@@ -263,24 +254,41 @@ export default function Budget() {
           {recurringBudgets.length === 0 ? (
             <p className="muted">No recurring budgets yet.</p>
           ) : (
-            <table className="table">
-              <thead><tr><th>Category</th><th>Limit</th><th>Spent</th><th>Remaining</th><th></th></tr></thead>
+            <table className="table" style={{width: "100%", tableLayout: "fixed" }}>
+              <colgroup>
+                <col style={{ width: "50%" }} />   {/* Category */}
+                <col style={{ width: "30%" }} />   {/* Limit */}
+                <col style={{ width: "20%" }} />   {/* Delete */}
+              </colgroup>
+              <thead>
+                <tr>
+                  <th style={{ textAlign: "left" }}>Category</th>
+                  <th style={{ textAlign: "center"}}>Limit</th>
+                  <th></th>
+                </tr>
+              </thead>
+
               <tbody>
-                {recurringBudgets.map(b => {
-                  const spent = spendFor(b.name, expenses)
-                  const remaining = (Number(b.limit)||0) - spent
-                  return (
-                    <tr key={b._id}>
-                      <td>{b.name}</td>
-                      <td>{b.limit ? `$${Number(b.limit).toFixed(2)}` : <span className="pill">No limit</span>}</td>
-                      <td>${spent.toFixed(2)}</td>
-                      <td style={{ color: remaining < 0 ? "#ef4444" : "#22c55e" }}>
-                        {Number.isFinite(remaining) ? `$${remaining.toFixed(2)}` : "—"}
-                      </td>
-                      <td><button className="btn danger" onClick={() => del(b._id)} disabled={loading}>Delete</button></td>
-                    </tr>
-                  )
-                })}
+                {recurringBudgets.map(b => (
+                  <tr key={b._id}>
+                    <td style={{ textAlign: "left"}}>{b.name}</td>
+                    <td style={{ textAlign: "center"}}>
+                      {b.limit
+                        ? `$${Number(b.limit).toFixed(2)}`
+                        : <span className="pill">No limit</span>
+                      }
+                    </td>
+                    <td style={{ textAlign: "right"}}>
+                      <button
+                        className="btn danger"
+                        onClick={() => del(b._id)}
+                        disabled={loading}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           )}
@@ -291,24 +299,42 @@ export default function Budget() {
           {variableBudgets.length === 0 ? (
             <p className="muted">No variable budgets yet.</p>
           ) : (
-            <table className="table">
-              <thead><tr><th>Category</th><th>Limit</th><th>Spent</th><th>Remaining</th><th></th></tr></thead>
+            <table className="table" style={{width: "100%", tableLayout: "fixed" }}>
+              <colgroup>
+                <col style={{ width: "50%" }} />   {/* Category */}
+                <col style={{ width: "30%" }} />   {/* Limit */}
+                <col style={{ width: "20%" }} />   {/* Delete */}
+              </colgroup>
+
+              <thead>
+                <tr>
+                  <th style={{ textAlign: "left" }}>Category</th>
+                  <th style={{ textAlign: "center"}}>Limit</th>
+                  <th></th>
+                </tr>
+              </thead>
+
               <tbody>
-                {variableBudgets.map(b => {
-                  const spent = spendFor(b.name, expenses)
-                  const remaining = (Number(b.limit)||0) - spent
-                  return (
-                    <tr key={b._id}>
-                      <td>{b.name}</td>
-                      <td>{b.limit ? `$${Number(b.limit).toFixed(2)}` : <span className="pill">No limit</span>}</td>
-                      <td>${spent.toFixed(2)}</td>
-                      <td style={{ color: remaining < 0 ? "#ef4444" : "#22c55e" }}>
-                        {Number.isFinite(remaining) ? `$${remaining.toFixed(2)}` : "—"}
-                      </td>
-                      <td><button className="btn danger" onClick={() => del(b._id)} disabled={loading}>Delete</button></td>
-                    </tr>
-                  )
-                })}
+                {variableBudgets.map(b => (
+                  <tr key={b._id}>
+                    <td style={{ textAlign: "left"}}>{b.name}</td>
+                    <td style={{ textAlign: "center"}}>
+                      {b.limit
+                        ? `$${Number(b.limit).toFixed(2)}`
+                        : <span className="pill">No limit</span>
+                      }
+                    </td>
+                    <td style={{ textAlign: "right"}}>
+                      <button
+                        className="btn danger"
+                        onClick={() => del(b._id)}
+                        disabled={loading}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           )}

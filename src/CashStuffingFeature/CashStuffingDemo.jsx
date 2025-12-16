@@ -86,7 +86,7 @@ useEffect(() => {
 
   return (
     <div className="cash-demo">
-      <h1 className="title" style={{ color: "var(--text)" }}>
+      <h1 className="title" style={{ maxWidth: "1140px", margin: "0 auto", textAlign:"center", marginBottom: "1rem", color: "var(--text)" }}>
         Your Wallet and Binders
       </h1>
 
