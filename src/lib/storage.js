@@ -19,7 +19,9 @@ const KEYS = {
   expenses: 'cv_expenses_v1',
   incomeActual: 'cv_income_actual_v1',
   incomeExpected: 'cv_income_expected_v1',
-  uploadHistory: 'cv_upload_history_v1'
+  uploadHistory: 'cv_upload_history_v1',
+  pdfParsedTransactions: 'cv_pdf_parsed_transactions_v1',
+  pdfFileContent: 'cv_pdf_file_content_v1'
 }
 
 // Helpers
@@ -200,6 +202,19 @@ export function addUploadHistoryEntry(fileType, importedCount){
   history.push(entry)
   write(KEYS.uploadHistory, history)
   return history
+}
+
+// PDF Parsed Transactions persistence
+export function getPdfParsedTransactions(){
+  return read(KEYS.pdfParsedTransactions, [])
+}
+
+export function savePdfParsedTransactions(transactions){
+  write(KEYS.pdfParsedTransactions, transactions)
+}
+
+export function clearPdfParsedTransactions(){
+  write(KEYS.pdfParsedTransactions, [])
 }
 
 export function totals(){
@@ -502,67 +517,15 @@ export function saveUserCreditCards(cards) {
   localStorage.setItem(USER_CARD_KEY, JSON.stringify(cards))
 }
 
-// Async version that syncs from API first
+// Sync function - now only uses localStorage (no API calls)
 export async function syncUserCreditCardsFromAPI() {
-  if (isAuthenticated()) {
-    try {
-      const apiCards = await fetchCreditCards()
-      if (apiCards && Array.isArray(apiCards)) {
-        // Filter for new format cards (have cardName field) or transform old format
-        const newFormatCards = apiCards
-          .filter(card => card.cardName) // New format cards
-          .map(card => ({
-            id: card.id,
-            cardName: card.cardName,
-            creditLimit: card.creditLimit || card.limit || 0,
-            currentBalance: card.currentBalance || card.balance || 0,
-            dueDate: card.dueDate || '',
-            logo: card.logo || ''
-          }))
-        saveUserCreditCards(newFormatCards)
-        return newFormatCards
-      }
-    } catch (error) {
-      console.warn('Failed to fetch user credit cards from API:', error)
-    }
-  }
+  // Simply return local cards - no API sync for credit cards
   return getUserCreditCards()
 }
 
 export async function addUserCreditCard(newCard) {
+  // Use localStorage only - no API calls
   const cardToAdd = { id: crypto.randomUUID(), ...newCard }
-  
-  // Try API first if authenticated
-  if (isAuthenticated()) {
-    try {
-      // Transform to API format (API might accept both formats)
-      const apiCard = {
-        ...cardToAdd,
-        name: newCard.cardName, // Some APIs might expect 'name' field
-        limit: newCard.creditLimit,
-        balance: newCard.currentBalance
-      }
-      const createdCard = await createCreditCard(apiCard)
-      // Sync to localStorage
-      const cards = getUserCreditCards()
-      // Transform back to new format
-      const transformedCard = {
-        id: createdCard.id,
-        cardName: createdCard.cardName || createdCard.name,
-        creditLimit: createdCard.creditLimit || createdCard.limit || 0,
-        currentBalance: createdCard.currentBalance || createdCard.balance || 0,
-        dueDate: createdCard.dueDate || '',
-        logo: createdCard.logo || ''
-      }
-      const updatedCards = [...cards.filter(c => c.id !== transformedCard.id), transformedCard]
-      saveUserCreditCards(updatedCards)
-      return updatedCards
-    } catch (error) {
-      console.warn('Failed to create user credit card via API, using localStorage:', error)
-    }
-  }
-  
-  // Fallback to localStorage only
   const cards = getUserCreditCards()
   cards.push(cardToAdd)
   saveUserCreditCards(cards)
@@ -570,20 +533,7 @@ export async function addUserCreditCard(newCard) {
 }
 
 export async function removeUserCreditCard(id) {
-  // Try API first if authenticated
-  if (isAuthenticated()) {
-    try {
-      await deleteCreditCard(id)
-      // Sync to localStorage
-      const cards = getUserCreditCards().filter(c => c.id !== id)
-      saveUserCreditCards(cards)
-      return cards
-    } catch (error) {
-      console.warn('Failed to delete user credit card via API, using localStorage:', error)
-    }
-  }
-  
-  // Fallback to localStorage only
+  // Use localStorage only - no API calls
   const cards = getUserCreditCards().filter(c => c.id !== id)
   saveUserCreditCards(cards)
   return cards

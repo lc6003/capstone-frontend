@@ -2,7 +2,7 @@ import { useMemo, useState, useEffect, useRef } from "react"
 import { FiTrash2, FiX, FiFile, FiUpload, FiFileText, FiCheckCircle, FiBarChart2, FiDollarSign, FiTag, FiCalendar, FiEdit3, FiFilter, FiCreditCard } from "react-icons/fi"
 import Papa from "papaparse"
 import * as pdfjsLib from "pdfjs-dist"
-import { addExpense, getExpenses, removeExpense, updateExpense, getUserCreditCards, addUserCreditCard, removeUserCreditCard, saveUserCreditCards, monthInsights, getBudgets, saveExpenses, addUploadHistoryEntry, getUploadHistory, syncExpensesFromAPI, syncUserCreditCardsFromAPI } from "../lib/storage.js"
+import { addExpense, getExpenses, removeExpense, updateExpense, getUserCreditCards, addUserCreditCard, removeUserCreditCard, saveUserCreditCards, monthInsights, getBudgets, saveExpenses, addUploadHistoryEntry, getUploadHistory, syncExpensesFromAPI, getPdfParsedTransactions, savePdfParsedTransactions, clearPdfParsedTransactions } from "../lib/storage.js"
 
 // Development-only logging helpers
 const isDev = import.meta.env.DEV
@@ -56,19 +56,15 @@ function CreditCardTracker({ expenses }) {
   })
   const [logo, setLogo] = useState("")
   
-  // Sync credit cards from API on mount
+  // Load credit cards from localStorage on mount
   useEffect(() => {
-    const syncCards = async () => {
-      try {
-        const syncedCards = await syncUserCreditCardsFromAPI()
-        if (syncedCards && syncedCards.length >= 0) {
-          setCards(syncedCards)
-        }
-      } catch (error) {
-        console.warn('Failed to sync credit cards from API:', error)
+    const loadCards = () => {
+      const localCards = getUserCreditCards()
+      if (localCards && Array.isArray(localCards)) {
+        setCards(localCards)
       }
     }
-    syncCards()
+    loadCards()
   }, [])
   
   // Calculate monthly spending for each card
@@ -975,6 +971,9 @@ export default function Expenses(){
       setPdfParsedTransactions(transactions)
       setPdfTransactionsApproved(false)
       
+      // Save parsed transactions to localStorage to persist across navigation
+      savePdfParsedTransactions(transactions)
+      
       // If no transactions were found, set an error message
       if (transactions.length === 0) {
         setPdfError('No transactions found in PDF. The PDF may not contain transaction data in a recognizable format.')
@@ -1287,6 +1286,8 @@ export default function Expenses(){
     setPdfTransactionsApproved(false)
     setPdfLoading(false)
     setPdfError(null)
+    // Clear persisted PDF transactions from localStorage
+    clearPdfParsedTransactions()
     
     try {
       if (detectedType === 'CSV') {
@@ -1368,6 +1369,8 @@ export default function Expenses(){
     setPdfProcessingInitiated(false)
     setPdfError(null)
     setPdfRawText('')
+    // Clear persisted PDF transactions from localStorage
+    clearPdfParsedTransactions()
 
     const reader = new FileReader()
     
@@ -1622,6 +1625,8 @@ export default function Expenses(){
     updated[index] = { ...updated[index], [field]: value }
     setPdfParsedTransactions(updated)
     setPdfTransactionsApproved(false) // Reset approval when transaction is edited
+    // Save updated transactions to localStorage
+    savePdfParsedTransactions(updated)
   }
 
   // Handle deleting PDF transactions
@@ -1629,6 +1634,8 @@ export default function Expenses(){
     const updated = pdfParsedTransactions.filter((_, i) => i !== index)
     setPdfParsedTransactions(updated)
     setPdfTransactionsApproved(false) // Reset approval when transaction is deleted
+    // Save updated transactions to localStorage
+    savePdfParsedTransactions(updated)
   }
 
   // Import parsed PDF transactions into app storage
@@ -1777,6 +1784,8 @@ export default function Expenses(){
       setPdfFileContent(null)
       setPdfProcessingInitiated(false)
       setPdfError(null)
+      // Clear persisted PDF transactions from localStorage
+      clearPdfParsedTransactions()
       setSelectedFile(null)
       setFileType(null)
       setFileLoaded(false)
@@ -1813,6 +1822,8 @@ export default function Expenses(){
       setPdfFileContent(null)
       setPdfProcessingInitiated(false)
       setPdfError(null)
+      // Clear persisted PDF transactions from localStorage
+      clearPdfParsedTransactions()
       setSelectedFile(null)
       setFileType(null)
       setFileLoaded(false)
@@ -1968,6 +1979,15 @@ export default function Expenses(){
       force(x => x + 1)
     }
     syncData()
+  }, [])
+
+  // Restore PDF parsed transactions from localStorage on mount
+  useEffect(() => {
+    const savedPdfTransactions = getPdfParsedTransactions()
+    if (savedPdfTransactions && savedPdfTransactions.length > 0) {
+      setPdfParsedTransactions(savedPdfTransactions)
+      setPdfProcessingInitiated(true) // Mark as processed so UI shows the transactions
+    }
   }, [])
 
   // Filter expenses
