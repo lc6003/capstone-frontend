@@ -554,6 +554,56 @@ html.dark .nav .btn.ghost.logout:hover{
   background:rgba(255,255,255,0.05);
 }
 
+/* Language Switcher */
+.lang-switch{
+  display:inline-flex;
+  gap:.35rem;
+  align-items:center;
+}
+
+.lang-pill{
+  padding: .55rem .75rem;
+  min-width: 52px;
+  text-align:center;
+  font-weight:600;
+  border-radius:999px;
+  border:1px solid rgba(244,162,97,0.3);
+  background:transparent;
+  color:#1a1a1a;
+  font-size:14px;
+  cursor:pointer;
+  transition:all 0.2s ease;
+  font-family:inherit;
+}
+
+html.dark .lang-pill{
+  color:#f3f4f6;
+  border-color:rgba(244,162,97,0.3);
+}
+
+.lang-pill:hover{
+  background:rgba(0,0,0,0.04);
+  border-color:rgba(244,162,97,0.5);
+}
+
+html.dark .lang-pill:hover{
+  background:rgba(255,255,255,0.05);
+}
+
+.lang-pill.active{
+  background:linear-gradient(135deg, #F4A261, #E07A3F);
+  color:#ffffff;
+  border:1px solid transparent;
+}
+
+@media (max-width: 640px){
+  .lang-pill{
+    padding: .5rem .6rem;
+    min-width: 48px;
+    font-size: 13px;
+  }
+}
+
 /* Hide mobile bottom nav on desktop */
 .mobile-bottom-nav {
   display: none;

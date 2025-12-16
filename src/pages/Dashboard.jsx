@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi"
+import { useTranslation } from "react-i18next"
 import {
   totals,
   monthInsights,
@@ -55,6 +56,8 @@ function getMonthInsightsForDate(targetDate) {
 }
 
 export default function Dashboard(){
+  const { t, i18n } = useTranslation("common")
+
   const [selectedMonth, setSelectedMonth] = useState(() => {
     const now = new Date()
     return new Date(now.getFullYear(), now.getMonth(), 1)
@@ -85,7 +88,9 @@ export default function Dashboard(){
 
   // Format month for display
   const formatMonth = (date) => {
-    return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+    const lng = (i18n.resolvedLanguage || i18n.language || "en").toLowerCase()
+    const locale = lng.startsWith("es") ? "es-ES" : "en-US"
+    return date.toLocaleDateString(locale, { month: "long", year: "numeric" })
   }
 
   const isCurrentMonth = useMemo(() => {
@@ -107,8 +112,8 @@ export default function Dashboard(){
   const prevMonthData = useMemo(() => getMonthInsightsForDate(prevMonthDate), [prevMonthDate])
   const lastMonthSum = Number.isFinite(prevMonthData?.sum) ? prevMonthData.sum : 0
 
-  const t = totals() || {}
-  const total = Number.isFinite(t?.total) ? t.total : 0
+  const totalsData = totals() || {}
+  const total = Number.isFinite(totalsData?.total) ? totalsData.total : 0
   const b = getBudgetTotalsByType() || {}
   const budgetedTotal = Number.isFinite(b?.total) ? b.total : 0
   const inc = getIncomeTotals() || {}
@@ -190,7 +195,7 @@ export default function Dashboard(){
     const limit = Number(card.creditLimit) || 0
     const utilization = limit > 0 ? (balance / limit) * 100 : 0
     return {
-      name: card.cardName || 'Unknown',
+      name: card.cardName || t("dashboard.credit.unknown"),
       balance,
       limit,
       utilization
@@ -203,7 +208,7 @@ export default function Dashboard(){
     const limit = Number(card.limit) || 0
     const utilization = limit > 0 ? (balance / limit) * 100 : 0
     return {
-      name: card.name || 'Unknown',
+      name: card.name || t("dashboard.credit.unknown"),
       balance,
       limit,
       utilization
@@ -229,7 +234,7 @@ export default function Dashboard(){
           <button 
             className="month-switcher-btn" 
             onClick={goToPreviousMonth}
-            aria-label="Previous month"
+            aria-label={t("dashboard.month.prevAria")}
           >
             <FiChevronLeft />
           </button>
@@ -244,41 +249,60 @@ export default function Dashboard(){
             className="month-switcher-btn" 
             onClick={goToNextMonth}
             disabled={isCurrentMonth}
-            aria-label="Next month"
+            aria-label={t("dashboard.month.nextAria")}
           >
             <FiChevronRight />
           </button>
         </div>
         <div className="grid">
         <section className="card col-12 welcome-card">
-          <h2>Welcome back</h2>
+          <h2>{t("dashboard.welcome.title")}</h2>
           <p className="welcome-summary">
-            {isSelectedMonthCurrent 
-              ? `So far this month you spent ${money(sum)} across ${transactionCount} ${transactionCount === 1 ? 'transaction' : 'transactions'}.`
-              : `In ${formatMonth(selectedMonth)} you spent ${money(sum)} across ${transactionCount} ${transactionCount === 1 ? 'transaction' : 'transactions'}.`
-            }
+            {isSelectedMonthCurrent
+              ? `${t("dashboard.welcome.soFar")} ${money(sum)} ${t(
+                  "dashboard.welcome.across"
+                )} ${transactionCount} ${
+                  transactionCount === 1
+                    ? t("dashboard.welcome.txnOne")
+                    : t("dashboard.welcome.txnMany")
+                }.`
+              : `${t("dashboard.welcome.in")} ${formatMonth(
+                  selectedMonth
+                )} ${t("dashboard.welcome.youSpent")} ${money(sum)} ${t(
+                  "dashboard.welcome.across"
+                )} ${transactionCount} ${
+                  transactionCount === 1
+                    ? t("dashboard.welcome.txnOne")
+                    : t("dashboard.welcome.txnMany")
+                }.`}
           </p>
         </section>
 
         <section className="card col-12 glance-section">
-          <h3>This Month at a Glance</h3>
+          <h3>{t("dashboard.glance.title")}</h3>
           <div className="glance-tiles">
             <div className="glance-tile">
-              <div className="glance-label">Spent</div>
+              <div className="glance-label">
+                {t("dashboard.glance.spent")}
+              </div>
               <div className="glance-value">{money(sum)}</div>
             </div>
             <div className="glance-tile">
-              <div className="glance-label">Remaining Budget</div>
+              <div className="glance-label">
+                {t("dashboard.glance.remaining")}
+              </div>
               <div className="glance-value">{money(remainingBudget)}</div>
             </div>
             <div className="glance-tile">
-              <div className="glance-label">Avg Daily Spend</div>
+              <div className="glance-label">
+                {t("dashboard.glance.avgDaily")}
+              </div>
               <div className="glance-value">{money(avgDailySpend)}</div>
             </div>
           </div>
           <div className="glance-credit-summary">
             <div className="glance-credit-header">
-              <span className="glance-credit-label">Total Credit Card Debt:</span>
+              <span className="glance-credit-label">{t("dashboard.glance.totalDebt")}</span>
               <span className="glance-credit-value">{money(totalDebt)}</span>
             </div>
             {combinedLimits > 0 && (
@@ -296,32 +320,46 @@ export default function Dashboard(){
         </section>
 
         <div className="quick-actions-row">
-          <Link to="/expenses" className="quick-action-btn">Add Expense</Link>
-          <Link to="/budget" className="quick-action-btn">Add Income</Link>
-          <Link to="/budget" className="quick-action-btn">Add Budget</Link>
+          <Link to="/expenses" className="quick-action-btn">
+            {t("dashboard.actions.addExpense")}
+          </Link>
+          <Link to="/budget" className="quick-action-btn">
+            {t("dashboard.actions.addIncome")}
+          </Link>
+          <Link to="/budget" className="quick-action-btn">
+            {t("dashboard.actions.addBudget")}
+          </Link>
         </div>
 
         <section className="card col-12 highlights-card">
-          <h3>Highlights</h3>
+          <h3>{t("dashboard.highlights.title")}</h3>
           <div className="highlights-list">
             {topCategory && topCategoryAmount > 0 && (
               <div className="highlight-item">
                 <span className="highlight-text">
-                  Top category this month: <strong>{topCategory}</strong> ({money(topCategoryAmount)})
+                  {t("dashboard.highlights.topCategoryPrefix")}{" "}
+                  <strong>{topCategory}</strong> ({money(topCategoryAmount)})
                 </span>
               </div>
             )}
             {transactionCount > 0 && (
               <div className="highlight-item">
                 <span className="highlight-text">
-                  You added <strong>{transactionCount}</strong> {transactionCount === 1 ? 'transaction' : 'transactions'} this month.
+                  {t("dashboard.highlights.youAdded")}{" "}
+                  <strong>{transactionCount}</strong>{" "}
+                  {transactionCount === 1
+                    ? t("dashboard.welcome.txnOne")
+                    : t("dashboard.welcome.txnMany")}{" "}
+                  {t("dashboard.highlights.thisMonthSuffix")}
                 </span>
               </div>
             )}
             {topCategoryPercent > 0 && (
               <div className="highlight-item">
                 <span className="highlight-text">
-                  You spent <strong>{topCategoryPercent}%</strong> in your top category.
+                  {t("dashboard.highlights.youSpent")}{" "}
+                  <strong>{topCategoryPercent}%</strong>{" "}
+                  {t("dashboard.highlights.inTop")}
                 </span>
               </div>
             )}
@@ -329,10 +367,10 @@ export default function Dashboard(){
         </section>
 
         <section className="card col-12 projected-spending-card">
-          <h3>Projected End-of-Month Spending</h3>
+          <h3>{t("dashboard.projected.title")}</h3>
           <div className="projected-content">
             <div className="projected-estimate">
-              <span className="projected-estimate-label">Estimated:</span>
+              <span className="projected-estimate-label">{t("dashboard.projected.estimated")}</span>
               <span className="projected-estimate-value">{money(forecast)}</span>
             </div>
             {sparklineData && sparklineData.days.length > 0 && (
@@ -366,16 +404,16 @@ export default function Dashboard(){
 
         {allCards.length > 0 && (
           <section className="card col-12 credit-snapshot-card">
-            <h3>Credit Snapshot</h3>
+            <h3>{t("dashboard.credit.title")}</h3>
             <div className="credit-snapshot-content">
               <div className="credit-snapshot-item">
-                <span className="credit-snapshot-label">Total Debt:</span>
+                <span className="credit-snapshot-label">{t("dashboard.credit.totalDebt")}</span>
                 <span className="credit-snapshot-value">{money(totalDebt)}</span>
               </div>
               {highestUtilizationCard && (
                 <div className="credit-snapshot-item">
-                  <span className="credit-snapshot-label">Highest Utilization:</span>
-                  <span className="credit-snapshot-value">{highestUtilizationCard.name}</span>
+                  <span className="credit-snapshot-label">{t("dashboard.credit.highestUtil")}</span>
+                  <span className="credit-snapshot-value">{highestUtilizationCard.name || t("dashboard.credit.unknown")}</span>
                 </div>
               )}
               {combinedLimits > 0 && (

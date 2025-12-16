@@ -2,14 +2,16 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { signOut } from "firebase/auth"
 import { auth } from "../firebase"
+import { useTranslation } from "react-i18next"
 
-const API_URL = 'http://localhost:3000/api'
+const API_URL = "http://localhost:3000/api"
 
 function getToken() {
-    return localStorage.getItem('authToken')
+  return localStorage.getItem("authToken")
 }
 
 export default function Settings() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -24,6 +26,7 @@ export default function Settings() {
 
   useEffect(() => {
     loadUserData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   async function loadUserData() {
@@ -31,7 +34,7 @@ export default function Settings() {
       setLoading(true)
       const response = await fetch(`${API_URL}/user`, {
         headers: {
-          'Authorization': `Bearer ${getToken()}`
+          Authorization: `Bearer ${getToken()}`
         }
       })
 
@@ -44,11 +47,11 @@ export default function Settings() {
           email: data.user.email
         })
       } else {
-        setError("Failed to load user data")
+        setError(t("settings.errors.loadUser", "Failed to load user data"))
       }
     } catch (err) {
-      console.error('Failed to load user data:', err)
-      setError("Failed to load user data")
+      console.error("Failed to load user data:", err)
+      setError(t("settings.errors.loadUser", "Failed to load user data"))
     } finally {
       setLoading(false)
     }
@@ -56,7 +59,7 @@ export default function Settings() {
 
   function handleChange(e) {
     const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
+    setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
   async function handleSubmit(e) {
@@ -66,10 +69,10 @@ export default function Settings() {
 
     try {
       const response = await fetch(`${API_URL}/user`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${getToken()}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`
         },
         body: JSON.stringify(formData)
       })
@@ -78,42 +81,49 @@ export default function Settings() {
 
       if (response.ok) {
         setUser(data.user)
-        setSuccess("Profile updated successfully!")
+        setSuccess(t("settings.success.updated", "Profile updated successfully!"))
         setIsEditing(false)
-        
+
         // Update localStorage
-        const storedUser = JSON.parse(localStorage.getItem('user') || '{}')
-        localStorage.setItem('user', JSON.stringify({
-          ...storedUser,
-          username: data.user.username,
-          fullName: data.user.fullName,
-          email: data.user.email
-        }))
+        const storedUser = JSON.parse(localStorage.getItem("user") || "{}")
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            ...storedUser,
+            username: data.user.username,
+            fullName: data.user.fullName,
+            email: data.user.email
+          })
+        )
       } else {
-        setError(data.error || "Failed to update profile")
+        setError(data.error || t("settings.errors.updateUser", "Failed to update profile"))
       }
     } catch (err) {
-      console.error('Failed to update profile:', err)
-      setError("Failed to update profile")
+      console.error("Failed to update profile:", err)
+      setError(t("settings.errors.updateUser", "Failed to update profile"))
     }
   }
 
   async function handleLogout() {
     const theme = localStorage.getItem("cashvelo_theme")
-    
+
     await signOut(auth)
     localStorage.clear()
     sessionStorage.clear()
-    
+
     if (theme) {
       localStorage.setItem("cashvelo_theme", theme)
     }
-    
+
     window.location.href = "/"
   }
 
   function handleDeleteAccount() {
-    if (window.confirm("Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently deleted.")) {
+    const msg = t(
+      "settings.confirmDelete",
+      "Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently deleted."
+    )
+    if (window.confirm(msg)) {
       deleteAccount()
     }
   }
@@ -121,31 +131,31 @@ export default function Settings() {
   async function deleteAccount() {
     try {
       const response = await fetch(`${API_URL}/user`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
-          'Authorization': `Bearer ${getToken()}`
+          Authorization: `Bearer ${getToken()}`
         }
       })
 
       if (response.ok) {
         const theme = localStorage.getItem("cashvelo_theme")
-        
+
         await signOut(auth)
         localStorage.clear()
         sessionStorage.clear()
-        
+
         if (theme) {
           localStorage.setItem("cashvelo_theme", theme)
         }
-        
+
         window.location.href = "/"
       } else {
         const data = await response.json()
-        setError(data.error || "Failed to delete account")
+        setError(data.error || t("settings.errors.deleteUser", "Failed to delete account"))
       }
     } catch (err) {
-      console.error('Failed to delete account:', err)
-      setError("Failed to delete account")
+      console.error("Failed to delete account:", err)
+      setError(t("settings.errors.deleteUser", "Failed to delete account"))
     }
   }
 
@@ -154,7 +164,7 @@ export default function Settings() {
       <div className="dashboard-container dash">
         <div className="grid">
           <section className="card col-12">
-            <p>Loading...</p>
+            <p>{t("settings.loading", "Loading...")}</p>
           </section>
         </div>
       </div>
@@ -165,57 +175,75 @@ export default function Settings() {
     <div className="dashboard-container dash">
       <div className="grid">
         <section className="card col-12">
-          <h2>Account Settings</h2>
-          <p className="muted">Manage your account information and preferences.</p>
+          <h2>{t("settings.title", "Account Settings")}</h2>
+          <p className="muted">
+            {t("settings.subtitle", "Manage your account information and preferences.")}
+          </p>
         </section>
 
         {error && (
-          <section className="card col-12" style={{ background: "#fee2e2", borderColor: "#fca5a5" }}>
+          <section
+            className="card col-12"
+            style={{ background: "#fee2e2", borderColor: "#fca5a5" }}
+          >
             <p style={{ color: "#dc2626", margin: 0 }}>{error}</p>
           </section>
         )}
 
         {success && (
-          <section className="card col-12" style={{ background: "#d1fae5", borderColor: "#6ee7b7" }}>
+          <section
+            className="card col-12"
+            style={{ background: "#d1fae5", borderColor: "#6ee7b7" }}
+          >
             <p style={{ color: "#059669", margin: 0 }}>{success}</p>
           </section>
         )}
 
         <section className="card col-12">
-          <h3>Profile Information</h3>
-          
+          <h3>{t("settings.profile.title", "Profile Information")}</h3>
+
           {!isEditing ? (
             <>
               <div style={{ marginBottom: "1rem" }}>
-                <p className="muted" style={{ marginBottom: "0.25rem" }}>Username</p>
-                <p style={{ fontSize: "1.1rem" }}>{user?.username || "N/A"}</p>
+                <p className="muted" style={{ marginBottom: "0.25rem" }}>
+                  {t("settings.fields.username", "Username")}
+                </p>
+                <p style={{ fontSize: "1.1rem" }}>{user?.username || t("common.na", "N/A")}</p>
               </div>
 
               <div style={{ marginBottom: "1rem" }}>
-                <p className="muted" style={{ marginBottom: "0.25rem" }}>Full Name</p>
-                <p style={{ fontSize: "1.1rem" }}>{user?.fullName || "N/A"}</p>
+                <p className="muted" style={{ marginBottom: "0.25rem" }}>
+                  {t("settings.fields.fullName", "Full Name")}
+                </p>
+                <p style={{ fontSize: "1.1rem" }}>{user?.fullName || t("common.na", "N/A")}</p>
               </div>
 
               <div style={{ marginBottom: "1rem" }}>
-                <p className="muted" style={{ marginBottom: "0.25rem" }}>Email</p>
-                <p style={{ fontSize: "1.1rem" }}>{user?.email || "N/A"}</p>
+                <p className="muted" style={{ marginBottom: "0.25rem" }}>
+                  {t("settings.fields.email", "Email")}
+                </p>
+                <p style={{ fontSize: "1.1rem" }}>{user?.email || t("common.na", "N/A")}</p>
               </div>
 
               <div style={{ marginBottom: "1rem" }}>
-                <p className="muted" style={{ marginBottom: "0.25rem" }}>Member Since</p>
+                <p className="muted" style={{ marginBottom: "0.25rem" }}>
+                  {t("settings.fields.memberSince", "Member Since")}
+                </p>
                 <p style={{ fontSize: "1.1rem" }}>
-                  {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : "N/A"}
+                  {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : t("common.na", "N/A")}
                 </p>
               </div>
 
               <button className="btn" onClick={() => setIsEditing(true)}>
-                Edit Profile
+                {t("settings.actions.edit", "Edit Profile")}
               </button>
             </>
           ) : (
             <form onSubmit={handleSubmit}>
               <div className="form-group" style={{ marginBottom: "1rem" }}>
-                <label htmlFor="username" className="label">Username</label>
+                <label htmlFor="username" className="label">
+                  {t("settings.fields.username", "Username")}
+                </label>
                 <input
                   id="username"
                   name="username"
@@ -228,7 +256,9 @@ export default function Settings() {
               </div>
 
               <div className="form-group" style={{ marginBottom: "1rem" }}>
-                <label htmlFor="fullName" className="label">Full Name</label>
+                <label htmlFor="fullName" className="label">
+                  {t("settings.fields.fullName", "Full Name")}
+                </label>
                 <input
                   id="fullName"
                   name="fullName"
@@ -240,7 +270,9 @@ export default function Settings() {
               </div>
 
               <div className="form-group" style={{ marginBottom: "1rem" }}>
-                <label htmlFor="email" className="label">Email</label>
+                <label htmlFor="email" className="label">
+                  {t("settings.fields.email", "Email")}
+                </label>
                 <input
                   id="email"
                   name="email"
@@ -253,10 +285,12 @@ export default function Settings() {
               </div>
 
               <div className="row" style={{ gap: "0.5rem" }}>
-                <button type="submit" className="btn">Save Changes</button>
-                <button 
-                  type="button" 
-                  className="btn secondary" 
+                <button type="submit" className="btn">
+                  {t("settings.actions.save", "Save Changes")}
+                </button>
+                <button
+                  type="button"
+                  className="btn secondary"
                   onClick={() => {
                     setIsEditing(false)
                     setFormData({
@@ -268,7 +302,7 @@ export default function Settings() {
                     setSuccess("")
                   }}
                 >
-                  Cancel
+                  {t("settings.actions.cancel", "Cancel")}
                 </button>
               </div>
             </form>
@@ -276,13 +310,13 @@ export default function Settings() {
         </section>
 
         <section className="card col-12">
-          <h3>Account Actions</h3>
+          <h3>{t("settings.actions.title", "Account Actions")}</h3>
           <div className="row" style={{ gap: "1rem", marginTop: "1rem" }}>
             <button className="btn secondary" onClick={handleLogout}>
-              Logout
+              {t("settings.actions.logout", "Logout")}
             </button>
             <button className="btn danger" onClick={handleDeleteAccount}>
-              Delete Account
+              {t("settings.actions.delete", "Delete Account")}
             </button>
           </div>
         </section>

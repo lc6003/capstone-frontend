@@ -3,6 +3,7 @@ import { FiTrash2, FiX, FiFile, FiUpload, FiFileText, FiCheckCircle, FiBarChart2
 import Papa from "papaparse"
 import * as pdfjsLib from "pdfjs-dist"
 import { addExpense, getExpenses, removeExpense, updateExpense, getUserCreditCards, addUserCreditCard, removeUserCreditCard, saveUserCreditCards, monthInsights, getBudgets, saveExpenses, addUploadHistoryEntry, getUploadHistory, syncExpensesFromAPI, getPdfParsedTransactions, savePdfParsedTransactions, clearPdfParsedTransactions } from "../lib/storage.js"
+import { useTranslation } from "react-i18next"
 
 // Development-only logging helpers
 const isDev = import.meta.env.DEV
@@ -46,6 +47,7 @@ const configurePDFWorker = () => {
 configurePDFWorker()
 
 function CreditCardTracker({ expenses }) {
+  const { t, i18n } = useTranslation("common")
   const [cards, setCards] = useState(getUserCreditCards())
   const [showAddForm, setShowAddForm] = useState(false)
   const [formData, setFormData] = useState({
@@ -172,7 +174,8 @@ function CreditCardTracker({ expenses }) {
   function formatDate(dateString) {
     if (!dateString) return ""
     const date = new Date(dateString)
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+    const locale = (i18n.resolvedLanguage || i18n.language || "en").startsWith("es") ? "es-ES" : "en-US"
+    return date.toLocaleDateString(locale, { month: "short", day: "numeric", year: "numeric" })
   }
 
   const money = (n) => (Number.isFinite(n) ? `$${n.toFixed(2)}` : "$0.00")
@@ -182,7 +185,7 @@ function CreditCardTracker({ expenses }) {
       <div className="credit-card-tracker-header">
         <div className="credit-card-tracker-title-section">
           <FiCreditCard className="credit-card-tracker-icon" />
-          <h3 className="chart-title">Credit Card Tracker</h3>
+          <h3 className="chart-title">{t("expenses.ccTracker.title")}</h3>
         </div>
         {!showAddForm && (
           <button 
@@ -194,7 +197,7 @@ function CreditCardTracker({ expenses }) {
               margin: 0
             }}
           >
-            Add Credit Card
+            {t("expenses.ccTracker.addCard")}
           </button>
         )}
       </div>
@@ -218,7 +221,7 @@ function CreditCardTracker({ expenses }) {
               <input 
                 className="input" 
                 type="text" 
-                placeholder="Card Name" 
+                placeholder={t("expenses.ccTracker.form.cardName")} 
                 value={formData.cardName}
                 onChange={e => setFormData({ ...formData, cardName: e.target.value })}
                 style={{ flex: "1", minWidth: "0" }}
@@ -241,7 +244,7 @@ function CreditCardTracker({ expenses }) {
               className="input" 
               type="number" 
               step="0.01"
-              placeholder="Credit Limit" 
+              placeholder={t("expenses.ccTracker.form.creditLimit")} 
               value={formData.creditLimit}
               onChange={e => setFormData({ ...formData, creditLimit: e.target.value })}
               style={{ flex: "1", minWidth: "120px" }}
@@ -251,7 +254,7 @@ function CreditCardTracker({ expenses }) {
               className="input" 
               type="number" 
               step="0.01"
-              placeholder="Current Balance" 
+              placeholder={t("expenses.ccTracker.form.currentBalance")} 
               value={formData.currentBalance}
               onChange={e => setFormData({ ...formData, currentBalance: e.target.value })}
               style={{ flex: "1", minWidth: "120px" }}
@@ -260,7 +263,7 @@ function CreditCardTracker({ expenses }) {
             <input 
               className="input" 
               type="date" 
-              placeholder="Due Date" 
+              placeholder={t("expenses.ccTracker.form.dueDate")} 
               value={formData.dueDate}
               onChange={e => setFormData({ ...formData, dueDate: e.target.value })}
               style={{ flex: "1", minWidth: "140px" }}
@@ -272,7 +275,7 @@ function CreditCardTracker({ expenses }) {
                 type="submit"
                 style={{ margin: 0 }}
               >
-                Add
+                {t("expenses.ccTracker.form.add")}
               </button>
               <button 
                 className="btn secondary" 
@@ -284,7 +287,7 @@ function CreditCardTracker({ expenses }) {
                 }}
                 style={{ margin: 0 }}
               >
-                Cancel
+                {t("expenses.ccTracker.form.cancel")}
               </button>
             </div>
           </form>
@@ -293,7 +296,7 @@ function CreditCardTracker({ expenses }) {
 
       {cards.length === 0 && !showAddForm && (
         <div className="center" style={{ margin: "1rem 0" }}>
-          <p className="muted">No credit card data yet.</p>
+          <p className="muted">{t("expenses.ccTracker.empty")}</p>
         </div>
       )}
 
@@ -324,8 +327,8 @@ function CreditCardTracker({ expenses }) {
                     onClick={() => handleDelete(card.id)}
                     type="button"
                     className="credit-card-delete-btn"
-                    title="Delete card"
-                    aria-label="Delete card"
+                    title={t("expenses.ccTracker.deleteTitle")}
+                    aria-label={t("expenses.ccTracker.deleteAria")}
                   >
                     <FiTrash2 size={18} />
                   </button>
@@ -333,15 +336,15 @@ function CreditCardTracker({ expenses }) {
                 
                 <div className="credit-card-balance-section">
                   <div className="credit-card-balance-row">
-                    <span className="credit-card-balance-label">Balance</span>
+                    <span className="credit-card-balance-label">{t("expenses.ccTracker.labels.balance")}</span>
                     <span className="credit-card-balance-value">{money(card.currentBalance)}</span>
                   </div>
                   <div className="credit-card-balance-row">
-                    <span className="credit-card-balance-label">Limit</span>
+                    <span className="credit-card-balance-label">{t("expenses.ccTracker.labels.limit")}</span>
                     <span className="credit-card-balance-value">{money(card.creditLimit)}</span>
                   </div>
                   <div className="credit-card-balance-row">
-                    <span className="credit-card-balance-label">Utilization</span>
+                    <span className="credit-card-balance-label">{t("expenses.ccTracker.labels.utilization")}</span>
                     <span className="credit-card-balance-value">{utilization}%</span>
                   </div>
                 </div>
@@ -349,7 +352,7 @@ function CreditCardTracker({ expenses }) {
                 <div className="credit-card-divider credit-card-monthly-divider"></div>
                 
                 <div className="credit-card-monthly-section">
-                  <span className="credit-card-monthly-label">This month's charges:</span>
+                  <span className="credit-card-monthly-label">{t("expenses.ccTracker.labels.monthCharges")}</span>
                   <span className="credit-card-monthly-value">${monthlyCharges.toFixed(2)}</span>
                 </div>
                 
@@ -364,7 +367,7 @@ function CreditCardTracker({ expenses }) {
                 </div>
                 
                 <div className="credit-card-footer">
-                  <span className="credit-card-due-date">Due: {formatDate(card.dueDate)}</span>
+                  <span className="credit-card-due-date">{t("expenses.ccTracker.labels.due")} {formatDate(card.dueDate)}</span>
                 </div>
               </div>
             )
@@ -377,6 +380,7 @@ function CreditCardTracker({ expenses }) {
 
 export default function Expenses(){
   const [_, force] = useState(0)
+  const { t, i18n } = useTranslation("common")
   // Fixed category options for dropdown
   const availableCategories = ["Uncategorized", "Food", "Bills", "Travel", "Shopping", "Entertainment", "Health", "Income", "Miscellaneous", "Other"]
   const [form, setForm] = useState({
@@ -2127,25 +2131,25 @@ export default function Expenses(){
           <div className="spending-hero-header">
             <div className="spending-hero-title-section">
               <FiBarChart2 className="spending-hero-icon" />
-              <h2 className="spending-hero-title">Spending Overview</h2>
+              <h2 className="spending-hero-title">{t("expenses.title")}</h2>
             </div>
-            <span className="spending-hero-badge">Spending Summary</span>
+            <span className="spending-hero-badge">{t("expenses.summaryBadge")}</span>
           </div>
           <div className="spending-hero-content">
             <div className="spending-hero-main-metric">
-              <div className="spending-hero-main-label">Total Spent</div>
+              <div className="spending-hero-main-label">{t("expenses.totalSpent")}</div>
               <div className="spending-hero-main-value">${monthData.sum.toFixed(2)}</div>
               </div>
             <div className="spending-hero-secondary-metrics">
               {monthData.sum > 0 && (
                 <div className="spending-hero-metric">
-                  <div className="spending-hero-metric-label">Avg Daily Spend</div>
+                  <div className="spending-hero-metric-label">{t("expenses.avgDailySpend")}</div>
                   <div className="spending-hero-metric-value">${avgDailySpend.toFixed(2)}</div>
                 </div>
               )}
               {expenses.length > 0 && (
                 <div className="spending-hero-metric">
-                  <div className="spending-hero-metric-label">Transactions</div>
+                  <div className="spending-hero-metric-label">{t("expenses.transactions")}</div>
                   <div className="spending-hero-metric-value">{expenses.filter(e => {
                     const ed = new Date(e.date)
                     const now = new Date()
@@ -2156,7 +2160,7 @@ export default function Expenses(){
             </div>
             {monthlyBudget > 0 && (
               <div className="overview-budget-info">
-                <p className="overview-budget-label">Remaining budget</p>
+                <p className="overview-budget-label">{t("expenses.remainingBudget")}</p>
                 <p className={`overview-budget-value ${remainingBudget <= (monthlyBudget * 0.2) ? "negative" : ""}`}>
                   ${remainingBudget.toFixed(2)}
                 </p>
@@ -2165,17 +2169,17 @@ export default function Expenses(){
           </div>
         </section>
         <section className="card col-12 spending-form-card" style={{ marginTop: "40px" }}>
-          <h3 className="chart-title">Add Transaction</h3>
+          <h3 className="chart-title">{t("expenses.addTransaction")}</h3>
           <form className="spending-form" onSubmit={submit}>
             <div className="spending-input-wrapper">
               <FiDollarSign className="spending-input-icon" />
-              <input className="input spending-input" type="number" step="0.01" placeholder="Amount"
+              <input className="input spending-input" type="number" step="0.01" placeholder={t("expenses.form.amount")}
                    value={form.amount} onChange={e=>setForm({ ...form, amount:e.target.value })} />
             </div>
             <div className="spending-input-wrapper">
               <FiTag className="spending-input-icon" />
               <select className="input spending-input spending-select" value={form.category} onChange={e=>setForm({ ...form, category:e.target.value })}>
-              <option value="">Select Category</option>
+              <option value="">{t("expenses.form.selectCategory")}</option>
               {availableCategories.map(cat => (
                 <option key={cat} value={cat}>{cat}</option>
               ))}
@@ -2187,10 +2191,10 @@ export default function Expenses(){
             </div>
             <div className="spending-input-wrapper">
               <FiEdit3 className="spending-input-icon" />
-              <input className="input spending-input" type="text" placeholder="Note" value={form.note}
+              <input className="input spending-input" type="text" placeholder={t("expenses.form.note")} value={form.note}
                    onChange={e=>setForm({ ...form, note:e.target.value })} />
             </div>
-            <button className="btn spending-submit-btn" type="submit">Add</button>
+            <button className="btn spending-submit-btn" type="submit">{t("common.add")}</button>
           </form>
         </section>
 
@@ -2200,8 +2204,8 @@ export default function Expenses(){
             <div className="upload-dropzone-icon-wrapper">
               <FiUpload className="upload-dropzone-icon" />
             </div>
-            <h3 className="upload-dropzone-title">Upload Bank Statement</h3>
-            <p className="upload-dropzone-subtitle">Upload your CSV or PDF bank statement</p>
+            <h3 className="upload-dropzone-title">{t("expenses.upload.title")}</h3>
+            <p className="upload-dropzone-subtitle">{t("expenses.upload.subtitle")}</p>
             
             <div className="upload-dropzone-divider"></div>
             
@@ -2223,7 +2227,7 @@ export default function Expenses(){
               className="upload-file-button"
             >
               <FiUpload size={18} />
-              <span>Choose File</span>
+              <span>{t("expenses.upload.chooseFile")}</span>
             </label>
           </div>
             
@@ -2330,7 +2334,7 @@ export default function Expenses(){
                       fontSize: "12px", 
                       color: "var(--muted)"
                     }}>
-                      Type: {fileType}
+                      {t("expenses.upload.type")}: {fileType}
                     </p>
                   )}
                 </div>
@@ -2355,7 +2359,7 @@ export default function Expenses(){
                   color: "var(--text)",
                   fontWeight: 500
                 }}>
-                  PDF file is ready. Click below to extract text and parse transactions.
+                  {t("expenses.pdf.ready")}
                 </p>
                 <button
                   className="btn"
@@ -2369,7 +2373,7 @@ export default function Expenses(){
                     fontWeight: 600
                   }}
                 >
-                  Process PDF
+                  {t("expenses.pdf.process")}
                 </button>
               </div>
             )}
@@ -2389,7 +2393,7 @@ export default function Expenses(){
                   color: "var(--text)",
                   fontWeight: 500
                 }}>
-                  PDF processing failed. Would you like to try again?
+                  {t("expenses.pdf.failedPrompt")}
                 </p>
                 <button
                   className="btn"
@@ -2403,7 +2407,7 @@ export default function Expenses(){
                     fontWeight: 600
                   }}
                 >
-                  Retry Processing
+                  {t("expenses.pdf.retry")}
                 </button>
               </div>
             )}
@@ -2434,14 +2438,14 @@ export default function Expenses(){
                   fontWeight: 500,
                   color: "var(--text)"
                 }}>
-                  Processing PDF...
+                  {t("expenses.pdf.processing")}
                 </p>
                 <p style={{
                   margin: "4px 0 0 0",
                   fontSize: "12px",
                   color: "var(--muted)"
                 }}>
-                  Extracting text and parsing transactions
+                  {t("expenses.pdf.processingSub")}
                 </p>
               </div>
             )}
@@ -2481,7 +2485,7 @@ export default function Expenses(){
                       color: "#ef4444",
                       marginBottom: "4px"
                     }}>
-                      Unable to process PDF
+                      {t("expenses.pdf.unableTitle")}
                     </p>
                     <p style={{
                       margin: 0,
@@ -2508,7 +2512,7 @@ export default function Expenses(){
                       fontWeight: 600
                     }}
                   >
-                    Try Again
+                    {t("expenses.pdf.tryAgain")}
                   </button>
                   <button
                     className="btn secondary"
@@ -2527,7 +2531,7 @@ export default function Expenses(){
                       backgroundColor: "transparent"
                     }}
                   >
-                    Cancel
+                    {t("expenses.pdf.cancel")}
                   </button>
                 </div>
               </div>
@@ -2548,7 +2552,7 @@ export default function Expenses(){
               fontWeight: 700,
               color: "var(--text)"
             }}>
-              Preview
+              {t("expenses.preview.title")}
             </h3>
             <div style={{
               marginTop: "16px",
@@ -2566,7 +2570,7 @@ export default function Expenses(){
                     fontWeight: 600,
                     color: "var(--text)"
                   }}>
-                    {parsedTransactions.length > 0 ? 'Detected Transactions' : 'Parsing CSV File...'}
+                    {parsedTransactions.length > 0 ? t("expenses.preview.detected") : t("expenses.preview.parsing")}
                   </h4>
                   
                   {parsedTransactions.length > 0 ? (
@@ -2576,7 +2580,7 @@ export default function Expenses(){
                         marginBottom: "16px", 
                         fontSize: "13px"
                       }}>
-                        Showing first {Math.min(10, parsedTransactions.length)} of {parsedTransactions.length} transactions
+                        {t("expenses.preview.showingFirst", { shown: Math.min(10, parsedTransactions.length), total: parsedTransactions.length })}
                       </p>
                       <div style={{ overflowX: "auto" }}>
                         <table style={{ 
@@ -2589,10 +2593,10 @@ export default function Expenses(){
                               borderBottom: "2px solid var(--border)",
                               textAlign: "left"
                             }}>
-                              <th style={{ padding: "10px 12px", fontWeight: 600, color: "var(--text)", fontSize: "13px" }}>Date</th>
-                              <th style={{ padding: "10px 12px", fontWeight: 600, color: "var(--text)", fontSize: "13px" }}>Description</th>
-                              <th style={{ padding: "10px 12px", fontWeight: 600, color: "var(--text)", fontSize: "13px", textAlign: "right" }}>Amount</th>
-                              <th style={{ padding: "10px 12px", fontWeight: 600, color: "var(--text)", fontSize: "13px" }}>Category</th>
+                              <th style={{ padding: "10px 12px", fontWeight: 600, color: "var(--text)", fontSize: "13px" }}>{t("expenses.table.date")}</th>
+                              <th style={{ padding: "10px 12px", fontWeight: 600, color: "var(--text)", fontSize: "13px" }}>{t("expenses.table.description")}</th>
+                              <th style={{ padding: "10px 12px", fontWeight: 600, color: "var(--text)", fontSize: "13px", textAlign: "right" }}>{t("expenses.table.amount")}</th>
+                              <th style={{ padding: "10px 12px", fontWeight: 600, color: "var(--text)", fontSize: "13px" }}>{t("expenses.table.category")}</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -2649,10 +2653,10 @@ export default function Expenses(){
                         marginBottom: "12px"
                       }} />
                       <p style={{ margin: 0, fontSize: "14px" }}>
-                        Parsing CSV file...
+                        {t("expenses.preview.parsing")}
                       </p>
                       <p style={{ margin: "8px 0 0 0", fontSize: "12px", opacity: 0.7 }}>
-                        Extracting transactions from your file
+                        {t("expenses.preview.parsingSub")}
                       </p>
                     </div>
                   )}
@@ -2674,10 +2678,10 @@ export default function Expenses(){
               fontWeight: 700,
               color: "var(--text)"
             }}>
-              Correct Before Import
+              {t("expenses.pdf.correct.title")}
             </h3>
             <p className="muted" style={{ marginTop: 0, marginBottom: "20px", fontSize: "14px" }}>
-              Edit or delete transactions before importing. Click "Approve All" when ready.
+              {t("expenses.pdf.correct.subtitle")}
             </p>
             
             <div style={{
@@ -2719,14 +2723,14 @@ export default function Expenses(){
                         color: "var(--muted)",
                         marginBottom: "4px"
                       }}>
-                        Date
+                        {t("expenses.table.date")}
                       </label>
                       <input
                         type="text"
                         className="input"
                         value={transaction.date || ''}
                         onChange={(e) => handleEditPDFTransaction(index, 'date', e.target.value)}
-                        placeholder="MM/DD/YYYY"
+                        placeholder={t("expenses.pdf.correct.datePlaceholder")}
                         style={{
                           width: "100%",
                           fontSize: "13px",
@@ -2744,14 +2748,14 @@ export default function Expenses(){
                         color: "var(--muted)",
                         marginBottom: "4px"
                       }}>
-                        Description
+                        {t("expenses.table.description")}
                       </label>
                       <input
                         type="text"
                         className="input"
                         value={transaction.description || ''}
                         onChange={(e) => handleEditPDFTransaction(index, 'description', e.target.value)}
-                        placeholder="Transaction description"
+                        placeholder={t("expenses.pdf.correct.descPlaceholder")}
                         style={{
                           width: "100%",
                           fontSize: "13px",
@@ -2769,7 +2773,7 @@ export default function Expenses(){
                         color: "var(--muted)",
                         marginBottom: "4px"
                       }}>
-                        Amount
+                        {t("expenses.table.amount")}
                       </label>
                       <input
                         type="number"
@@ -2777,7 +2781,7 @@ export default function Expenses(){
                         className="input"
                         value={transaction.amount || ''}
                         onChange={(e) => handleEditPDFTransaction(index, 'amount', parseFloat(e.target.value) || 0)}
-                        placeholder="0.00"
+                        placeholder={t("expenses.pdf.correct.amountPlaceholder")}
                         style={{
                           width: "100%",
                           fontSize: "13px",
@@ -2813,8 +2817,8 @@ export default function Expenses(){
                           e.currentTarget.style.color = "#ef4444"
                           e.currentTarget.style.backgroundColor = "transparent"
                         }}
-                        title="Delete transaction"
-                        aria-label="Delete transaction"
+                        title={t("expenses.pdf.correct.deleteTxn")}
+                        aria-label={t("expenses.pdf.correct.deleteTxn")}
                       >
                         <FiTrash2 size={18} />
                       </button>
@@ -2830,11 +2834,11 @@ export default function Expenses(){
                       color: "var(--muted)",
                       marginBottom: "4px"
                     }}>
-                      Category
+                      {t("expenses.table.category")}
                     </label>
                     <select
                       className="input"
-                      value={transaction.category || 'Other'}
+                      value={transaction.category || t("expenses.categories.other")}
                       onChange={(e) => handleEditPDFTransaction(index, 'category', e.target.value)}
                       style={{
                         width: "100%",
@@ -2875,15 +2879,15 @@ export default function Expenses(){
                   cursor: pdfParsedTransactions.length === 0 ? "not-allowed" : "pointer"
                 }}
               >
-                Approve All
+                {t("expenses.pdf.correct.approveAll")}
               </button>
               <p className="muted" style={{
                 margin: 0,
                 fontSize: "13px"
               }}>
                 {pdfTransactionsApproved 
-                  ? "✓ Transactions approved. Ready to import."
-                  : "Review and approve transactions before importing."
+                  ? t("expenses.pdf.correct.approvedReady")
+                  : t("expenses.pdf.correct.reviewApprove")
                 }
               </p>
             </div>
@@ -2907,7 +2911,7 @@ export default function Expenses(){
                   cursor: (pdfTransactionsApproved && pdfParsedTransactions.length > 0) ? "pointer" : "not-allowed"
                 }}
               >
-                Import PDF Transactions
+                {t("expenses.pdf.correct.importPdf")}
               </button>
             </div>
           </section>
@@ -2939,7 +2943,7 @@ export default function Expenses(){
                   fontWeight: 500,
                   marginBottom: "4px"
                 }}>
-                  PDF transactions imported successfully.
+                  {t("expenses.pdf.success.title")}
                 </p>
                 {pdfImportedCount > 0 && (
                   <p style={{ 
@@ -2947,7 +2951,7 @@ export default function Expenses(){
                     fontSize: "12px", 
                     color: "var(--muted)"
                   }}>
-                    {pdfImportedCount} {pdfImportedCount === 1 ? 'transaction' : 'transactions'} added to your spending records.
+                    {t("expenses.importSuccess.addedCount", { count: pdfImportedCount })}
                   </p>
                 )}
                 {pdfImportedCount === 0 && (
@@ -2956,7 +2960,7 @@ export default function Expenses(){
                     fontSize: "12px", 
                     color: "var(--muted)"
                   }}>
-                    All transactions were duplicates and were skipped.
+                    {t("expenses.importSuccess.duplicates")}
                   </p>
                 )}
               </div>
@@ -2993,9 +2997,9 @@ export default function Expenses(){
         {/* CSV Transaction Preview */}
         {fileType === 'CSV' && parsedTransactions.length > 0 && (
           <section className="card col-12 csv-preview-card">
-            <h3>Transaction Preview</h3>
+            <h3>{t("expenses.csvPreview.title")}</h3>
             <p className="muted" style={{ marginTop: "4px", marginBottom: "16px", fontSize: "13px" }}>
-              Showing first {Math.min(5, parsedTransactions.length)} of {parsedTransactions.length} transactions
+              {t("expenses.csvPreview.showingFirst", { shown: Math.min(5, parsedTransactions.length), total: parsedTransactions.length })}
             </p>
             <div style={{ overflowX: "auto" }}>
               <table style={{ 
@@ -3014,7 +3018,7 @@ export default function Expenses(){
                       color: "var(--text)",
                       fontSize: "13px"
                     }}>
-                      Date
+                      {t("expenses.table.date")}
                     </th>
                     <th style={{ 
                       padding: "10px 12px", 
@@ -3022,7 +3026,7 @@ export default function Expenses(){
                       color: "var(--text)",
                       fontSize: "13px"
                     }}>
-                      Description
+                      {t("expenses.table.description")}
                     </th>
                     <th style={{ 
                       padding: "10px 12px", 
@@ -3031,7 +3035,7 @@ export default function Expenses(){
                       fontSize: "13px",
                       textAlign: "right"
                     }}>
-                      Amount
+                      {t("expenses.table.amount")}
                     </th>
                     <th style={{ 
                       padding: "10px 12px", 
@@ -3039,7 +3043,7 @@ export default function Expenses(){
                       color: "var(--text)",
                       fontSize: "13px"
                     }}>
-                      Category
+                      {t("expenses.table.category")}
                     </th>
                   </tr>
                 </thead>
@@ -3090,7 +3094,7 @@ export default function Expenses(){
                         color: "var(--text)",
                         fontSize: "13px"
                       }}>
-                        {transaction.category || 'Other'}
+                        {transaction.category || t("expenses.categories.other")}
                       </td>
                     </tr>
                   ))}
@@ -3105,7 +3109,7 @@ export default function Expenses(){
                 color: "var(--muted)",
                 fontStyle: "italic"
               }}>
-                ... and {parsedTransactions.length - 5} more transactions
+                {t("expenses.csvPreview.more", { count: parsedTransactions.length - 5 })}
               </p>
             )}
             
@@ -3120,7 +3124,7 @@ export default function Expenses(){
                 fontSize: "13px",
                 lineHeight: "1.5"
               }}>
-                Review the data above and click Import to add these transactions to your spending records.
+                {t("expenses.csvPreview.review")}
               </p>
               <button
                 className="btn"
@@ -3132,7 +3136,7 @@ export default function Expenses(){
                   minWidth: "160px"
                 }}
               >
-                Import Transactions
+                {t("expenses.csvPreview.import")}
               </button>
             </div>
           </section>
@@ -3164,7 +3168,7 @@ export default function Expenses(){
                   fontWeight: 500,
                   marginBottom: "4px"
                 }}>
-                  Transactions imported successfully.
+                  {t("expenses.importSuccess.title")}
                 </p>
                 {importedCount > 0 && (
                   <p style={{ 
@@ -3172,7 +3176,7 @@ export default function Expenses(){
                     fontSize: "12px", 
                     color: "var(--muted)"
                   }}>
-                    {importedCount} {importedCount === 1 ? 'transaction' : 'transactions'} added to your spending records.
+                    {t("expenses.importSuccess.addedCount", { count: importedCount })}
                   </p>
                 )}
                 {importedCount === 0 && (
@@ -3181,7 +3185,7 @@ export default function Expenses(){
                     fontSize: "12px", 
                     color: "var(--muted)"
                   }}>
-                    All transactions were duplicates and were skipped.
+                    {t("expenses.importSuccess.duplicates")}
                   </p>
                 )}
               </div>
@@ -3207,7 +3211,7 @@ export default function Expenses(){
                   e.currentTarget.style.backgroundColor = "transparent"
                   e.currentTarget.style.color = "var(--muted)"
                 }}
-                aria-label="Dismiss"
+                aria-label={t("expenses.actions.dismiss")}
               >
                 ×
               </button>
@@ -3218,18 +3222,19 @@ export default function Expenses(){
         {/* Upload History Section */}
         {uploadHistory.length > 0 && (
           <section className="card col-12 upload-history-card" style={{ marginTop: "40px" }}>
-            <h3 className="chart-title">Upload History</h3>
-            <p className="muted upload-history-subtitle">Recent file uploads and imports</p>
+            <h3 className="chart-title">{t("expenses.history.title")}</h3>
+            <p className="muted upload-history-subtitle">{t("expenses.history.subtitle")}</p>
             
             <div className="upload-history-list upload-history-timeline">
               {uploadHistory.map((entry, index) => {
                 const date = new Date(entry.timestamp)
-                const formattedDate = date.toLocaleDateString('en-US', {
+                const locale = i18n.resolvedLanguage?.startsWith('es') ? 'es-ES' : 'en-US'
+                const formattedDate = date.toLocaleDateString(locale, {
                   month: 'short',
                   day: 'numeric',
                   year: 'numeric'
                 })
-                const formattedTime = date.toLocaleTimeString('en-US', {
+                const formattedTime = date.toLocaleTimeString(locale, {
                   hour: 'numeric',
                   minute: '2-digit',
                   hour12: true
@@ -3249,12 +3254,12 @@ export default function Expenses(){
                     </div>
                     <span className="upload-history-type-inline">{entry.fileType}</span>
                     <span className="upload-history-divider">•</span>
-                    <span className="upload-history-date-inline">{formattedDate} at {formattedTime}</span>
+                    <span className="upload-history-date-inline">{t("expenses.history.at", { date: formattedDate, time: formattedTime })}</span>
                     <span className="upload-history-divider">•</span>
                         {entry.importedCount === 0 ? (
-                      <span className="upload-history-empty">No transactions imported</span>
+                      <span className="upload-history-empty">{t("expenses.history.noneImported")}</span>
                     ) : (
-                      <span className="upload-history-count-inline">{entry.importedCount} {entry.importedCount === 1 ? 'transaction' : 'transactions'}</span>
+                      <span className="upload-history-count-inline">{t("expenses.history.count", { count: entry.importedCount })}</span>
                     )}
                   </div>
                 )
@@ -3279,13 +3284,13 @@ export default function Expenses(){
                   fontSize: "20px",
                   fontWeight: 600
                 }}>
-                  Imported Transactions Summary
+                  {t("expenses.summary.title")}
                 </h3>
                 <p className="muted" style={{ 
                   margin: 0,
                   fontSize: "13px"
                 }}>
-                  You have imported {importedTransactionsSummary.length} {importedTransactionsSummary.length === 1 ? 'new transaction' : 'new transactions'}.
+                  {t("expenses.summary.subtitle", { count: importedTransactionsSummary.length })}
                 </p>
               </div>
             </div>
@@ -3325,13 +3330,13 @@ export default function Expenses(){
                   >
                     <div style={{ fontSize: "13px", color: "var(--text)" }}>
                       {transaction.date ? (
-                        new Date(transaction.date).toLocaleDateString('en-US', { 
+                        new Date(transaction.date).toLocaleDateString(i18n.resolvedLanguage?.startsWith('es') ? 'es-ES' : 'en-US', { 
                           month: 'short', 
                           day: 'numeric', 
                           year: 'numeric' 
                         })
                       ) : (
-                        <span style={{ color: "var(--muted)", fontStyle: "italic" }}>—</span>
+                        <span style={{ color: "var(--muted)", fontStyle: "italic" }}>{t("common.dash")}</span>
                       )}
                     </div>
                     <div style={{ 
@@ -3379,7 +3384,7 @@ export default function Expenses(){
                   fontStyle: "italic",
                   textAlign: "center"
                 }}>
-                  ... and {importedTransactionsSummary.length - 10} more transactions (showing first 10)
+                  {t("expenses.summary.more", { count: importedTransactionsSummary.length - 10 })}
                 </p>
               )}
             </div>
@@ -3405,7 +3410,7 @@ export default function Expenses(){
                   fontSize: "14px"
                 }}
               >
-                Hide Summary
+                {t("expenses.summary.hide")}
               </button>
             </div>
           </section>
@@ -3413,13 +3418,13 @@ export default function Expenses(){
 
         <section className="card col-12 recent-table-card" ref={recentTableRef} style={{ marginTop: "40px" }}>
           <div className="recent-table-header">
-            <h3 className="chart-title">Recent Transactions</h3>
+            <h3 className="chart-title">{t("expenses.recent.title")}</h3>
             {filterCardName && (
               <button
                 onClick={() => setFilterCardName("")}
                 className="btn secondary clear-filter-btn"
               >
-                Clear card filter
+                {t("expenses.filters.clearCard")}
               </button>
             )}
           </div>
@@ -3434,7 +3439,7 @@ export default function Expenses(){
                 value={filterCategory}
                 onChange={(e) => setFilterCategory(e.target.value)}
               >
-                <option value="">All Categories</option>
+                <option value="">{t("expenses.filters.allCategories")}</option>
                 {availableCategories.map(cat => (
                   <option key={cat} value={cat}>{cat}</option>
                 ))}
@@ -3448,34 +3453,34 @@ export default function Expenses(){
                 value={filterDateRange}
                 onChange={(e) => setFilterDateRange(e.target.value)}
               >
-                <option value="all">All Time</option>
-                <option value="today">Today</option>
-                <option value="week">Last 7 Days</option>
-                <option value="month">This Month</option>
-                <option value="year">This Year</option>
+                <option value="all">{t("expenses.filters.allTime")}</option>
+                <option value="today">{t("expenses.filters.today")}</option>
+                <option value="week">{t("expenses.filters.last7Days")}</option>
+                <option value="month">{t("expenses.filters.thisMonth")}</option>
+                <option value="year">{t("expenses.filters.thisYear")}</option>
               </select>
               </div>
               
               <div className="filtered-total">
-                <span className="filtered-total-label">Filtered total:</span>
+                <span className="filtered-total-label">{t("expenses.filters.filteredTotal")}</span>
                 <span className="filtered-total-value">${filteredTotal.toFixed(2)}</span>
               </div>
             </div>
           )}
           
           {expenses.length === 0 ? (
-            <p className="muted" style={{ marginTop: "0.25rem" }}>No expenses yet.</p>
+            <p className="muted" style={{ marginTop: "0.25rem" }}>{t("expenses.recent.empty")}</p>
           ) : filteredExpenses.length === 0 ? (
-            <p className="muted" style={{ marginTop: "0.25rem" }}>No expenses match the selected filters.</p>
+            <p className="muted" style={{ marginTop: "0.25rem" }}>{t("expenses.recent.noMatch")}</p>
           ) : (
             <div className="table-container">
               <table className="expenses-table">
               <thead>
                   <tr>
-                    <th>Date</th>
-                    <th>Category</th>
-                    <th className="text-right">Amount</th>
-                    <th>Note</th>
+                    <th>{t("expenses.table.date")}</th>
+                    <th>{t("expenses.table.category")}</th>
+                    <th className="text-right">{t("expenses.table.amount")}</th>
+                    <th>{t("expenses.table.note")}</th>
                     <th style={{ width: "50px" }}></th>
                   </tr>
               </thead>
@@ -3508,27 +3513,27 @@ export default function Expenses(){
                       onClick={() => setSelectedExpense(e)}
                     >
                       <td>
-                        {new Date(e.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                        {new Date(e.date).toLocaleDateString(i18n.resolvedLanguage?.startsWith('es') ? 'es-ES' : 'en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                       </td>
                       <td>
                           <div className="expense-category-cell">
                             <span className="expense-category-dot" style={{ backgroundColor: categoryColor }}></span>
-                        {e.category || "Uncategorized"}
+                        {e.category || t("expenses.categories.uncategorized")}
                           </div>
                       </td>
                         <td className={`text-right amount-cell ${isIncome ? 'amount-income' : isExpense ? 'amount-expense' : ''}`}>
                           ${displayAmount.toFixed(2)}
                       </td>
                       <td className="note-cell">
-                        {e.note || <span className="muted-text">—</span>}
+                        {e.note || <span className="muted-text">{t("common.dash")}</span>}
                       </td>
                       <td className="action-cell" onClick={(e) => e.stopPropagation()}>
                         <button 
                           onClick={()=>del(e.id)}
                           type="button"
                             className="expense-delete-btn"
-                          title="Delete expense"
-                          aria-label="Delete expense"
+                          title={t("expenses.actions.deleteExpense")}
+                          aria-label={t("expenses.actions.deleteExpense")}
                         >
                             <FiTrash2 size={14} />
                         </button>
@@ -3547,28 +3552,28 @@ export default function Expenses(){
           <div className="expense-modal-overlay" onClick={() => setSelectedExpense(null)}>
             <div className="expense-modal" onClick={(e) => e.stopPropagation()}>
               <div className="expense-modal-header">
-                <h3 style={{ margin: 0 }}>Expense Details</h3>
+                <h3 style={{ margin: 0 }}>{t("expenses.modal.title")}</h3>
                 <button 
                   className="expense-modal-close"
                   onClick={() => setSelectedExpense(null)}
-                  aria-label="Close"
+                  aria-label={t("common.close")}
                 >
                   <FiX size={20} />
                 </button>
               </div>
               <div className="expense-modal-content">
                 <div className="expense-detail-item">
-                  <span className="expense-detail-label">Amount</span>
+                  <span className="expense-detail-label">{t("expenses.modal.amount")}</span>
                   <span className="expense-detail-value">${Number(selectedExpense.amount).toFixed(2)}</span>
                 </div>
                 <div className="expense-detail-item">
-                  <span className="expense-detail-label">Category</span>
-                  <span className="expense-detail-value">{selectedExpense.category || "Uncategorized"}</span>
+                  <span className="expense-detail-label">{t("expenses.modal.category")}</span>
+                  <span className="expense-detail-value">{selectedExpense.category || t("expenses.categories.uncategorized")}</span>
                 </div>
                 <div className="expense-detail-item">
-                  <span className="expense-detail-label">Date</span>
+                  <span className="expense-detail-label">{t("expenses.modal.date")}</span>
                   <span className="expense-detail-value">
-                    {new Date(selectedExpense.date).toLocaleDateString('en-US', { 
+                    {new Date(selectedExpense.date).toLocaleDateString(i18n.resolvedLanguage?.startsWith('es') ? 'es-ES' : 'en-US', { 
                       weekday: 'long',
                       year: 'numeric', 
                       month: 'long', 
@@ -3577,9 +3582,9 @@ export default function Expenses(){
                   </span>
                 </div>
                 <div className="expense-detail-item">
-                  <span className="expense-detail-label">Note</span>
+                  <span className="expense-detail-label">{t("expenses.modal.note")}</span>
                   <span className="expense-detail-value">
-                    {selectedExpense.note || <span style={{ color: "var(--muted)", fontStyle: "italic" }}>No note</span>}
+                    {selectedExpense.note || <span style={{ color: "var(--muted)", fontStyle: "italic" }}>{t("expenses.modal.noNote")}</span>}
                   </span>
                 </div>
               </div>

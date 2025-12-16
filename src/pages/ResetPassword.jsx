@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import ThemeToggle from "../components/ThemeToggle"
+import { useTranslation } from "react-i18next"
 
 const API_URL = "http://localhost:3000/api"
 
 export default function ResetPassword() {
+  const { t } = useTranslation()
   const { token } = useParams()
   const navigate = useNavigate()
-  
+
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
@@ -20,7 +22,7 @@ export default function ResetPassword() {
   useEffect(() => {
     const verifyToken = async () => {
       if (!token) {
-        setError("No reset token provided")
+        setError(t("reset.errors.noToken", "No reset token provided"))
         setVerifying(false)
         return
       }
@@ -32,35 +34,38 @@ export default function ResetPassword() {
         if (data.valid) {
           setTokenValid(true)
         } else {
-          setError(data.error || "Invalid or expired reset link")
+          setError(
+            data.error ||
+              t("reset.errors.invalidOrExpired", "Invalid or expired reset link")
+          )
         }
       } catch (err) {
         console.error("Token verification error:", err)
-        setError("Unable to verify reset link")
+        setError(t("reset.errors.verifyFail", "Unable to verify reset link"))
       } finally {
         setVerifying(false)
       }
     }
 
     verifyToken()
-  }, [token])
+  }, [token, t])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError("")
 
     if (!password || !confirmPassword) {
-      setError("Please fill in all fields")
+      setError(t("reset.errors.fillAll", "Please fill in all fields"))
       return
     }
 
     if (password.length < 6) {
-      setError("Password must be at least 6 characters")
+      setError(t("reset.errors.minLen", "Password must be at least 6 characters"))
       return
     }
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match")
+      setError(t("reset.errors.noMatch", "Passwords do not match"))
       return
     }
 
@@ -68,10 +73,8 @@ export default function ResetPassword() {
       setLoading(true)
 
       const response = await fetch(`${API_URL}/reset-password/${token}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password })
       })
 
@@ -80,17 +83,15 @@ export default function ResetPassword() {
       if (response.ok) {
         setSuccess(true)
       } else {
-        setError(data.error || "Failed to reset password")
+        setError(data.error || t("reset.errors.failed", "Failed to reset password"))
       }
-
     } catch (err) {
       console.error("Reset password error:", err)
-      setError("Unable to connect to server. Please try again.")
+      setError(t("reset.errors.server", "Unable to connect to server. Please try again."))
     } finally {
       setLoading(false)
     }
   }
-
 
   if (verifying) {
     return (
@@ -108,9 +109,15 @@ export default function ResetPassword() {
             <div className="card-body">
               <div className="center">
                 <div className="illustration">
-                  <img src="/cat-envelope.jpg" alt="Cashvelo logo" className="cat-hero" />
+                  <img
+                    src="/cat-envelope.jpg"
+                    alt={t("reset.aria.logoAlt", "Cashvelo logo")}
+                    className="cat-hero"
+                  />
                 </div>
-                <p className="subtitle">Verifying reset link...</p>
+                <p className="subtitle">
+                  {t("reset.verifying", "Verifying reset link...")}
+                </p>
               </div>
             </div>
           </div>
@@ -120,7 +127,6 @@ export default function ResetPassword() {
       </div>
     )
   }
-
 
   if (!tokenValid && !success) {
     return (
@@ -138,18 +144,26 @@ export default function ResetPassword() {
             <div className="card-body">
               <div className="center">
                 <div className="illustration">
-                  <img src="/cat-envelope.jpg" alt="Cashvelo logo" className="cat-hero" />
+                  <img
+                    src="/cat-envelope.jpg"
+                    alt={t("reset.aria.logoAlt", "Cashvelo logo")}
+                    className="cat-hero"
+                  />
                 </div>
-                <h1>Invalid Reset Link 🐱</h1>
-                <p className="subtitle" style={{ color: '#dc2626' }}>
-                  {error || "This password reset link is invalid or has expired."}
+                <h1>{t("reset.invalid.title", "Invalid Reset Link 🐱")}</h1>
+                <p className="subtitle" style={{ color: "#dc2626" }}>
+                  {error ||
+                    t(
+                      "reset.invalid.defaultError",
+                      "This password reset link is invalid or has expired."
+                    )}
                 </p>
-                <button 
-                  className="btn" 
+                <button
+                  className="btn"
                   onClick={() => navigate("/forgot-password")}
                   style={{ marginTop: 20 }}
                 >
-                  Request new reset link
+                  {t("reset.invalid.requestNew", "Request new reset link")}
                 </button>
               </div>
             </div>
@@ -160,7 +174,6 @@ export default function ResetPassword() {
       </div>
     )
   }
-
 
   return (
     <div className="container">
@@ -177,25 +190,33 @@ export default function ResetPassword() {
           <div className="card-body">
             <div className="center">
               <div className="illustration">
-                <img src="/cat-envelope.jpg" alt="Cashvelo logo" className="cat-hero" />
+                <img
+                  src="/cat-envelope.jpg"
+                  alt={t("reset.aria.logoAlt", "Cashvelo logo")}
+                  className="cat-hero"
+                />
               </div>
-              <h1>Reset your password 🐱</h1>
+              <h1>{t("reset.title", "Reset your password 🐱")}</h1>
               <p className="subtitle">
-                {success ? "Your password has been reset!" : "Enter your new password below"}
+                {success
+                  ? t("reset.subtitle.success", "Your password has been reset!")
+                  : t("reset.subtitle.default", "Enter your new password below")}
               </p>
             </div>
 
             {!success ? (
               <form onSubmit={handleSubmit} noValidate>
                 <div className="form-group">
-                  <label htmlFor="password" className="label">New password</label>
+                  <label htmlFor="password" className="label">
+                    {t("reset.form.newPassword", "New password")}
+                  </label>
                   <div className="password-wrap">
                     <input
                       id="password"
                       name="password"
                       type={showPassword ? "text" : "password"}
                       className="input"
-                      placeholder="At least 6 characters"
+                      placeholder={t("reset.form.minChars", "At least 6 characters")}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       autoComplete="new-password"
@@ -204,21 +225,29 @@ export default function ResetPassword() {
                       type="button"
                       className="toggle-eye"
                       onClick={() => setShowPassword((s) => !s)}
-                      aria-label={showPassword ? "Hide password" : "Show password"}
+                      aria-label={
+                        showPassword
+                          ? t("reset.form.hidePasswordAria", "Hide password")
+                          : t("reset.form.showPasswordAria", "Show password")
+                      }
                     >
-                      {showPassword ? "Hide" : "Show"}
+                      {showPassword
+                        ? t("reset.form.hide", "Hide")
+                        : t("reset.form.show", "Show")}
                     </button>
                   </div>
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="confirm" className="label">Confirm new password</label>
+                  <label htmlFor="confirm" className="label">
+                    {t("reset.form.confirmPassword", "Confirm new password")}
+                  </label>
                   <input
                     id="confirm"
                     name="confirm"
                     type={showPassword ? "text" : "password"}
                     className="input"
-                    placeholder="Re-enter password"
+                    placeholder={t("reset.form.reenter", "Re-enter password")}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     autoComplete="new-password"
@@ -232,28 +261,33 @@ export default function ResetPassword() {
                 )}
 
                 <button type="submit" className="btn" disabled={loading}>
-                  {loading ? "Resetting password..." : "Reset password"}
+                  {loading
+                    ? t("reset.actions.resetting", "Resetting password...")
+                    : t("reset.actions.reset", "Reset password")}
                 </button>
               </form>
             ) : (
               <div>
-                <div style={{
-                  background: '#d1fae5',
-                  border: '1px solid #6ee7b7',
-                  borderRadius: '8px',
-                  padding: '16px',
-                  marginBottom: '20px'
-                }}>
-                  <p style={{ color: '#065f46', margin: 0, fontSize: '14px' }}>
-                    ✅ Your password has been reset successfully!
+                <div
+                  style={{
+                    background: "#d1fae5",
+                    border: "1px solid #6ee7b7",
+                    borderRadius: "8px",
+                    padding: "16px",
+                    marginBottom: "20px"
+                  }}
+                >
+                  <p style={{ color: "#065f46", margin: 0, fontSize: "14px" }}>
+                    ✅{" "}
+                    {t(
+                      "reset.success.banner",
+                      "Your password has been reset successfully!"
+                    )}
                   </p>
                 </div>
 
-                <button 
-                  className="btn" 
-                  onClick={() => navigate("/login")}
-                >
-                  Go to login
+                <button className="btn" onClick={() => navigate("/login")}>
+                  {t("reset.actions.goLogin", "Go to login")}
                 </button>
               </div>
             )}

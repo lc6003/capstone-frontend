@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react"
 import { Routes, Route, Navigate, NavLink } from "react-router-dom"
 import { onAuthStateChanged, signOut } from "firebase/auth"
 import { auth } from "./firebase"
+import { useTranslation } from "react-i18next"
 
 import ThemeToggle from "./components/ThemeToggle.jsx"
+import LanguageSwitcher from "./components/LanguageSwitcher.jsx"
 import HomePage from "./pages/HomePage.jsx"
 import Login from "./pages/Login.jsx"
 import SignUp from "./pages/SignUp.jsx"
@@ -27,6 +29,7 @@ function PublicOnly({ user, children }) {
 
 export default function App() {
   const [user, setUser] = useState(undefined)
+  const { t } = useTranslation("common")
   console.log("APP USER = ", user)
 
 
@@ -67,16 +70,29 @@ export default function App() {
       <nav className="nav">
         <div className="left">
           <img src="/cat-envelope.jpg" className="logo-img" alt="Cashvelo" />
-          <NavLink to="/dashboard" end>Dashboard</NavLink>
-          <NavLink to="/budget">Budget</NavLink>
-          <NavLink to="/cash-stuffing">Cash Stuffing</NavLink>
-          <NavLink to="/expenses">Spending</NavLink>
-          <NavLink to="/insights">Insights</NavLink>
+          <NavLink to="/dashboard" end>
+            {t("nav.dashboard", "Dashboard")}
+          </NavLink>
+          <NavLink to="/budget">
+            {t("nav.budget", "Budget")}
+          </NavLink>
+          <NavLink to="/cash-stuffing">
+            {t("nav.cashStuffing", "Cash Stuffing")}
+          </NavLink>
+          <NavLink to="/expenses">
+            {t("nav.spending", "Spending")}
+          </NavLink>
+          <NavLink to="/insights">
+            {t("nav.insights", "Insights")}
+          </NavLink>
         </div>
         <div className="right">
+          <LanguageSwitcher />
           <ThemeToggle />
-          <NavLink to="/settings" className="btn ghost">⚙️</NavLink>
-          <button onClick={handleLogout} className="btn ghost logout">Logout</button>
+          <NavLink to="/settings" className="btn ghost icon-btn">⚙️</NavLink>
+          <button onClick={handleLogout} className="btn ghost logout">
+            {t("nav.logout", "Logout")}
+          </button>
         </div>
       </nav>
 
