@@ -1,0 +1,600 @@
+{
+  "appName": "Cashvelo",
+
+  "auth": {
+    "login": "Iniciar sesión",
+    "signup": "Crear cuenta"
+  },
+  "home": {
+  "logoAria": "Inicio de Cashvelo",
+  "logoAlt": "Logo de Cashvelo",
+
+  "nav": {
+    "home": "Inicio",
+    "how": "Cómo funciona",
+    "features": "Funciones",
+    "why": "Por qué Cashvelo",
+    "login": "Iniciar sesión",
+    "signup": "Crear cuenta",
+    "signupAria": "Crear una cuenta gratis"
+  },
+
+  "hero": {
+    "titleLine1": "Presupuesta bonito.",
+    "titleLine2": "Gasta con confianza.",
+    "subtitle": "Cashvelo convierte tus ingresos en sobres simples, te da claridad con tus gastos y te ayuda a ser constante sin hojas de cálculo ni estrés.",
+    "primaryCta": "Empieza en 60 segundos →",
+    "secondaryCta": "Ver una demo en vivo"
+  },
+
+  "envelopes": {
+    "groceries": "Comida",
+    "transport": "Transporte",
+    "savings": "Ahorros",
+    "fun": "Diversión"
+  },
+
+  "demo": {
+    "aria": "Demostración de sobres y estadísticas",
+    "title": "Sobres",
+    "chip": "Demo",
+    "insights": {
+      "mtd": "Mes actual:",
+      "mtdSuffix": "registrados",
+      "safe": "Seguro para gastar:",
+      "upcoming": "Próximos pagos:",
+      "upcomingSuffix": "en 5 días"
+    }
+  },
+
+  "badges": {
+    "envelope": "Método de sobres",
+    "insights": "Estadísticas claras"
+  },
+
+  "description": "Cashvelo usa el sistema de sobres, una forma visual de poner límites, seguir tus gastos y mantener tu hábito mes a mes.",
+
+  "how": {
+    "title": "Cómo Cashvelo te mantiene al día",
+    "subtitle": "Tres pasos. Minutos para empezar. Hábitos que duran.",
+    "step1": {
+      "title": "Crea sobres inteligentes",
+      "body": "Asigna dinero a categorías que de verdad usas. Te guiamos según tus metas y tu mes típico."
+    },
+    "step2": {
+      "title": "Registra sin complicaciones",
+      "body": "Anota tus gastos en segundos, importa CSV de tu banco y deja que las reglas etiqueten tus movimientos."
+    },
+    "step3": {
+      "title": "Protege tu plan",
+      "body": "Ve tu 'seguro para gastar' de un vistazo, recibe avisos antes de pasarte y manda lo que sobra a ahorros."
+    }
+  },
+
+  "features": {
+    "goals": {
+      "title": "Metas que sí se sienten posibles",
+      "copy": "Viajes, fondo de emergencia o deudas divididos en metas semanales pequeñas."
+    },
+    "fast": {
+      "title": "Rápido y ligero",
+      "copy": "Interfaz sin lag y lista incluso sin internet, para que tu presupuesto esté listo al abrir la app."
+    },
+    "private": {
+      "title": "Privado desde el diseño",
+      "copy": "Tus datos se quedan en tu dispositivo con copia de seguridad cifrada opcional. Nada de vender información."
+    },
+    "reminders": {
+      "title": "Recordatorios suaves",
+      "copy": "Notificaciones en el momento justo: después de una compra o antes de un cobro."
+    }
+  },
+
+  "why": {
+    "title": "Por qué la gente sigue usando Cashvelo",
+    "item1": "Sistema de sobres visual que se entiende rápido",
+    "item2": "‘Seguro para gastar’ claro para decidir sin estrés",
+    "item3": "Los sobrantes pasan al siguiente mes para mantener el ritmo",
+    "item4": "Funciona bien sola o en pareja"
+  },
+
+  "cta": {
+    "title": "¿Lista para sentir control de tu dinero?",
+    "subtitle": "Empieza en minutos.",
+    "primaryCta": "Crear cuenta",
+    "secondaryCta": "Ya tengo una cuenta"
+  }
+},
+
+  "login": {
+    "title": "Bienvenid@ de nuevo 🐱",
+    "subtitle": "Inicie sesión para seguir construyendo hábitos financieros sólidos con Cashvelo.",
+    "emailLabel": "Correo electrónico",
+    "emailPlaceholder": "tú@ejemplo.com",
+    "emailRequired": "El correo electrónico es obligatorio.",
+    "emailInvalid": "Ingresa un correo válido.",
+    "passwordLabel": "Contraseña",
+    "passwordPlaceholder": "••••••••",
+    "passwordRequired": "La contraseña es obligatoria.",
+    "rememberMe": "Recuérdame",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "submit": "Iniciar sesión",
+    "submitLoading": "Iniciando…",
+    "or": "o",
+    "google": "Continuar con Google",
+    "googleLoading": "Iniciando...",
+    "microsoft": "Continuar con Microsoft",
+    "newHere": "¿Eres nuev@?",
+    "createAccount": "Crear una cuenta",
+    "serverError": "No se pudo conectar al servidor. Por favor, inténtalo de nuevo.",
+    "loginFailed": "Error al iniciar sesión"
+  },
+
+  "signup": {
+    "title": "Crea tu cuenta",
+    "subtitle": "Únete a Cashvelo para presupuestar de forma más inteligente.",
+    "nameLabel": "Nombre completo (opcional)",
+    "namePlaceholder": "ej., Alex Doe",
+    "emailLabel": "Correo electrónico",
+    "emailPlaceholder": "tú@ejemplo.com",
+    "passwordLabel": "Contraseña",
+    "passwordPlaceholder": "Mínimo 6 caracteres",
+    "confirmLabel": "Confirmar contraseña",
+    "confirmPlaceholder": "Vuelve a escribir la contraseña",
+
+    "errorRequired": "Por favor completa todos los campos requeridos.",
+    "errorShortPassword": "La contraseña debe tener al menos 6 caracteres.",
+    "errorMismatch": "Las contraseñas no coinciden.",
+    "errorDefault": "Algo salió mal. Por favor, inténtalo de nuevo.",
+    "serverError": "No se pudo conectar al servidor. Por favor, inténtalo de nuevo.",
+
+    "submit": "Crear cuenta",
+    "submitLoading": "Creando cuenta...",
+
+    "or": "o",
+    "google": "Continuar con Google",
+    "googleLoading": "Registrando...",
+    "microsoft": "Continuar con Microsoft",
+
+    "alreadyHaveAccount": "¿Ya tienes una cuenta?",
+    "login": "Iniciar sesión"
+  },
+
+"forgot": {
+    "title": "¿Olvidaste tu contraseña? 🐱",
+    "subtitle": {
+      "default": "Ingresa tu correo y te enviaremos un enlace para restablecerla",
+      "success": "Revisa tu correo para el enlace de restablecimiento"
+    },
+    "form": {
+      "emailLabel": "Correo electrónico",
+      "emailPlaceholder": "tu@ejemplo.com"
+    },
+    "actions": {
+      "sendLink": "Enviar enlace",
+      "sending": "Enviando..."
+    },
+    "footer": {
+      "remember": "¿Recuerdas tu contraseña?",
+      "backToLogin": "Volver al inicio de sesión"
+    },
+    "success": {
+      "banner": "✅ Si existe una cuenta con este correo, recibirás un enlace para restablecer tu contraseña en breve.",
+      "instructions": "Revisa tu bandeja de entrada y la carpeta de spam para encontrar el enlace."
+    },
+    "errors": {
+      "enterEmail": "Por favor ingresa tu correo electrónico",
+      "validEmail": "Por favor ingresa un correo válido",
+      "generic": "Algo salió mal",
+      "server": "No se pudo conectar al servidor. Inténtalo de nuevo."
+    },
+    "aria": {
+      "card": "Tarjeta de contraseña olvidada",
+      "imageAlt": "Gato colocando dinero en un sobre"
+    }
+  },
+  "reset": {
+    "verifying": "Verificando el enlace de restablecimiento...",
+    "title": "Restablece tu contraseña 🐱",
+    "subtitle": {
+      "default": "Ingresa tu nueva contraseña abajo",
+      "success": "¡Tu contraseña ha sido restablecida!"
+    },
+    "invalid": {
+      "title": "Enlace inválido 🐱",
+      "defaultError": "Este enlace para restablecer la contraseña no es válido o ya expiró.",
+      "requestNew": "Solicitar un nuevo enlace"
+    },
+    "form": {
+      "newPassword": "Nueva contraseña",
+      "confirmPassword": "Confirmar nueva contraseña",
+      "minChars": "Mínimo 6 caracteres",
+      "reenter": "Vuelve a escribir la contraseña",
+      "show": "Mostrar",
+      "hide": "Ocultar",
+      "showPasswordAria": "Mostrar contraseña",
+      "hidePasswordAria": "Ocultar contraseña"
+    },
+    "actions": {
+      "reset": "Restablecer contraseña",
+      "resetting": "Restableciendo contraseña...",
+      "goLogin": "Ir a iniciar sesión"
+    },
+    "success": {
+      "banner": "¡Tu contraseña se restableció correctamente!"
+    },
+    "errors": {
+      "noToken": "No se proporcionó un token de restablecimiento",
+      "invalidOrExpired": "Enlace inválido o expirado",
+      "verifyFail": "No se pudo verificar el enlace",
+      "fillAll": "Por favor completa todos los campos",
+      "minLen": "La contraseña debe tener al menos 6 caracteres",
+      "noMatch": "Las contraseñas no coinciden",
+      "failed": "No se pudo restablecer la contraseña",
+      "server": "No se pudo conectar al servidor. Inténtalo de nuevo."
+    },
+    "aria": {
+      "logoAlt": "Logo de Cashvelo"
+    }
+  },
+  "settings": {
+    "title": "Configuración de la cuenta",
+    "subtitle": "Administra tu información de cuenta y preferencias.",
+    "loading": "Cargando...",
+    "profile": { "title": "Información del perfil" },
+    "fields": {
+      "username": "Nombre de usuario",
+      "fullName": "Nombre completo",
+      "email": "Correo electrónico",
+      "memberSince": "Miembro desde"
+    },
+    "actions": {
+      "title": "Acciones de la cuenta",
+      "edit": "Editar perfil",
+      "save": "Guardar cambios",
+      "cancel": "Cancelar",
+      "logout": "Cerrar sesión",
+      "delete": "Eliminar cuenta"
+    },
+    "success": {
+      "updated": "¡Perfil actualizado correctamente!"
+    },
+    "errors": {
+      "loadUser": "No se pudieron cargar los datos del usuario",
+      "updateUser": "No se pudo actualizar el perfil",
+      "deleteUser": "No se pudo eliminar la cuenta"
+    },
+    "confirmDelete": "¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer y todos tus datos se eliminarán permanentemente."
+  },
+"nav": {
+    "dashboard": "Panel",
+    "budget": "Presupuesto",
+    "spending": "Gastos",
+    "insights": "Análisis",
+    "settings": "Ajustes",
+    "logout": "Salir"
+  },
+  "dashboard": {
+    "month": {
+      "prevAria": "Mes anterior",
+      "nextAria": "Mes siguiente"
+    },
+    "welcome": {
+      "title": "Bienvenido/a de nuevo",
+      "soFar": "Hasta ahora este mes gastaste",
+      "in": "En",
+      "youSpent": "gastaste",
+      "across": "en",
+      "txnOne": "transacción",
+      "txnMany": "transacciones"
+    },
+    "glance": {
+      "title": "Resumen del mes",
+      "spent": "Gastado",
+      "remaining": "Presupuesto restante",
+      "avgDaily": "Promedio diario",
+      "totalDebt": "Deuda total de tarjetas:"
+    },
+    "actions": {
+      "addExpense": "Agregar gasto",
+      "addIncome": "Agregar ingreso",
+      "addBudget": "Agregar presupuesto"
+    },
+    "highlights": {
+      "title": "Destacados",
+      "topCategoryPrefix": "Categoría principal este mes:",
+      "youAdded": "Agregaste",
+      "thisMonthSuffix": "este mes",
+      "youSpent": "Gastaste",
+      "inTop": "en tu categoría principal"
+    },
+    "projected": {
+      "title": "Gasto estimado al final del mes",
+      "estimated": "Estimado:"
+    },
+    "credit": {
+      "title": "Resumen de crédito",
+      "totalDebt": "Deuda total:",
+      "highestUtil": "Mayor utilización:",
+      "unknown": "Desconocido"
+    }
+  },
+"common": {
+    "add": "Agregar",
+    "cancel": "Cancelar",
+    "dash": "—",
+    "na": "N/D",
+    "close": "Cerrar",
+    "dismiss": "Cerrar"
+  },
+"expenses": {
+  "title": "Resumen de gastos",
+  "summaryBadge": "Resumen de gastos",
+  "totalSpent": "Total gastado",
+  "avgDailySpend": "Promedio diario",
+  "transactions": "Transacciones",
+  "remainingBudget": "Presupuesto restante",
+
+  "addTransaction": "Agregar transacción",
+
+  "form": {
+    "amount": "Monto",
+    "selectCategory": "Seleccionar categoría",
+    "note": "Nota",
+    "add": "Agregar",
+    "date": "Fecha"
+  },
+
+  "upload": {
+    "title": "Subir estado de cuenta",
+    "subtitle": "Sube tu estado de cuenta en CSV o PDF",
+    "chooseFile": "Elegir archivo",
+    "fileReady": "El archivo está listo.",
+    "type": "Tipo"
+  },
+
+  "pdf": {
+    "ready": "El PDF está listo. Haz clic abajo para extraer el texto y analizar las transacciones.",
+    "process": "Procesar PDF",
+    "failedPrompt": "Falló el procesamiento del PDF. ¿Quieres intentarlo de nuevo?",
+    "retry": "Reintentar",
+    "processing": "Procesando PDF...",
+    "processingSub": "Extrayendo texto y analizando transacciones",
+    "unableTitle": "No se pudo procesar el PDF",
+    "tryAgain": "Intentar de nuevo",
+    "cancel": "Cancelar",
+
+    "correct": {
+      "title": "Corregir antes de importar",
+      "subtitle": "Edita o elimina transacciones antes de importar. Haz clic en \"Aprobar todo\" cuando estés listo.",
+      "datePlaceholder": "MM/DD/AAAA",
+      "descPlaceholder": "Descripción de la transacción",
+      "amountPlaceholder": "0.00",
+      "deleteTxn": "Eliminar transacción",
+      "approveAll": "Aprobar todo",
+      "approvedReady": "✓ Transacciones aprobadas. Listas para importar.",
+      "reviewApprove": "Revisa y aprueba las transacciones antes de importar.",
+      "importPdf": "Importar transacciones PDF"
+    },
+
+    "success": {
+      "title": "Las transacciones del PDF se importaron correctamente."
+    }
+  },
+
+  "preview": {
+    "title": "Vista previa",
+    "detected": "Transacciones detectadas",
+    "parsing": "Analizando archivo CSV...",
+    "showingFirst": "Mostrando {{shown}} de {{total}} transacciones",
+    "parsingBody": "Analizando archivo CSV...",
+    "parsingSub": "Extrayendo transacciones de tu archivo"
+  },
+
+  "csvPreview": {
+    "title": "Vista previa de transacciones",
+    "showingFirst": "Mostrando {{shown}} de {{total}} transacciones",
+    "more": "... y {{count}} transacciones más",
+    "review": "Revisa los datos y haz clic en Importar para agregarlos a tus gastos.",
+    "import": "Importar transacciones"
+  },
+
+  "importSuccess": {
+    "title": "Las transacciones se importaron correctamente.",
+    "addedCount": "Se agregaron {{count}} transacciones a tus registros de gastos.",
+    "duplicates": "Todas las transacciones eran duplicadas y se omitieron."
+  },
+
+  "history": {
+    "title": "Historial de subidas",
+    "subtitle": "Archivos subidos e importaciones recientes",
+    "at": "{{date}} a las {{time}}",
+    "noneImported": "No se importaron transacciones",
+    "count": "{{count}} transacciones"
+  },
+
+  "summary": {
+    "title": "Resumen de transacciones importadas",
+    "subtitle": "Has importado {{count}} nuevas transacciones.",
+    "more": "... y {{count}} transacciones más (mostrando las primeras 10)",
+    "hide": "Ocultar resumen"
+  },
+
+  "recent": {
+    "title": "Transacciones recientes",
+    "empty": "Aún no hay gastos.",
+    "noMatch": "No hay gastos que coincidan con los filtros seleccionados."
+  },
+
+  "filters": {
+    "clearCard": "Quitar filtro de tarjeta",
+    "allCategories": "Todas las categorías",
+    "allTime": "Todo el tiempo",
+    "today": "Hoy",
+    "last7Days": "Últimos 7 días",
+    "thisMonth": "Este mes",
+    "thisYear": "Este año",
+    "filteredTotal": "Total filtrado:"
+  },
+
+  "table": {
+    "date": "Fecha",
+    "description": "Descripción",
+    "amount": "Monto",
+    "category": "Categoría",
+    "note": "Nota",
+    "actions": "Acciones"
+  },
+
+  "actions": {
+    "deleteExpense": "Eliminar gasto",
+    "deleteTransaction": "Eliminar transacción",
+    "dismiss": "Cerrar",
+    "close": "Cerrar"
+  },
+
+  "modal": {
+    "title": "Detalles del gasto",
+    "amount": "Monto",
+    "category": "Categoría",
+    "date": "Fecha",
+    "note": "Nota",
+    "noNote": "Sin nota"
+  },
+
+  "categories": {
+    "uncategorized": "Sin categoría",
+    "other": "Otro"
+  },
+
+  "ccTracker": {
+    "title": "Seguimiento de tarjetas de crédito",
+    "addCard": "Agregar tarjeta",
+    "empty": "Aún no hay datos de tarjetas.",
+    "deleteTitle": "Eliminar tarjeta",
+    "deleteAria": "Eliminar tarjeta",
+
+    "form": {
+      "cardName": "Nombre de la tarjeta",
+      "creditLimit": "Límite de crédito",
+      "currentBalance": "Saldo actual",
+      "dueDate": "Fecha de vencimiento",
+      "add": "Agregar",
+      "cancel": "Cancelar"
+    },
+
+    "labels": {
+      "balance": "Saldo",
+      "limit": "Límite",
+      "utilization": "Utilización",
+      "monthCharges": "Cargos de este mes:",
+      "due": "Vence:"
+    }
+  }
+},
+"insights": {
+    "uncategorized": "Sin categoría",
+    "monthlyOverview": "Resumen mensual",
+    "legend": { "income": "Ingresos", "spending": "Gastos" },
+    "aria": { "selectMonth": "Seleccionar mes {{month}}" },
+    "tooltips": {
+      "income": "Ingresos: ${{amt}}",
+      "spending": "Gastos: ${{amt}}"
+    },
+    "hero": {
+      "earned": "Ganaste ${{amt}} este mes.",
+      "noIncome": "No hay ingresos registrados este mes.",
+      "spentMoreThanEarned": "Gastaste {{pct}}% más de lo que ganaste.",
+      "spentOfIncome": "Gastaste {{pct}}% de tus ingresos.",
+      "spentAmount": "Gastaste ${{amt}} este mes.",
+      "noSpending": "No hay gastos registrados este mes.",
+      "saved": "Ahorraste ${{amt}} este mes.",
+      "overspent": "Te pasaste por ${{amt}}.",
+      "equal": "Ingresos y gastos son iguales."
+    },
+    "breakdown": {
+      "title": "Desglose de gastos",
+      "none": "Aún no hay datos por categoría."
+    },
+    "daily": {
+      "title": "Tendencia diaria de gastos",
+      "none": "Aún no hay datos.",
+      "spentLabel": "Gastado"
+    },
+    "compare": {
+      "title": "Este mes vs el mes pasado",
+      "thisMonth": "Este mes",
+      "lastMonth": "Mes pasado",
+      "totalSpending": "Gasto total",
+      "transactions": "Transacciones",
+      "avgDaily": "Promedio diario",
+      "firstMonthData": "Este es tu primer mes con datos de gastos.",
+      "noData": "No hay datos para comparar.",
+      "up": "El gasto subió ${{amt}} (+{{pct}}%) comparado con el mes pasado.",
+      "down": "Gastaste ${{amt}} ({{pct}}%) menos que el mes pasado.",
+      "same": "Tu gasto es exactamente igual al mes pasado."
+    },
+    "key": {
+      "title": "Insights clave",
+      "topCategory": "{{cat}} es tu categoría con más gasto este mes ({{pct}}%).",
+      "categoryUp": "El gasto en {{cat}} aumentó {{pct}}% comparado con el mes pasado.",
+      "categoryDown": "El gasto en {{cat}} bajó {{pct}}% comparado con el mes pasado.",
+      "budgetUsed": "Has usado {{pct}}% de tu presupuesto mensual.",
+      "overallUp": "El gasto total subió {{pct}}% desde el mes pasado.",
+      "overallDown": "El gasto total bajó {{pct}}% desde el mes pasado."
+    },
+    "summary": {
+      "trendingOverspend": "Vas camino a pasarte por ${{amt}}.",
+      "firstMonth": "Este es tu primer mes registrando gastos.",
+      "noneYet": "Aún no hay gastos registrados este mes.",
+      "lessThanLast": "Estás gastando {{pct}}% menos que el mes pasado.",
+      "moreThanLast": "Estás gastando {{pct}}% más que el mes pasado.",
+      "sameAsLast": "Tu gasto coincide con el mes pasado."
+    }
+  },
+"budget": {
+    "title": "Presupuesto",
+    "actions": { "add": "Agregar", "delete": "Eliminar" },
+    "types": { "recurring": "Recurrente (mensual)", "variable": "Variable" },
+    "form": {
+      "categoryPlaceholder": "Nombre de categoría (ej., Supermercado)",
+      "limitPlaceholder": "Límite mensual (opcional)"
+    },
+    "summary": {
+      "totalBudgeted": "Total presupuestado",
+      "recurringExpenses": "Gastos recurrentes",
+      "variableExpenses": "Gastos variables"
+    },
+    "tables": {
+      "recurringTitle": "Recurrente",
+      "variableTitle": "Variable",
+      "noneRecurring": "Aún no hay presupuestos recurrentes.",
+      "noneVariable": "Aún no hay presupuestos variables."
+    },
+    "table": {
+      "category": "Categoría",
+      "limit": "Límite",
+      "spent": "Gastado",
+      "remaining": "Restante",
+      "noLimit": "Sin límite"
+    },
+    "income": {
+      "title": "Registro de ingresos",
+      "subtitle": "Registra tus ingresos reales y esperados a continuación.",
+      "actualTitle": "Ingresos reales",
+      "expectedTitle": "Ingresos esperados",
+      "paycheck": "Pago",
+      "expectedPaycheck": "Pago esperado",
+      "paycheckLabel": "Pago",
+      "amountPlaceholder": "Monto $",
+      "deleteLastTitle": "Eliminar último registro"
+    },
+    "alerts": {
+      "missingFields": "Por favor escribe un nombre de categoría y selecciona 'Recurrente' o 'Variable' antes de agregar un presupuesto.",
+      "failedCreateBudget": "No se pudo crear el presupuesto",
+      "failedDeleteBudget": "No se pudo eliminar el presupuesto",
+      "failedAddIncome": "No se pudo agregar el ingreso",
+      "failedDeleteIncome": "No se pudo eliminar el ingreso"
+    }
+}
+}
