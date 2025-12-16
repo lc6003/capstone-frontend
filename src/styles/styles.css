@@ -461,15 +461,25 @@ html.dark .nav{
   transition:all 0.2s ease;
   width:36px;
   height:36px;
+  outline:none;
 }
 
-.theme-toggle-btn:hover{
+.theme-toggle-btn:hover:not(:active){
   background:rgba(0,0,0,0.04);
   border-color:rgba(244,162,97,0.5);
 }
 
-html.dark .theme-toggle-btn:hover{
+html.dark .theme-toggle-btn:hover:not(:active){
   background:rgba(255,255,255,0.05);
+}
+
+.theme-toggle-btn:active{
+  background:rgba(244,162,97,0.25) !important;
+  border-color:rgba(244,162,97,0.7) !important;
+}
+
+html.dark .theme-toggle-btn:active{
+  background:rgba(244,162,97,0.3) !important;
 }
 
 /* nav links as pills */
@@ -503,16 +513,16 @@ html.dark .nav a{
   border:1px solid transparent;
 }
 
-.nav a:not(.active){
+.nav a:not(.active):not(.icon-btn){
   border:1px solid rgba(244,162,97,0.3);
 }
 
-.nav a:not(.active):hover{
+.nav a:not(.active):not(.icon-btn):hover{
   background:rgba(0,0,0,0.04);
   border-color:rgba(244,162,97,0.5);
 }
 
-html.dark .nav a:not(.active):hover{
+html.dark .nav a:not(.active):not(.icon-btn):hover{
   background:rgba(255,255,255,0.05);
 }
 
@@ -527,7 +537,7 @@ html.dark .nav a:not(.active):hover{
   line-height:1.5;
   transition:all 0.2s ease;
   border:1px solid rgba(244,162,97,0.3);
-  background:transparent;
+  background:transparent !important;
   cursor:pointer;
   font-family:inherit;
   display:inline-flex;
@@ -539,19 +549,78 @@ html.dark .nav a:not(.active):hover{
   height:auto;
   min-height:auto;
   position:relative;
+  outline:none;
+  width:auto !important;
+  margin-top:0 !important;
 }
 
 html.dark .nav .btn.ghost.logout{
   color:#f3f4f6;
 }
 
-.nav .btn.ghost.logout:hover{
-  background:rgba(0,0,0,0.04);
-  border-color:rgba(244,162,97,0.5);
+.nav .btn.ghost.logout:hover:not(:active){
+  background:rgba(0,0,0,0.04) !important;
+  border-color:rgba(244,162,97,0.5) !important;
 }
 
-html.dark .nav .btn.ghost.logout:hover{
-  background:rgba(255,255,255,0.05);
+html.dark .nav .btn.ghost.logout:hover:not(:active){
+  background:rgba(255,255,255,0.05) !important;
+}
+
+.nav .btn.ghost.logout:active{
+  background:rgba(244,162,97,0.25) !important;
+  border-color:rgba(244,162,97,0.7) !important;
+}
+
+html.dark .nav .btn.ghost.logout:active{
+  background:rgba(244,162,97,0.3) !important;
+}
+
+/* Settings icon button - match theme toggle size exactly */
+.nav .btn.ghost.icon-btn,
+.nav a.btn.ghost.icon-btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0;
+  border-radius:8px;
+  border:1px solid var(--border);
+  background:transparent !important;
+  color:var(--text);
+  cursor:pointer;
+  transition:all 0.2s ease;
+  width:36px !important;
+  height:36px;
+  outline:none;
+  margin-top:0 !important;
+  box-shadow:none !important;
+  line-height:1;
+  font-size:18px;
+  text-align:center;
+}
+
+.nav .btn.ghost.icon-btn:hover:not(:active),
+.nav a.btn.ghost.icon-btn:hover:not(:active){
+  background:rgba(0,0,0,0.04) !important;
+  border-color:rgba(244,162,97,0.5) !important;
+}
+
+html.dark .nav .btn.ghost.icon-btn:hover:not(:active),
+html.dark .nav a.btn.ghost.icon-btn:hover:not(:active){
+  background:rgba(255,255,255,0.05) !important;
+}
+
+.nav .btn.ghost.icon-btn:active,
+.nav a.btn.ghost.icon-btn:active,
+.nav a.icon-btn:active{
+  background:rgba(244,162,97,0.25) !important;
+  border-color:rgba(244,162,97,0.7) !important;
+}
+
+html.dark .nav .btn.ghost.icon-btn:active,
+html.dark .nav a.btn.ghost.icon-btn:active,
+html.dark .nav a.icon-btn:active{
+  background:rgba(244,162,97,0.3) !important;
 }
 
 /* Language Switcher */
@@ -574,6 +643,7 @@ html.dark .nav .btn.ghost.logout:hover{
   cursor:pointer;
   transition:all 0.2s ease;
   font-family:inherit;
+  outline:none;
 }
 
 html.dark .lang-pill{
@@ -581,13 +651,24 @@ html.dark .lang-pill{
   border-color:rgba(244,162,97,0.3);
 }
 
-.lang-pill:hover{
+.lang-pill:hover:not(:active){
   background:rgba(0,0,0,0.04);
   border-color:rgba(244,162,97,0.5);
 }
 
-html.dark .lang-pill:hover{
+html.dark .lang-pill:hover:not(:active){
   background:rgba(255,255,255,0.05);
+}
+
+.lang-pill:active,
+button.lang-pill:active{
+  background:rgba(244,162,97,0.25) !important;
+  border-color:rgba(244,162,97,0.7) !important;
+}
+
+html.dark .lang-pill:active,
+html.dark button.lang-pill:active{
+  background:rgba(244,162,97,0.3) !important;
 }
 
 .lang-pill.active{
