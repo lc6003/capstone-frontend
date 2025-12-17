@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { fetchBudgets, createBudget, deleteBudget, fetchIncome, createIncome, deleteIncome, fetchExpenses } from "../lib/api.js"
+import { fetchBudgets, createBudget, deleteBudget, fetchIncome, createIncome, deleteIncome } from "../lib/api.js"
 import { FaRegTrashAlt } from "react-icons/fa"
 import { useTranslation } from "react-i18next"
 
@@ -18,7 +18,7 @@ function IncomeColumn({ title, type, prefix }) {
       const data = await fetchIncome(type)
       setEntries(data)
     } catch (error) {
-      console.error('Failed to load income:', error)
+      console.error("Failed to load income:", error)
     }
   }
 
@@ -33,7 +33,7 @@ function IncomeColumn({ title, type, prefix }) {
       setInput("")
       await loadEntries()
     } catch (error) {
-      console.error('Failed to add income:', error)
+      console.error("Failed to add income:", error)
       alert(t("budget.alerts.failedAddIncome"))
     } finally {
       setLoading(false)
@@ -43,67 +43,113 @@ function IncomeColumn({ title, type, prefix }) {
   async function handleDeleteLast() {
     if (entries.length === 0) return
     const lastEntry = entries[entries.length - 1]
-    
+
     try {
       setLoading(true)
       await deleteIncome(lastEntry._id)
       await loadEntries()
     } catch (error) {
-      console.error('Failed to delete income:', error)
+      console.error("Failed to delete income:", error)
       alert(t("budget.alerts.failedDeleteIncome"))
     } finally {
       setLoading(false)
     }
   }
 
-  const total = entries.reduce((a, b) => a + b.amount, 0)
+  const total = entries.reduce((sum, e) => sum + e.amount, 0)
 
   return (
     <div>
+      {/* Total */}
       <h4 style={{ marginBottom: "0.5rem" }}>
-        {title}: <span style={{ fontWeight: 800, color: "green" }}>${total.toFixed(2)}</span>
+        {title}:{" "}
+        <span style={{ fontWeight: 800, color: "green" }}>
+          ${total.toFixed(2)}
+        </span>
       </h4>
-      {entries.map((entry, i) => (
-        <div key={entry._id} style={{ marginBottom: "1rem" }}>
-          {t("budget.income.paycheckLabel")} {i + 1}: ${entry.amount.toFixed(2)}
-        </div>
-      ))}
-      <form onSubmit={addEntry} style={{ marginTop: "0.5rem", display: "flex", alignItems: "center", flexWrap:"nowrap" }}>
-        <label style={{ marginRight: "0.5rem" }}>{prefix} {entries.length + 1}:</label>
-        <input 
-          className="input" 
-          type="number" 
-          step="0.01" 
-          placeholder={t("budget.income.amountPlaceholder")} 
-          value={input} 
-          onChange={(e) => setInput(e.target.value)} 
+
+      {/* Paychecks list */}
+      {entries.map((entry, i) => {
+        const isLast = i === entries.length - 1
+
+        return (
+          <div
+            key={entry._id}
+            style={{
+              marginBottom: "0.75rem",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+            }}
+          >
+            <span>
+              {t("budget.income.paycheckLabel")} {i + 1}: $
+              {entry.amount.toFixed(2)}
+            </span>
+
+            {isLast && (
+              <button
+                className="btn danger"
+                onClick={handleDeleteLast}
+                title={t("budget.income.deleteLastTitle")}
+                type="button"
+                disabled={loading}
+                style={{
+                  minWidth: "40px",
+                  height: "40px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "0 12px",
+                  position: "relative",
+                  top: "-4px",
+                  background: "crimson",
+                }}
+              >
+                <FaRegTrashAlt size={16} color="white" />
+              </button>
+            )}
+          </div>
+        )
+      })}
+
+      {/* Add paycheck form */}
+      <form
+        onSubmit={addEntry}
+        style={{
+          marginTop: "0.5rem",
+          display: "flex",
+          alignItems: "center",
+          flexWrap: "nowrap",
+        }}
+      >
+        <label style={{ marginRight: "0.5rem" }}>
+          {prefix} {entries.length + 1}:
+        </label>
+
+        <input
+          className="input"
+          type="number"
+          step="0.01"
+          placeholder={t("budget.income.amountPlaceholder")}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
           style={{ width: 120, marginRight: "0.5rem" }}
           disabled={loading}
         />
-        <button className="btn" type="submit" disabled={loading}>{t("budget.actions.add")}</button>
-        <button 
-          className="btn danger" 
-          onClick={handleDeleteLast} 
-          title={t("budget.income.deleteLastTitle")} 
-          type="button"
-          disabled={loading || entries.length === 0}
-          style={{ marginLeft: "0.5rem", minWidth: "40px", height: "40px", display: "inline-flex", alignItems: "center", justifyContent: "center", verticalAlign: "middle", background: "crimson"}}
-        >
-          <FaRegTrashAlt size={16} color="white" />
+
+        <button className="btn" type="submit" disabled={loading}>
+          {t("budget.actions.add")}
         </button>
       </form>
     </div>
   )
 }
 
-function spendFor(name, expenses){
-  return expenses.filter(e => (e.category || "") === name).reduce((s, e) => s + (Number(e.amount) || 0), 0)
-}
 
 export default function Budget() {
   const { t } = useTranslation("common")
   const [budgets, setBudgets] = useState([])
-  const [expenses, setExpenses] = useState([])
   const [loading, setLoading] = useState(false)
   const [form, setForm] = useState({ name: "", limit: "", type: "" })
 
@@ -113,12 +159,8 @@ export default function Budget() {
 
   async function loadData() {
     try {
-      const [budgetsData, expensesData] = await Promise.all([
-        fetchBudgets(),
-        fetchExpenses()
-      ])
+      const budgetsData = await fetchBudgets()
       setBudgets(budgetsData)
-      setExpenses(expensesData)
     } catch (error) {
       console.error('Failed to load data:', error)
     }
@@ -167,6 +209,8 @@ export default function Budget() {
   return (
     <div className="dashboard-container dash">
       <div className="grid">
+
+        {/* Creat a budget */}
         <section className="card col-12">
           <h2>{t("budget.title")}</h2>
           <form className="row" onSubmit={submit} style={{ flexDirection:"column", gap:"0.75rem", alignItems:"flex-start" }}>
@@ -218,11 +262,13 @@ export default function Budget() {
           </form>
         </section>
 
+        {/* Total Summary */}
         <section className="card col-12 center">
           <h3>{t("budget.summary.totalBudgeted")}</h3>
           <div style={{ fontSize:36, fontWeight:800, marginTop:4 }}>${total.toFixed(2)}</div>
         </section>
 
+        {/* Individual Totals of Recurring/Variable Budgets */}
         <section className="card col-12">
           <div className="two-col">
             <div className="center">
@@ -236,34 +282,28 @@ export default function Budget() {
           </div>
         </section>
 
+        {/* Recurring Budget Table */}
         <section className="card col-6">
           <h3>{t("budget.tables.recurringTitle")}</h3>
           {recurringBudgets.length === 0 ? (
             <p className="muted">{t("budget.tables.noneRecurring")}</p>
           ) : (
-            <table className="table">
+            <table className="table" style={{width: "100%", tableLayout: "fixed" }}>
+              <colgroup><col style={{ width: "50%" }} /><col style={{ width: "30%" }} /><col style={{ width: "20%" }} /></colgroup>
               <thead>
                 <tr>
-                  <th>{t("budget.table.category")}</th>
-                  <th>{t("budget.table.limit")}</th>
-                  <th>{t("budget.table.spent")}</th>
-                  <th>{t("budget.table.remaining")}</th>
+                  <th style={{ textAlign: "left" }}>{t("budget.table.category")}</th>
+                  <th style={{ textAlign: "center"}}>{t("budget.table.limit")}</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
                 {recurringBudgets.map(b => {
-                  const spent = spendFor(b.name, expenses)
-                  const remaining = (Number(b.limit)||0) - spent
                   return (
                     <tr key={b._id}>
-                      <td>{b.name}</td>
-                      <td>{b.limit ? `$${Number(b.limit).toFixed(2)}` : <span className="pill">{t("budget.table.noLimit")}</span>}</td>
-                      <td>${spent.toFixed(2)}</td>
-                      <td style={{ color: remaining < 0 ? "#ef4444" : "#22c55e" }}>
-                        {Number.isFinite(remaining) ? `$${remaining.toFixed(2)}` : "—"}
-                      </td>
-                      <td><button className="btn danger" onClick={() => del(b._id)} disabled={loading}>{t("budget.actions.delete")}</button></td>
+                      <td style={{ textAlign: "left"}}>{b.name}</td>
+                      <td style={{ textAlign: "center"}}>{b.limit ? `$${Number(b.limit).toFixed(2)}` : <span className="pill">{t("budget.table.noLimit")}</span>}</td>
+                      <td style={{ textAlign: "right"}}><button className="btn danger" onClick={() => del(b._id)} disabled={loading}>{t("budget.actions.delete")}</button></td>
                     </tr>
                   )
                 })}
@@ -271,35 +311,29 @@ export default function Budget() {
             </table>
           )}
         </section>
-
+        
+        {/* Varible Budget Table */}
         <section className="card col-6">
           <h3>{t("budget.tables.variableTitle")}</h3>
           {variableBudgets.length === 0 ? (
             <p className="muted">{t("budget.tables.noneVariable")}</p>
           ) : (
-            <table className="table">
+            <table className="table" style={{width: "100%", tableLayout: "fixed" }}>
+              <colgroup><col style={{ width: "50%" }} /><col style={{ width: "50%" }} /><col style={{ width: "20%" }} /></colgroup>
               <thead>
                 <tr>
-                  <th>{t("budget.table.category")}</th>
-                  <th>{t("budget.table.limit")}</th>
-                  <th>{t("budget.table.spent")}</th>
-                  <th>{t("budget.table.remaining")}</th>
+                  <th style={{ textAlign: "left" }}>{t("budget.table.category")}</th>
+                  <th style={{ textAlign: "center"}}>{t("budget.table.limit")}</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
                 {variableBudgets.map(b => {
-                  const spent = spendFor(b.name, expenses)
-                  const remaining = (Number(b.limit)||0) - spent
                   return (
                     <tr key={b._id}>
-                      <td>{b.name}</td>
-                      <td>{b.limit ? `$${Number(b.limit).toFixed(2)}` : <span className="pill">{t("budget.table.noLimit")}</span>}</td>
-                      <td>${spent.toFixed(2)}</td>
-                      <td style={{ color: remaining < 0 ? "#ef4444" : "#22c55e" }}>
-                        {Number.isFinite(remaining) ? `$${remaining.toFixed(2)}` : "—"}
-                      </td>
-                      <td><button className="btn danger" onClick={() => del(b._id)} disabled={loading}>{t("budget.actions.delete")}</button></td>
+                      <td style={{ textAlign: "left"}}>{b.name}</td>
+                      <td style={{ textAlign: "center"}}>{b.limit ? `$${Number(b.limit).toFixed(2)}` : <span className="pill">{t("budget.table.noLimit")}</span>}</td>
+                      <td style={{ textAlign: "right"}}><button className="btn danger" onClick={() => del(b._id)} disabled={loading}>{t("budget.actions.delete")}</button></td>
                     </tr>
                   )
                 })}
