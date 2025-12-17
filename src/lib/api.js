@@ -65,43 +65,6 @@ export async function deleteExpense(id) {
     return response.json();
 }
 
-export async function fetchCreditCards() {
-    const response = await fetch(`${API_URL}/credit-cards`, {
-        headers: getHeaders()
-    });
-    if (!response.ok) throw new Error('Failed to fetch credit cards');
-    return response.json();
-}
-
-export async function createCreditCard(card) {
-    const response = await fetch(`${API_URL}/credit-cards`, {
-        method: 'POST',
-        headers: getHeaders(),
-        body: JSON.stringify(card)
-    });
-    if (!response.ok) throw new Error('Failed to create credit card');
-    return response.json();
-}
-
-export async function updateCreditCard(id, card) {
-    const response = await fetch(`${API_URL}/credit-cards/${id}`, {
-        method: 'PUT',
-        headers: getHeaders(),
-        body: JSON.stringify(card)
-    });
-    if (!response.ok) throw new Error('Failed to update credit card');
-    return response.json();
-}
-
-export async function deleteCreditCard(id) {
-    const response = await fetch(`${API_URL}/credit-cards/${id}`, {
-        method: 'DELETE',
-        headers: getHeaders()
-    });
-    if (!response.ok) throw new Error('Failed to delete credit card');
-    return response.json();
-}
-
 export async function fetchIncome(type = null) {
     const url = type ? `${API_URL}/income?type=${type}` : `${API_URL}/income`;
     const response = await fetch(url, {
