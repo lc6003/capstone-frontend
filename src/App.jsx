@@ -89,7 +89,7 @@ export default function App() {
         <div className="right">
           <LanguageSwitcher />
           <ThemeToggle />
-          <NavLink to="/settings" className="btn ghost icon-btn">⚙️</NavLink>
+          <NavLink to="/settings" className="pill">⚙️</NavLink>
           <button onClick={handleLogout} className="btn ghost logout">
             {t("nav.logout", "Logout")}
           </button>

@@ -4,10 +4,6 @@ import {
   deleteBudget,
   fetchExpenses,
   deleteExpense,
-  fetchCreditCards,
-  createCreditCard,
-  updateCreditCard as updateCreditCardAPI,
-  deleteCreditCard,
   fetchIncome,
   createIncome,
   deleteIncome
