@@ -1,5 +1,6 @@
 const API_URL = 'http://localhost:3000/api';
 
+//Get JWT token from localStorage
 function getToken() {
     return localStorage.getItem('authToken');
 }
@@ -11,6 +12,7 @@ function getHeaders() {
     };
 }
 
+//Fetch all budgets 
 export async function fetchBudgets() {
     const response = await fetch(`${API_URL}/budgets`, {
         headers: getHeaders()
@@ -19,6 +21,7 @@ export async function fetchBudgets() {
     return response.json();
 }
 
+//Create budget
 export async function createBudget(budget) {
     const response = await fetch(`${API_URL}/budgets`, {
         method: 'POST',
@@ -29,6 +32,7 @@ export async function createBudget(budget) {
     return response.json();
 }
 
+//Delete a budget
 export async function deleteBudget(id) {
     const response = await fetch(`${API_URL}/budgets/${id}`, {
         method: 'DELETE',
@@ -38,6 +42,7 @@ export async function deleteBudget(id) {
     return response.json();
 }
 
+//Fetch all expenses
 export async function fetchExpenses() {
     const response = await fetch(`${API_URL}/expenses`, {
         headers: getHeaders()
@@ -46,6 +51,7 @@ export async function fetchExpenses() {
     return response.json();
 }
 
+//Create new expense
 export async function createExpense(expense) {
     const response = await fetch(`${API_URL}/expenses`, {
         method: 'POST',
@@ -56,6 +62,7 @@ export async function createExpense(expense) {
     return response.json();
 }
 
+//Delete expense
 export async function deleteExpense(id) {
     const response = await fetch(`${API_URL}/expenses/${id}`, {
         method: 'DELETE',
@@ -65,6 +72,7 @@ export async function deleteExpense(id) {
     return response.json();
 }
 
+//Fetch all incomes
 export async function fetchIncome(type = null) {
     const url = type ? `${API_URL}/income?type=${type}` : `${API_URL}/income`;
     const response = await fetch(url, {
@@ -74,6 +82,7 @@ export async function fetchIncome(type = null) {
     return response.json();
 }
 
+//Create new income
 export async function createIncome(income) {
     const response = await fetch(`${API_URL}/income`, {
         method: 'POST',
@@ -84,6 +93,7 @@ export async function createIncome(income) {
     return response.json();
 }
 
+//Delete income
 export async function deleteIncome(id) {
     const response = await fetch(`${API_URL}/income/${id}`, {
         method: 'DELETE',

@@ -29,7 +29,7 @@ export default function Settings() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  async function loadUserData() {
+  async function loadUserData() {//fetch user profile data from backend
     try {
       setLoading(true)
       const response = await fetch(`${API_URL}/user`, {
@@ -40,7 +40,7 @@ export default function Settings() {
 
       if (response.ok) {
         const data = await response.json()
-        setUser(data.user)
+        setUser(data.user)//fill form with current user data
         setFormData({
           username: data.user.username,
           fullName: data.user.fullName,
@@ -57,11 +57,13 @@ export default function Settings() {
     }
   }
 
+  //Handle form input changes
   function handleChange(e) {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
+  //Submit profile update to backend
   async function handleSubmit(e) {
     e.preventDefault()
     setError("")
@@ -104,15 +106,16 @@ export default function Settings() {
     }
   }
 
+  //Logout user and clear data
   async function handleLogout() {
-    const theme = localStorage.getItem("cashvelo_theme")
+    const theme = localStorage.getItem("cashvelo_theme")//Save theme
 
     await signOut(auth)
     localStorage.clear()
     sessionStorage.clear()
 
     if (theme) {
-      localStorage.setItem("cashvelo_theme", theme)
+      localStorage.setItem("cashvelo_theme", theme)//restore theme
     }
 
     window.location.href = "/"
@@ -128,6 +131,7 @@ export default function Settings() {
     }
   }
 
+  //Delete user account permanently
   async function deleteAccount() {
     try {
       const response = await fetch(`${API_URL}/user`, {
