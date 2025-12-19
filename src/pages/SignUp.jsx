@@ -47,11 +47,11 @@ export default function SignUp() {
   async function submit(e) {
     e.preventDefault()
     setError("")
-    if (!email || !password || !confirm) return setError(t("signup.errorRequired"))
-    if (password.length < 6) return setError(t("signup.errorShortPassword"))
-    if (password !== confirm) return setError(t("signup.errorMismatch"))
+    if (!email || !password || !confirm) return setError(t("signup.errorRequired"))//Validate required fields
+    if (password.length < 6) return setError(t("signup.errorShortPassword"))//Validate password length
+    if (password !== confirm) return setError(t("signup.errorMismatch"))//Validate passwords match
     try {
-      setLoading(true)
+      setLoading(true)//send signup request to backend
       const response = await fetch(`${API_URL}/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
