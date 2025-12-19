@@ -27,7 +27,7 @@ export default function ResetPassword() {
         return
       }
 
-      try {
+      try {//Call backend to verify token validity
         const response = await fetch(`${API_URL}/verify-reset-token/${token}`)
         const data = await response.json()
 
@@ -59,12 +59,12 @@ export default function ResetPassword() {
       return
     }
 
-    if (password.length < 6) {
+    if (password.length < 6) {//minimum password length
       setError(t("reset.errors.minLen", "Password must be at least 6 characters"))
       return
     }
 
-    if (password !== confirmPassword) {
+    if (password !== confirmPassword) {//Password must match
       setError(t("reset.errors.noMatch", "Passwords do not match"))
       return
     }
@@ -72,7 +72,7 @@ export default function ResetPassword() {
     try {
       setLoading(true)
 
-      const response = await fetch(`${API_URL}/reset-password/${token}`, {
+      const response = await fetch(`${API_URL}/reset-password/${token}`, {//Send password reset request with token
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password })

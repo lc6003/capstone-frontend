@@ -17,18 +17,18 @@ export default function ForgotPassword() {
     setError("")
     setSuccess(false)
 
-    if (!email.trim()) {
+    if (!email.trim()) {//Validate email field is not empty
       setError(t("forgot.errors.enterEmail"))
       return
     }
-    if (!/^\S+@\S+\.\S+$/.test(email)) {
+    if (!/^\S+@\S+\.\S+$/.test(email)) {//Validate email format
       setError(t("forgot.errors.validEmail"))
       return
     }
 
     try {
       setLoading(true)
-      const response = await fetch(`${API_URL}/forgot-password`, {
+      const response = await fetch(`${API_URL}/forgot-password`, {//send password reset request to backend
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email.trim() })
