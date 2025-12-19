@@ -515,3 +515,4 @@ export const parsePDFTransactions = (pdfText) => {
   }
 }
 
+

@@ -4,6 +4,9 @@ import Papa from "papaparse"
 import { extractTextFromPDF, parsePDFTransactions } from "../lib/pdfParser.js"
 import { parseChasePDF } from "../lib/ChasePDFParser.js"
 import { parseDiscoverPDF } from "../lib/DiscoverPDFParser.js"
+import { parseBankOfAmericaPDF } from "../lib/BankOfAmericaPDFParser.js"
+import { parseCapitalOnePDF } from "../lib/CapitalOnePDFParser.js"
+import { parseCitiPDF } from "../lib/CitiPDFParser.js"
 import { addExpense, getExpenses, removeExpense, updateExpense, getUserCreditCards, addUserCreditCard, removeUserCreditCard, saveUserCreditCards, monthInsights, getBudgets, saveExpenses, addUploadHistoryEntry, getUploadHistory, syncExpensesFromAPI, getPdfParsedTransactions, savePdfParsedTransactions, clearPdfParsedTransactions } from "../lib/storage.js"
 import { useTranslation } from "react-i18next"
 
@@ -738,12 +741,138 @@ export default function Expenses(){
       try {
         const upperText = extractedText.toUpperCase()
 
-        // Detect Discover and Chase PDFs by checking the extracted text
-        const isDiscoverPDF = upperText.includes('DISCOVER')
-        const isChasePDF = upperText.includes('CHASE')
-
-        if (isDiscoverPDF) {
-          // Try Discover parser first
+        // Citi detection FIRST (before Bank of America) to prevent mis-detection
+        // Citi statements can be identified by:
+        // - "Citibank"
+        // - "CHECKING ACTIVITY"
+        // - "Regular Checking"
+        // - "CITIBANK ACCOUNT"
+        const isCitiPDF = upperText.includes('CITIBANK') &&
+                          upperText.includes('CHECKING ACTIVITY') &&
+                          (upperText.includes('REGULAR CHECKING') || upperText.includes('CITIBANK ACCOUNT'))
+        
+        // Bank of America detection (after Citi) to prevent mis-detection
+        // Bank of America statements can be identified by:
+        // - "Bank of America, N.A."
+        // - "Your checking account"
+        // - "Deposits and other credits"
+        // - "Withdrawals and other debits"
+        const isBankOfAmericaPDF = upperText.includes('BANK OF AMERICA') ||
+                                    upperText.includes('BANK OF AMERICA, N.A.') ||
+                                    upperText.includes('YOUR CHECKING ACCOUNT') ||
+                                    upperText.includes('DEPOSITS AND OTHER CREDITS') ||
+                                    upperText.includes('WITHDRAWALS AND OTHER DEBITS')
+        
+        // Chase: STRICT detection - must contain "CHASE" AND ("JPMORGAN" OR "CHASE BANK")
+        // This prevents Bank of America business checking PDFs from being misidentified
+        const isChasePDF = upperText.includes('CHASE') && 
+                          (upperText.includes('JPMORGAN') || upperText.includes('CHASE BANK'))
+        
+        // Discover: STRICT detection - must contain "DISCOVER" AND at least one Discover-specific indicator
+        // This prevents Bank of America statements from being misidentified as Discover
+        // Match the logic from DiscoverPDFParser.js: requires "DISCOVER" AND ("PURCHASES" OR "PAYMENTS AND CREDITS" OR "PAYMENTS")
+        const isDiscoverPDF = upperText.includes('DISCOVER') &&
+                              (upperText.includes('PURCHASES') ||
+                               upperText.includes('PAYMENTS AND CREDITS') ||
+                               upperText.includes('PAYMENTS'))
+        
+        // Capital One: Detection using reliable identifiers
+        // - "Capital One 360"
+        // - "Thanks for saving with Capital One"
+        // - "capitalone.com"
+        const isCapitalOnePDF = upperText.includes('CAPITAL ONE 360') ||
+                                upperText.includes('THANKS FOR SAVING WITH CAPITAL ONE') ||
+                                upperText.includes('CAPITALONE.COM')
+        
+        // Log detection results for debugging
+        devLog('PDF Detection Results:', {
+          isCitiPDF,
+          isBankOfAmericaPDF,
+          isChasePDF,
+          isDiscoverPDF,
+          isCapitalOnePDF
+        })
+        
+        // Routing order: Citi → Bank of America → Chase → Discover → Capital One → Generic
+        // Citi checked FIRST to prevent mis-detection as Bank of America
+        if (isCitiPDF) {
+          // Try Citi parser first
+          console.log('Bank detected: CITI')
+          devLog('Citi PDF detected, using CitiPDFParser...')
+          try {
+            const citiTransactions = parseCitiPDF(extractedText)
+            if (Array.isArray(citiTransactions) && citiTransactions.length > 0) {
+              transactions = citiTransactions
+              devLog('Citi parser succeeded, found', citiTransactions.length, 'transactions')
+            } else {
+              // Citi parser returned empty, fall back to standard parser
+              devLog('Citi parser returned empty, falling back to standard parser...')
+              transactions = parsePDFTransactions(extractedText)
+              if (!Array.isArray(transactions)) {
+                transactions = []
+              }
+            }
+          } catch (citiError) {
+            // Citi parser failed, fall back to standard parser
+            console.error('Error parsing with Citi parser, falling back:', citiError)
+            transactions = parsePDFTransactions(extractedText)
+            if (!Array.isArray(transactions)) {
+              transactions = []
+            }
+          }
+        } else if (isBankOfAmericaPDF) {
+          // Try Bank of America parser first
+          console.log('Bank detected: BANK OF AMERICA')
+          devLog('Bank of America PDF detected, using Bank of America parser...')
+          try {
+            const boaTransactions = parseBankOfAmericaPDF(extractedText)
+            if (Array.isArray(boaTransactions) && boaTransactions.length > 0) {
+              transactions = boaTransactions
+              devLog('Bank of America parser succeeded, found', boaTransactions.length, 'transactions')
+            } else {
+              // Bank of America parser returned empty, fall back to standard parser
+              devLog('Bank of America parser returned empty, falling back to standard parser...')
+              transactions = parsePDFTransactions(extractedText)
+              if (!Array.isArray(transactions)) {
+                transactions = []
+              }
+            }
+          } catch (boaError) {
+            // Bank of America parser failed, fall back to standard parser
+            console.error('Error parsing with Bank of America parser, falling back:', boaError)
+            transactions = parsePDFTransactions(extractedText)
+            if (!Array.isArray(transactions)) {
+              transactions = []
+            }
+          }
+        } else if (isChasePDF) {
+          // Try Chase parser
+          console.log('Bank detected: CHASE')
+          devLog('Chase PDF detected, using Chase parser...')
+          try {
+            const chaseTransactions = parseChasePDF(extractedText)
+            if (Array.isArray(chaseTransactions) && chaseTransactions.length > 0) {
+              transactions = chaseTransactions
+              devLog('Chase parser succeeded, found', chaseTransactions.length, 'transactions')
+            } else {
+              // Chase parser returned empty, fall back to standard parser
+              devLog('Chase parser returned empty, falling back to standard parser...')
+              transactions = parsePDFTransactions(extractedText)
+              if (!Array.isArray(transactions)) {
+                transactions = []
+              }
+            }
+          } catch (chaseError) {
+            // Chase parser failed, fall back to standard parser
+            console.error('Error parsing with Chase parser, falling back:', chaseError)
+            transactions = parsePDFTransactions(extractedText)
+            if (!Array.isArray(transactions)) {
+              transactions = []
+            }
+          }
+        } else if (isDiscoverPDF) {
+          // Try Discover parser
+          console.log('Bank detected: DISCOVER')
           devLog('Discover PDF detected, using Discover parser...')
           try {
             const discoverTransactions = parseDiscoverPDF(extractedText)
@@ -766,32 +895,35 @@ export default function Expenses(){
               transactions = []
             }
           }
-        } else if (isChasePDF) {
-          // Try Chase parser
-          devLog('Chase PDF detected, using Chase parser...')
+        } else if (isCapitalOnePDF) {
+          // Try Capital One parser
+          console.log('Bank detected: CAPITAL ONE')
+          devLog('Capital One PDF detected, using CapitalOnePDFParser...')
           try {
-            const chaseTransactions = parseChasePDF(extractedText)
-            if (Array.isArray(chaseTransactions) && chaseTransactions.length > 0) {
-              transactions = chaseTransactions
-              devLog('Chase parser succeeded, found', transactions.length, 'transactions')
+            const capitalOneTransactions = parseCapitalOnePDF(extractedText)
+            if (Array.isArray(capitalOneTransactions) && capitalOneTransactions.length > 0) {
+              transactions = capitalOneTransactions
+              devLog('Capital One parser succeeded, found', capitalOneTransactions.length, 'transactions')
             } else {
-              // Chase parser returned empty, fall back to standard parser
-              devLog('Chase parser returned empty, falling back to standard parser...')
+              // Capital One parser returned empty, fall back to standard parser
+              devLog('Capital One parser returned empty, falling back to standard parser...')
               transactions = parsePDFTransactions(extractedText)
               if (!Array.isArray(transactions)) {
                 transactions = []
               }
             }
-          } catch (chaseError) {
-            // Chase parser failed, fall back to standard parser
-            console.error('Error parsing with Chase parser, falling back:', chaseError)
+          } catch (capitalOneError) {
+            // Capital One parser failed, fall back to standard parser
+            console.error('Error parsing with Capital One parser, falling back:', capitalOneError)
             transactions = parsePDFTransactions(extractedText)
             if (!Array.isArray(transactions)) {
               transactions = []
             }
           }
         } else {
-          // Not a Discover or Chase PDF, use standard parser
+          // Not a Discover, Chase, Bank of America, or Capital One PDF, use standard parser
+          console.log('Bank detected: GENERIC (no specific bank detected)')
+          devLog('No specific bank detected, using generic parser...')
           transactions = parsePDFTransactions(extractedText)
           if (!Array.isArray(transactions)) {
             transactions = []
