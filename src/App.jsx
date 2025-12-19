@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, NavLink } from "react-router-dom"
 import { onAuthStateChanged, signOut } from "firebase/auth"
 import { auth } from "./firebase"
 import { useTranslation } from "react-i18next"
+import { FiSettings } from "react-icons/fi"
 
 import ThemeToggle from "./components/ThemeToggle.jsx"
 import LanguageSwitcher from "./components/LanguageSwitcher.jsx"
@@ -89,7 +90,7 @@ export default function App() {
         <div className="right">
           <LanguageSwitcher />
           <ThemeToggle />
-          <NavLink to="/settings" className="pill">⚙️</NavLink>
+          <NavLink to="/settings" className="pill"><FiSettings size={20} /></NavLink>
           <button onClick={handleLogout} className="btn ghost logout">
             {t("nav.logout", "Logout")}
           </button>
