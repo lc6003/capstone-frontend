@@ -42,6 +42,7 @@ export default function Login() {
     if (errors[name]) setErrors((p) => ({ ...p, [name]: "" }))
   }
 
+  //validate email and password
   function validate() {
     const next = {}
     if (!values.email.trim()) next.email = t("login.emailRequired")
@@ -58,7 +59,7 @@ export default function Login() {
 
     try{
       setLoginLoading(true)
-      setErrors({})
+      setErrors({})//send login request to backend
       const response = await fetch(`${API_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
