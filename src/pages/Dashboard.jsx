@@ -1,5 +1,4 @@
 import { useState, useMemo, useEffect } from "react"
-import { Link } from "react-router-dom"
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi"
 import { useTranslation } from "react-i18next"
 import {
@@ -318,18 +317,6 @@ export default function Dashboard(){
             )}
           </div>
         </section>
-
-        <div className="quick-actions-row">
-          <Link to="/expenses" className="quick-action-btn">
-            {t("dashboard.actions.addExpense")}
-          </Link>
-          <Link to="/budget" className="quick-action-btn">
-            {t("dashboard.actions.addIncome")}
-          </Link>
-          <Link to="/budget" className="quick-action-btn">
-            {t("dashboard.actions.addBudget")}
-          </Link>
-        </div>
 
         <section className="card col-12 highlights-card">
           <h3>{t("dashboard.highlights.title")}</h3>
